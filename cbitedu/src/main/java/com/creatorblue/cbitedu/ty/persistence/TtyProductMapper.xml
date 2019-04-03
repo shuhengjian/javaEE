@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TtyProductMapper">
+
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		<id column="product_id" property="productId" 
+			jdbcType="VARCHAR" />
+		<result column="product_name" property="productName" 
+			jdbcType="VARCHAR" />
+		<result column="product_market_price" property="productMarketPrice"
+			jdbcType="DECIMAL" />
+		<result column="product_flatly_price" property="productFlatlyPrice"
+			jdbcType="DECIMAL" />
+		<result column="product_remark" property="productRemark"
+			jdbcType="VARCHAR" />
+		<result column="product_color" property="productColor"
+			jdbcType="VARCHAR" />
+		<result column="product_cover_picture" property="productCoverPicture"
+			jdbcType="VARCHAR" />
+		<result column="product_pub_time" property="productPubTime"
+			jdbcType="TIMESTAMP" />
+		<result column="create_user_id" property="createUserId"
+			jdbcType="VARCHAR" />
+		<result column="update_user_id" property="updateUserId"
+			jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime"
+		 	jdbcType="VARCHAR" />
+		 		<result column="create_time" property="createTime"
+		 	jdbcType="VARCHAR" />
+		<result column="product_details" property="productDetails"
+		 	jdbcType="VARCHAR" />
+		<result column="product_state" property="productState"
+		 	jdbcType="VARCHAR" />
+		 	
+		 	<result column="FILE_URL" property="productDetailsPicture" />
+		 	
+		<association property="ttyBrand" foreignColumn="brand_id"
+			resultMap="com.creatorblue.cbitedu.ty.persistence.TtyBrandMapper.BaseResultMap" />
+		<association property="ttyType" foreignColumn="type_id"
+			resultMap="com.creatorblue.cbitedu.ty.persistence.TtyTypeMapper.BaseResultMap" />
+		<association property="ttyPrice" foreignColumn="price_id"
+			resultMap="com.creatorblue.cbitedu.ty.persistence.TtyPriceMapper.BaseResultMap" />
+		<association property="tsysOrg" foreignColumn="org_Id"
+			resultMap="com.creatorblue.cbitedu.system.persistence.TsysOrgMapper.BaseResultMap" />
+	</resultMap>
+	
+	
+	<!-- 多图上传 -->
+	<insert id="insertDetailPicture" parameterType="map">
+		 INSERT INTO t_sys_attach (ATTACH_ID,FILE_URL,PKID) VALUES (#{attachId},#{FILEURL},#{productId})
+	</insert>
+	
+	<update id="updateDetailPicture" parameterType="map">
+        UPDATE t_sys_attach
+        	<set>
+			<if test="FILEURL != null and FILEURL != ''">
+				FILE_URL = #{FILEURL}
+			</if>
+			</set>
+        WHERE 
+        	PKID = #{productId}
+        	
+	</update>
+	<delete id="deletDetailPicture" parameterType="map">
+	        DELETE FROM t_sys_attach
+	        <where>
+	        	<if test="value != null and value != ''">
+					PKID = #{proId} and FILE_NAME=#{fileName}
+				</if>
+	        </where>
+	 </delete>
+	<!-- 多图上传 -->
+	
+
+	<sql id="Base_Column_List">
+	p.product_id, p.brand_id, p.type_id, org_id,p.create_time,
+		p.product_name, p.product_market_price,
+		p.product_flatly_price, p.product_remark,p.product_color,
+		p.product_cover_picture, p.product_pub_time,
+		p.create_user_id, p.update_user_id, p.update_time,
+		p.product_details, p.product_state
+	</sql>
+	<!-- 条件查询，查询所有 -->
+	<select id="selectPageTtyProductByMap" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+		product_id, b.brand_id, t.type_id, o.ORG_ID,
+		p.price_id, product_name, product_market_price,
+		product_flatly_price, product_remark, product_color,
+		product_cover_picture, product_pub_time,
+		create_user_id, update_user_id, update_time,
+		product_details, product_state,
+		b.brand_name, t.type_name, t.type_start, o.org_name		
+        FROM t_ty_product p 
+        LEFT JOIN t_ty_brand b on p.brand_id = b.brand_id
+		LEFT JOIN t_ty_type t on p.type_id = t.type_id
+		LEFT JOIN t_sys_org o on p.ORG_ID = o.ORG_ID		
+        <where>
+			<if test="productName != null and '' != productName">
+				AND product_name LIKE CONCAT(CONCAT('%', #{productName}),'%')
+			</if>
+			<if test="brandName != null and '' != brandName">
+				AND brand_name = #{brandName}
+			</if>
+			<if test="typeName != null and '' != typeName">
+				AND type_name = #{typeName}
+			</if>
+			<if test="typeStart != null and '' != typeStart">
+				AND type_start = #{typeStart}
+			</if>
+			<if test="priceId != null and '' != priceId">
+				AND p.price_id = #{priceId}
+			</if>
+			<if test="priceMin != null and priceMin != ''">
+				AND product_flatly_price &gt;= #{priceMin}
+			</if>
+			<if test="priceMax != null and priceMax != ''">
+				AND product_flatly_price &lt;= #{priceMax}
+			</if>
+			<if test="orgName != null and '' != orgName">
+				AND org_name = #{orgName}
+			</if>
+			<if test="productState != null and '' != productState">
+				AND product_state = #{productState}
+			</if>
+		</where>
+		order by product_pub_time DESC
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="Base_Column_List" />
+        from t_ty_product p
+        where product_id = #{productId,jdbcType=VARCHAR}
+    </select>
+	
+	<select id="select" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		select
+		<include refid="Base_Column_List" />
+		from t_ty_product p,t_ty_brand b,t_ty_type t
+		<where>
+				p.type_id=t.type_id  and p.brand_id=b.brand_id
+				and product_state=1
+				and brand_state=1
+				and type_state=1
+				and type_start=1
+			<if test="ttyBrand!=null and ttyBrand.brandId.trim()!=''">
+				and p.brand_id=#{ttyBrand.brandId}
+			</if>
+			<if test="ttyPrice!=null and ttyPrice.priceMin!=null">
+			and p.product_flatly_price &gt; ${ttyPrice.priceMin}
+			</if>	
+			<if test="ttyPrice!=null and ttyPrice.priceMax!=null">
+			and p.product_flatly_price &lt;= ${ttyPrice.priceMax}
+			</if>	
+			<if test="ttyType!=null and ttyType.typeId.trim()!=''">
+				and p.type_id=#{ttyType.typeId}
+			</if>
+		</where>
+		limit 6
+	</select>
+	
+	<select id="selectLikeProduct" resultMap="BaseResultMap">
+			select
+			<include refid="Base_Column_List" />
+			from t_ty_product p,t_ty_brand b,t_ty_type t
+			where  p.type_id=t.type_id  and p.brand_id=b.brand_id
+				and p.product_state=1
+				and b.brand_state=1
+				and t.type_state=1
+			ORDER BY create_time
+			LIMIT 4
+	</select>		
+	<select id="selectNewProduct" resultMap="BaseResultMap">
+			select
+			<include refid="Base_Column_List" />
+			from t_ty_product p,t_ty_brand b,t_ty_type t
+			where 
+				p.type_id=t.type_id  and p.brand_id=b.brand_id
+				and product_state=1
+				and brand_state=1
+				and type_state=1
+			ORDER BY create_time desc
+			LIMIT 4
+	</select>	
+	<select id="selectByBrandAndTypeAndPrice" resultMap="BaseResultMap"
+		parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		select
+		<include refid="Base_Column_List" />
+		from t_ty_product p,t_ty_brand bd,t_ty_price pr,t_ty_type tp
+		<where>
+			p.brand_id=bd.brand_id and
+			p.type_id=tp.type_id
+			<if test="ttyBrand!=null and ttyBrand.brandId.trim()!=''">
+				and brand_id=#{ttyBrand.brandId}
+			</if>
+			<if test="ttyType!=null and ttyType.typeId.trim()!=''">
+				and type_id=#{ttyType.typeId}
+			</if>
+			<if test="ttyPrice!=null and ttyPrice.priceMin!=null">
+			and p.product_flatly_price &gt; ${ttyPrice.priceMin}
+			</if>	
+			<if test="ttyPrice!=null and ttyPrice.priceMax!=null">
+			and p.product_flatly_price &lt;= ${ttyPrice.priceMax}
+			</if>	
+			<if test="productId.trim()!='' and productId!=null">
+				and product_id=#{productId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<!-- 查询品牌 -->
+	<select id="selectLogo"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap">
+		select FILE_NAME,FILE_URL,PKID from t_sys_attach where PKID in(
+		select brand_id
+		from t_ty_brand where brand_state=1) 
+	</select>
+
+	<!-- 查询价格区间 -->
+	<select id="selectPrice"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TtyPriceMapper.BaseResultMap">
+		SELECT price_max,price_min,price_id FROM t_ty_price WHERE price_state = 1  ORDER BY price_min
+	</select>
+
+	<!-- 查询类型 -->
+	<select id="selectType"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TtyTypeMapper.BaseResultMap" parameterType="String">
+		select type_id,type_name from t_ty_type where type_start=${value} AND type_state = 1
+	</select>
+	<sql id="sql">
+		product_id,product_name,product_cover_picture,product_flatly_price,product_market_price,product_remark
+	</sql>
+	<!-- 查询全部产品 -->
+	<select id="selectAll"
+		resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		SELECT
+		<include refid="sql" />
+		FROM t_ty_product p JOIN t_ty_type t on p.type_id = t.type_id join t_ty_brand b on p.brand_id=b.brand_id
+		<where>
+		and product_state=1 and type_state = 1 and brand_state=1
+		 <if test="ttyType!=null and ttyType.typeStart!=null">
+				and type_start=${ttyType.typeStart}
+			</if>   
+			<if test="ttyBrand!=null and ttyBrand.brandId !=null and ttyBrand.brandId.trim()!=''">
+				and p.brand_id=#{ttyBrand.brandId}
+			</if>
+			<if test="ttyType!=null and ttyType.typeId!=null and  ttyType.typeId.trim()!=''">
+				and p.type_id=#{ttyType.typeId}
+			</if>
+			<if test="ttyPrice!=null and ttyPrice.priceMin!=null">
+			and p.product_flatly_price &gt; ${ttyPrice.priceMin}
+			</if>	
+			<if test="ttyPrice!=null and ttyPrice.priceMax!=null">
+			and p.product_flatly_price &lt;= ${ttyPrice.priceMax}
+			</if>	
+		</where>
+
+	</select>
+	<!-- 根据类查询是否存在 -->
+	<select id="checkTheNameWithParentId" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM t_ty_product p
+			 <where>
+		       <if test="productName != null and '' != productName">
+		       	  and product_name = #{productName} 
+		        </if>
+		       <if test="productId != null and '' != productId">
+		        	and product_id != #{productId}
+		       </if>
+		       <if test="productState != null and '' != productState">
+		       	  and product_state = #{productState}
+		        </if>
+	        </where>
+	</select>
+	
+	<!-- 进入详情began -->
+	<select id="selectDetails" resultMap="BaseResultMap">
+		SELECT product_name,product_flatly_price,product_market_price,type_name,ORG_NAME,PHONE,product_pub_time,product_color,product_details
+		FROM t_ty_product p JOIN t_sys_org o on p.ORG_ID=o.ORG_ID
+		JOIN t_ty_type t on t.type_id = p.type_id
+		WHERE p.product_id =#{productId}
+	</select>
+	<select id="selectPicture" resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap">
+		SELECT FILE_URL FROM t_sys_attach WHERE PKID=#{productId} limit 4
+	</select>
+	<!-- 进入详情end -->
+    
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct" >
+        insert into t_ty_product (product_id, brand_id, type_id, 
+            ORG_ID, price_id, product_name, 
+            product_market_price, product_flatly_price, 
+            product_remark, product_color, product_cover_picture, 
+            product_pub_time, create_user_id, update_user_id, 
+            create_time, product_details)
+        values (#{productId,jdbcType=VARCHAR}, #{ttyBrand.brandId,jdbcType=VARCHAR}, #{ttyType.typeId,jdbcType=VARCHAR}, 
+            #{tsysOrg.orgId,jdbcType=VARCHAR}, #{ttyPrice.priceId,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+            #{productMarketPrice,jdbcType=DECIMAL}, #{productFlatlyPrice,jdbcType=DECIMAL}, 
+            #{productRemark,jdbcType=VARCHAR}, #{productColor,jdbcType=VARCHAR}, #{productCoverPicture,jdbcType=VARCHAR}, 
+            #{productPubTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=VARCHAR}, #{updateUserId,jdbcType=VARCHAR}, 
+            now(), #{productDetails,jdbcType=VARCHAR})
+    
+   
+    </insert>
+    
+    <!-- 删除 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from t_ty_product
+        where product_id = #{productId,jdbcType=VARCHAR}
+    </delete>
+  
+  	<!-- 修改 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct" >
+        update t_ty_product
+        <set >
+            <if test="ttyBrand != null and ttyBrand.brandId != null and '' != ttyBrand.brandId ">
+                brand_id = #{ttyBrand.brandId,jdbcType=VARCHAR},
+            </if>
+            <if test="ttyType != null and ttyType.typeId != null and  '' != ttyType.typeId ">
+                type_id = #{ttyType.typeId,jdbcType=VARCHAR},
+            </if>
+            <if test="tsysOrg != null and tsysOrg.orgId != null and '' != tsysOrg.orgId">
+                ORG_ID = #{tsysOrg.orgId,jdbcType=VARCHAR},
+            </if>
+            <if test="ttyPrice != null and ttyPrice.priceId != null and '' != ttyPrice.priceId ">
+                price_id = #{ttyPrice.priceId,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null" >
+                product_name = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="productMarketPrice != null" >
+                product_market_price = #{productMarketPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="productFlatlyPrice != null" >
+                product_flatly_price = #{productFlatlyPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="productRemark != null" >
+                product_remark = #{productRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="productColor != null" >
+                product_color = #{productColor,jdbcType=VARCHAR},
+            </if>
+            <if test="productCoverPicture != null" >
+                product_cover_picture = #{productCoverPicture,jdbcType=VARCHAR},
+            </if>
+            <if test="productPubTime != null" >
+                product_pub_time = #{productPubTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null" >
+                create_user_id = #{createUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUserId != null" >
+                update_user_id = #{updateUserId,jdbcType=VARCHAR},
+            </if>
+                update_time = now(),
+            <if test="productDetails != null" >
+                product_details = #{productDetails,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where product_id = #{productId,jdbcType=VARCHAR}
+    </update>
+  
+  <!-- 根据ID查询 -->
+  <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+	 SELECT
+	 product_id, t_ty_product.brand_id, t_ty_product.type_id, t_ty_product.org_id,
+		t_ty_product.price_id, product_name, product_market_price,
+		product_flatly_price, product_remark, product_color,
+		product_cover_picture, product_pub_time,
+		create_user_id, update_user_id, update_time,
+		product_details, product_state
+	 FROM t_ty_product  
+	 	join t_ty_brand on(t_ty_product.brand_id=t_ty_brand.brand_id)
+	 	join t_ty_type on(t_ty_product.type_id=t_ty_type.type_id)
+	 WHERE product_id = #{productId} 
+  </select>
+  
+  <!-- 产品上下架 -->
+	 <update id="updateProductStateByPrimaryKey" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct" >
+ 		update t_ty_product
+ 		<set>
+ 			<if test="productState != null and '' != productState">
+	        	product_state = #{productState,jdbcType=VARCHAR} 
+	        </if>
+ 		</set>
+ 		WHERE product_id = #{productId,jdbcType=VARCHAR} 
+    </update>
+  
+  	<!-- 热门推荐 -->
+  	<select id="selectLike" resultMap="BaseResultMap">
+			select
+			<include refid="Base_Column_List" />
+			from t_ty_product p,t_ty_brand b,t_ty_type t,t_ty_price pr
+			where product_state=1 and p.type_id=t.type_id and p.brand_id=b.brand_id
+				and product_state=1
+				and brand_state=1
+				and type_state=1
+			ORDER BY product_pub_time
+			LIMIT 3
+	</select>
+	<!-- 看过的人还看 -->		
+	<select id="selectNew" resultMap="BaseResultMap">
+			select
+			<include refid="Base_Column_List" />
+			from t_ty_product p,t_ty_brand b,t_ty_type t
+			where 
+				p.type_id=t.type_id  and p.brand_id=b.brand_id
+				and product_state=1
+				and brand_state=1
+				and type_state=1
+			ORDER BY product_pub_time desc
+			LIMIT 3
+	</select>
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TtyNewsMapper">
+	<resultMap type="com.creatorblue.cbitedu.ty.domain.TtyNews" id="TtyNewsMap">
+		<result column="news_id" property="newsId"/>
+		<result column="news_type_code" property="newsTypeCode"/>
+		<result column="news_title" property="newsTitle"/>
+		<result column="news_content" property="newsContent"/>
+		<result column="create_time" property="createTime"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="news_introduce" property="newsIntroduce"/>
+		<result column="news_state" property="newsState"/>
+		<result column="news_sort" property="newsSort"/>
+		<association property="tsysAttach" javaType="com.creatorblue.cbitedu.ty.domain.TsysAttach" 
+        	resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap" >
+        </association>
+	</resultMap>
+	<!-- sql -->
+	<sql id="news">
+		news_id,news_type_code,news_title,news_content,create_time,create_user_id,update_user_id,update_time,news_introduce,news_state
+	</sql>
+	<select id="selectPkid" resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap" parameterType="string">
+   		select *
+   		from t_sys_attach
+   		where PKID=#{value}
+   </select>
+   		
+   <!-- 查询促销活动 -->
+   <select id="selectActivity" resultMap="TtyNewsMap">
+   		select 	<include refid="news"/>
+   		from t_ty_news
+   		where news_type_code=3 and news_state =1
+   		ORDER BY create_time desc
+		limit 1
+   </select>
+    <!-- 查询天逸动态/常见问题-->
+   <select id="selectCompanyDynamic" resultMap="TtyNewsMap" parameterType="int">
+   		select 	<include refid="news"/>
+   		from t_ty_news
+   		where news_type_code=#{value} and news_state =1
+   		ORDER BY create_time desc 
+		limit 3
+   </select>
+	
+	<!-- 查询新闻动态 -->
+	<select id="selectAll" resultMap="TtyNewsMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyNews">
+		select
+		<include refid="news"/>
+		from t_ty_news where news_type_code = #{newsTypeCode} and news_state =1
+		order BY create_time DESC
+	</select>
+	<!-- 查询标题是否存在 -->
+	<select id="selectDetailByTitle" resultMap="TtyNewsMap" parameterType="String">
+		select <include refid="news"/>
+		from t_ty_news where news_title = #{value}
+	</select>
+		<!-- 条件查询 -->
+		<select id="selectPageTtyNewsByMap" resultMap="TtyNewsMap" parameterType="map">
+	    SELECT n.news_id,n.news_type_code,n.news_title,n.news_content,n.news_introduce,n.news_state,a.file_url
+	        FROM t_ty_news n left join t_sys_attach a on n.news_id = a.PKID
+	        <where>
+	        	<if test="newsTitle != null and '' != newsTitle">
+		       	and	news_title LIKE CONCAT(CONCAT('%', #{newsTitle}),'%')
+		        </if>
+		       <if test="newsTypeCode != null and '' != newsTypeCode">
+		       	and	news_type_code = #{newsTypeCode}    
+		        </if>
+		        <if test="newsState != null and '' != newsState">
+		       	and	news_state = #{newsState}    
+		        </if>
+	        </where>
+	        order BY n.create_time DESC
+ 	</select>
+	<!-- 查询 -->
+ 	<select id="selectByPrimaryKey" resultMap="TtyNewsMap" parameterType="String" >
+        select 
+        n.news_id,n.news_type_code,n.news_title,n.news_content,n.news_introduce,n.news_state,a.*
+        from t_ty_news n left join  t_sys_attach a on n.news_id = a.PKID
+        where   news_id = #{newsId,jdbcType=VARCHAR}
+    </select>
+    <!-- 查询新闻内容 -->
+    <select id="selectNewsContentById" resultMap="TtyNewsMap" parameterType="String">
+    	select *
+    	from t_ty_news where news_id = #{value}
+    </select>
+<!-- 新增 -->
+	<insert id="insert" parameterType="com.creatorblue.cbitedu.ty.domain.TtyNews" >
+		insert into t_ty_news(
+			news_id,news_type_code,news_title,news_content,create_time,create_user_id,news_introduce,news_state
+		)values(
+			#{newsId},
+			#{newsTypeCode},
+			#{newsTitle},
+			#{newsContent},
+			#{createTime},
+			#{createUserId},
+			#{newsIntroduce},
+			#{newsState}
+		)
+	</insert>
+	<!-- 修改 -->
+	<update id="updateByNews" parameterType="com.creatorblue.cbitedu.ty.domain.TtyNews">
+		update t_ty_news
+		<set>
+			<if test="newsTypeCode != null and newsTypeCode != ''">
+				news_type_code = #{newsTypeCode},
+			</if>
+			<if test="newsTitle !=null and newsTitle != ''">
+				news_title = #{newsTitle},
+			</if>
+			<if test="newsContent != null and newsContent !=''">
+				news_content = #{newsContent},
+			</if>
+			<if test="updateUserId != null and updateUserId !=''">
+				update_user_id = #{updateUserId},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime},
+			</if>
+			<if test="newsIntroduce != null and newsIntroduce !=''">
+				news_introduce = #{newsIntroduce},
+			</if>
+			<if test="newsState != null and newsState !=''">
+				news_state = #{newsState},
+			</if>
+		</set>
+		where news_id = #{newsId}
+	</update>
+	<!-- 更改新闻状态 -->
+	<update id="updateState" parameterType="com.creatorblue.cbitedu.ty.domain.TtyNews">
+		update t_ty_news
+		<set>
+			<if test="newsState !=null and newsState !=''">
+				news_state = #{newsState}
+			</if>
+		</set>
+		where news_id = #{newsId}
+	</update>
+	<!-- 删除 -->
+	<delete id="del" parameterType="String">
+		delete from t_ty_news where news_id=#{value}
+	</delete>
+	
+	<!-- 根据新闻id查询单条新闻 -->
+	<select id="selectDetailsById" parameterType="string"
+		resultMap="TtyNewsMap">
+		select
+		<include refid="news" />
+		FROM t_ty_news
+		<where>
+			news_id = #{value}
+		</where>
+	</select>
+	
+	<!-- 根据新闻id查询上一篇 -->
+	<select id="selectPrev" parameterType="com.creatorblue.cbitedu.ty.domain.TtyNews"
+		resultMap="TtyNewsMap">
+		select
+		<include refid="news" />
+		from t_ty_news
+		where create_time &gt;  (select create_time from t_ty_news where news_id = #{newsId}) and  news_state =1 and news_type_code=#{newsTypeCode}
+		order BY create_time 	
+		limit 1 ;
+	</select>
+	
+	<!-- 根据新闻id查询下一篇 -->
+	<select id="selectNext" parameterType="com.creatorblue.cbitedu.ty.domain.TtyNews"
+		resultMap="TtyNewsMap">
+		select
+		<include refid="news" />
+		from t_ty_news
+		where create_time &lt;  (select create_time from t_ty_news where news_id = #{newsId}) and  news_state =1 and news_type_code=#{newsTypeCode}
+		order BY create_time DESC	
+		limit 1 ;
+	</select>
+	
+	<!-- 根据新闻id关联用户id查询发布人姓名 -->
+	<select id="selectCreateName" parameterType="string"
+		resultMap="com.creatorblue.cbitedu.system.persistence.TsysUserinfoMapper.BaseResultMap">
+		SELECT LOGIN_NAME FROM t_sys_userinfo WHERE USER_ID = (select create_user_id from t_ty_news WHERE news_id= #{value}) ;
+	</select>
+	
+	<!-- 根据新闻id关联pkid查询新闻图片 -->
+	<select id="selectNewsImg"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap">
+		<!-- SELECT FILE_URL FROM t_sys_attach WHERE PKID = (select news_id from t_ty_news WHERE news_id = #{value}) limit 1; -->
+		select PKID,FILE_URL from t_sys_attach,t_ty_news where t_sys_attach.PKID = t_ty_news.news_id and news_state=1
+	</select>
+	
+	<!-- 根据新闻id关联pkid查询新闻图片 -->
+	<select id="findNewsImg"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap" parameterType="string">
+		SELECT FILE_URL FROM t_sys_attach WHERE PKID = (select news_id from t_ty_news WHERE news_id = #{value}) limit 1;
+		<!-- select PKID,FILE_URL from t_sys_attach,t_ty_news where t_sys_attach.PKID = t_ty_news.news_id and news_state=1 limit 1; -->
+	</select>
+	
+</mapper>

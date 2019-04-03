@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysCustomfieldsMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysCustomfields">
+        <result column="CUSTOMID" jdbcType="VARCHAR" property="customid"/>
+        <result column="POSITION" jdbcType="DECIMAL" property="position"/>
+        <result column="CUTOM_TYPE" jdbcType="VARCHAR" property="cutom_type"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="FIELD_FORMAT" jdbcType="VARCHAR" property="fieldFormat"/>
+        <result column="MIN_LENGTH" jdbcType="VARCHAR" property="minLength"/>
+        <result column="MAX_LENGTH" jdbcType="VARCHAR" property="maxLength"/>
+        <result column="IS_REQUIRED" jdbcType="VARCHAR" property="isRequired"/>
+        <result column="DEFAULT_VALUE" jdbcType="VARCHAR" property="defaultValue"/>
+        <result column="CUSTOM_REGEXP" jdbcType="VARCHAR" property="custom_regexp"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		CUSTOMID,POSITION,CUTOM_TYPE,NAME,FIELD_FORMAT,MIN_LENGTH,MAX_LENGTH,IS_REQUIRED,DEFAULT_VALUE,CUSTOM_REGEXP
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysCustomfields">
+        INSERT INTO T_SYS_CUSTOMFIELDS (
+        	CUSTOMID ,
+        	POSITION ,
+        	CUTOM_TYPE ,
+        	NAME ,
+        	FIELD_FORMAT ,
+        	MIN_LENGTH ,
+        	MAX_LENGTH ,
+        	IS_REQUIRED ,
+        	DEFAULT_VALUE ,
+        	CUSTOM_REGEXP 
+        ) VALUES (
+        
+        	#{customid,jdbcType=VARCHAR} ,
+        
+        	#{position,jdbcType=DECIMAL} ,
+        
+        	#{cutom_type,jdbcType=VARCHAR} ,
+        
+        	#{name,jdbcType=VARCHAR} ,
+        
+        	#{fieldFormat,jdbcType=VARCHAR} ,
+        
+        	#{minLength,jdbcType=VARCHAR} ,
+        
+        	#{maxLength,jdbcType=VARCHAR} ,
+        
+        	#{isRequired,jdbcType=VARCHAR} ,
+        
+        	#{defaultValue,jdbcType=VARCHAR} ,
+        
+        	#{custom_regexp,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysCustomfields">
+        UPDATE T_SYS_CUSTOMFIELDS SET
+	        POSITION = #{position,jdbcType=DECIMAL} ,
+	        CUTOM_TYPE = #{cutom_type,jdbcType=VARCHAR} ,
+	        NAME = #{name,jdbcType=VARCHAR} ,
+	        FIELD_FORMAT = #{fieldFormat,jdbcType=VARCHAR} ,
+	        MIN_LENGTH = #{minLength,jdbcType=VARCHAR} ,
+	        MAX_LENGTH = #{maxLength,jdbcType=VARCHAR} ,
+	        IS_REQUIRED = #{isRequired,jdbcType=VARCHAR} ,
+	        DEFAULT_VALUE = #{defaultValue,jdbcType=VARCHAR} ,
+	        CUSTOM_REGEXP = #{custom_regexp,jdbcType=VARCHAR} 
+        WHERE 
+	        CUSTOMID = #{customid,jdbcType=VARCHAR} 
+	</update>
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_CUSTOMFIELDS WHERE
+	        CUSTOMID = #{customid,jdbcType=VARCHAR} 
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_CUSTOMFIELDS WHERE
+	        CUSTOMID = #{customid,jdbcType=VARCHAR} 
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTsysCustomfieldsByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_CUSTOMFIELDS
+ </select>
+    
+<select id="selectPageTsysCustomfields" resultMap="BaseResultMap" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_CUSTOMFIELDS
+ </select>
+</mapper>
+

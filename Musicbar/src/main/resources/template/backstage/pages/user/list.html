@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>用户管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css" th:href="@{'/backstage/static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css" th:href="@{'/backstage/static/css/weadmin.css'}">
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	</head>
+
+	<body>
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">用户管理</a>
+      </span>
+			<a class="layui-btn layui-btn-sm" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="layui-icon" style="line-height:30px">&#x1002;</i></a>
+		</div>
+		<div class="weadmin-body">
+			<div class="layui-row">
+				<form class="layui-form layui-col-md12 we-search">
+					<div class="layui-inline">
+						<input type="text" name="userName" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-inline">
+						<input type="text" name="userMobile" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-input-inline">
+						<select name="userState" value="">
+							<option value="" name="state">用户状态</option>
+							<!-- <option value="1">在职</option>
+							<option value="0">离职</option>	 -->						
+						</select>
+					</div>
+
+					<button class="layui-btn" type="button" lay-filter="sreach" id="search" onclick="query(1,10)"><i class="layui-icon">&#xe615;</i></button>
+
+				</form>
+			</div>
+			<div class="weadmin-block">
+				<button class="layui-btn layui-btn-danger cb-btn-remove"><i class="layui-icon"></i>批量删除</button>
+
+				<button class="layui-btn" onclick="WeAdminShow('添加用户','user_edit',600,400)"><i class="layui-icon"></i>添加</button>
+				<button class="layui-btn layui-btn-danger able">离职</button>
+				<button class="layui-btn able">在职</button>
+			</div>
+			<table class="layui-table" id="memberList">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" th:onchange="'selectAll(this)'" name="selectAll" id="selectAll" value="" />
+						</th>
+						<th>序号</th>
+						<th>姓名</th>
+						<th>手机号</th>
+						<th>身份证</th>
+						<th>用户状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- <tr data-id="1">
+						<td>
+							<div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id="1"><i class="layui-icon">&#xe605;</i></div>
+						</td>
+						<td>1</td>
+						<td>小张</td>
+						<td>151515151515151</td>
+						<td>430404199901013030</td>
+						<td>在职</td>
+						<td class="td-manage">
+							<a title="编辑" onclick="WeAdminEdit('修改用户','./edit.html', 1, 600, 400)" href="javascript:;">
+								<i class="layui-icon">&#xe642;</i>
+							</a>
+							<a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
+								<i class="layui-icon">&#xe640;</i>
+							</a>
+						</td>
+					</tr> -->
+				</tbody>
+			</table>
+			<div id="pagefenye" class="fenye" style="text-align:center;"></div>
+		</div>
+		<script src="../jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+		<script src="../../lib/layui/layui.js" charset="utf-8" th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+		<script src="../../static/js/eleDel.js" type="text/javascript" charset="utf-8" th:src="@{'/backstage/static/js/eleDel.js'}"></script>
+		<script src="../../pages/management/dateformat.js" type="text/javascript" charset="utf-8" th:src="@{'/backstage/pages/management/dateformat.js'}"></script>
+
+		<script type="text/javascript">
+			$(function(){
+				/* 查询用户列表 */
+				query(1, 1);
+				/* 查询用户状态 */
+				selectState();
+			})
+			//重新渲染表单
+			function renderForm(){
+			  layui.use('form', function(){
+			   var form = layui.form;//高版本建议把括号去掉，有的低版本，需要加()
+			   form.render();
+			  });
+			 }
+			
+			/* 查询用户状态 */
+			function selectState(){
+				$.ajax({
+					url:"user_state",
+					type:"post",
+					dataType:"json",
+					success:function(res){
+						$("[name=userState] option:eq(0)").text(res[0].paraName);
+					for(let i in res){
+						$("[name=state]").after("<option value='"+res[i].paraNo+"'>"+res[i].paraVal+"</option>");
+					}
+					$($(".able")[0]).text(res[0].paraVal).val(res[0].paraNo);
+					$($(".able")[1]).text(res[1].paraVal).val(res[1].paraNo);
+					renderForm();
+					}
+				})
+			}
+			
+			/* 查询用户列表 */
+			function query(pageNum, pageSize){
+				$.ajax({
+					url:"user_query",
+					type:"post",
+					data:$("form").serialize() + "&pageNum=" + pageNum || 1
+					+ "&pageSize=" + pageSize || 1,
+					success: function(res){
+						let all = JSON.parse(res);
+						let list = all[0].list;
+						//总页数
+						let pages = all[0].pages;
+						//当前页码
+						let pageNum = all[0].pageNum;
+						//每页显示的数
+						let pageSize = all[0].pageSize;
+						//总记录数
+						let count = all[0].total;
+						$("tbody").empty();
+						for(let i = 0; i < list.length; i++){
+							$("tbody").append("<tr data-id='1'>\
+							<td>\
+								<input type='checkbox' name='selectOne' id='selectAll' value='' class='"+list[i].userId+"' onchange='select(this)'/>\
+							</td>\
+							<td>"+(i+1)+"</td>\
+							<td>"+list[i].userName+"</td>\
+							<td>"+list[i].userMobile+"</td>\
+							<td>"+list[i].userIdcard+"</td>\
+							<td>"+list[i].userState+"</td>\
+							<td style='display:none;'><input th:value='"+list[i].userId+"'/></td>\
+							<td class='td-manage' data-id=\""+list[i].userId+"\">\
+								<a title='编辑' onclick=\"WeAdminEdit('修改用户','user_edit?userId="+list[i].userId+"', '"+list[i].userId+"', 600, 400)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe642;</i>\
+								</a>\
+								<a title='删除' onclick=\"user_delete(this)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe640;</i>\
+								</a>\
+							</td>\
+						</tr>")
+					   }
+						//调用分页方法
+						getPageList(count, pageNum, pageSize);
+					}
+				})
+			}
+		
+		//全选
+		function selectAll (tag) {
+			let t = $(tag).prop("checked");
+			$("input[type='checkbox']").prop("checked",t);
+		}
+		function select (tag) {
+			let t = $(tag).is(':checked');
+			let value = true;
+			for (let i = 0;i < $("input[name='selectOne']").length;i++) {	
+				if (!$("input[name='selectOne']")[i].checked) {
+					value = false;
+					break;
+				}
+			}
+			$("input[name='selectAll']").prop("checked",value);
+			$(tag).prop("checked",t);
+		}
+		
+		/*删除*/
+		function user_delete(tag){
+			layui.use('layer', function(){
+    			layer.confirm('确认要删除该用户？', {
+    			    btn: ['确定','取消'],
+    			    time: 200000, //20s后自动关闭
+    			    },function(index){
+						$.ajax({
+							url:"user_delete",
+							data:{userId:$(tag).parents("td").data("id")},
+							type:"post",						
+							dataType:"json",
+							success:function(res){
+			    				layer.alert(res.msg, {
+			                        title: "提示",
+			                        btn: ['确定']
+			                    },function (index, item) {
+			                         location.reload();
+			                    });
+			    			}
+			    		})
+			    		layer.close(index);
+					});
+			})
+		}
+		
+		/*批量删除*/
+		$(".cb-btn-remove").click(function(){
+			var param = "";
+			$("[name='selectOne']:checked").each(function(){
+				param += $(this).attr("class")+",";
+			});
+			layui.use('layer', function(){
+    			layer.confirm('确认要删除所选用户？', {
+    			    btn: ['确定','取消'],
+    			    time: 200000, //20s后自动关闭
+    			    },function(index){
+						$.ajax({
+							url:"user_deleteAll",
+							type:"post",
+							data:{userIds:param},
+							dataType:"json",
+							success:function(res){
+								layer.alert(res.msg, {
+			                        title: "提示",
+			                        btn: ['确定']
+			                    },function (index, item) {
+			                         location.reload();
+			                    });
+							}
+						})
+					    layer.close(index);
+					});
+			})
+		})
+		
+		/*在职*/
+			$(".able").click(function(){
+				var checked = $("input[name='selectOne']:checked");
+				if(checked.length == 0){
+					layer.open({
+  					  title: '提示'
+  					  ,content: '请先选中一条记录!'
+  					});
+					return false;
+				}
+				var userIds = new Array();
+				$("[name='selectOne']:checked").each(function(index,ele){
+					userIds.push($(ele).attr("class"));
+				})
+				let userState = $(this).val();
+				layer.confirm('确认要变更该用户状态？', {
+    			    btn: ['确定','取消'],
+    			    time: 200000, //20s后自动关闭
+    			    },function(index){
+						$.ajax({
+							url:"user_changeState",
+							type:"post",
+							data:{
+								"userIds" : userIds,
+								"userState" : userState
+							},
+							dataType:"json",
+							success:function(res){
+	    						layer.alert(res.msg, {
+			                        title: "提示",
+			                        btn: ['确定']
+			                    },function (index, item) {
+			                         location.reload();
+			                    });
+	    					}
+	    				})
+	    			    layer.close(index);
+	    			});
+	    		})
+			
+			/*分页*/
+			function getPageList(count, curr, limit) {
+				//分页方法
+				layui.use([ 'laypage', 'layer' ], function() {
+					var laypage = layui.laypage, layer = layui.layer;
+					//完整功能
+					laypage.render({
+						elem : 'pagefenye',
+						count : count || 0,
+						theme : '#009587',
+						limit : limit || 3,
+						limits : [ 5, 10, 20, 30, 40 ],
+						curr : curr || 1,
+						layout : [ 'count', 'prev', 'page', 'next', 'refresh', 'skip' ],
+						jump : function(obj, first) {
+							//debugger;
+							if (!first) {
+								//window.location.href = "?curr="+obj.curr+"&pageSize="+obj.limit+"&enterId="+'${enterId}';
+								query(obj.curr, obj.limit);
+							}
+						}
+					});
+				});
+			}
+		
+		</script>
+	</body>
+
+</html>

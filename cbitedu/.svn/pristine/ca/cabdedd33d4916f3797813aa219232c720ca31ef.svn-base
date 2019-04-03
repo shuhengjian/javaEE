@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysUserinfoMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysUserinfo">
+		<result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+		<result column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
+		<result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+		<result column="USER_REALNAME" jdbcType="VARCHAR" property="userRealname" />
+		<result column="USER_NO" jdbcType="VARCHAR" property="userNo" />
+		<result column="ORG_ID" jdbcType="VARCHAR" property="orgId" />
+		<result column="DEPT_ID" jdbcType="VARCHAR" property="deptId" />
+		<result column="SEX" jdbcType="VARCHAR" property="sex" />
+		<result column="MOBILETEL" jdbcType="VARCHAR" property="mobiletel" />
+		<result column="FAX" jdbcType="VARCHAR" property="fax" />
+		<result column="EMAIL" jdbcType="VARCHAR" property="email" />
+		<result column="ZIP" jdbcType="VARCHAR" property="zip" />
+		<result column="STATE" jdbcType="VARCHAR" property="state" />
+		<result column="USER_LOGINCOUNT" jdbcType="DECIMAL" property="userLogincount" />
+		<result column="USER_TYPE" jdbcType="VARCHAR" property="userType" />
+		<result column="DREDGE_TIME" jdbcType="VARCHAR" property="dredgeTime" />
+		<result column="SORT_NUM" jdbcType="DECIMAL" property="sortNum" />
+		<result column="CREATE_MAN" jdbcType="VARCHAR" property="createMan" />
+		<result column="LOGIN_IP" jdbcType="VARCHAR" property="loginIp" />
+		<result column="LOGIN_DATE" jdbcType="VARCHAR" property="loginDate" />
+		<result column="CREATE_DATE" jdbcType="VARCHAR" property="createDate" />
+		<result column="POST_NAME" jdbcType="VARCHAR" property="postName" />
+		<result column="POST_ID" jdbcType="VARCHAR" property="postId" />
+<!-- 		<result column="POST_NAME" jdbcType="VARCHAR" property="sysPost.postName" />
+		<result column="POST_ID" jdbcType="VARCHAR" property="sysPost.postId" /> -->
+	</resultMap>
+	
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		USER_ID,LOGIN_NAME,PASSWORD,USER_REALNAME,USER_NO,ORG_ID,DEPT_ID,SEX,MOBILETEL,FAX,EMAIL,ZIP,STATE,USER_LOGINCOUNT,USER_TYPE,DREDGE_TIME,SORT_NUM,CREATE_MAN,LOGIN_IP,LOGIN_DATE,CREATE_DATE
+</sql>
+<insert id="insertUserPost"  parameterType="com.creatorblue.cbitedu.system.domain.TuserPost">
+        INSERT INTO t_user_post (
+        	USER_JOBID,
+        	POST_ID,
+        	USER_ID 
+        ) VALUES (        
+        	#{userJobid,jdbcType=VARCHAR} ,        
+        	#{postId,jdbcType=VARCHAR} ,        
+        	#{userId,jdbcType=VARCHAR} 
+        )
+</insert>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysUserinfo">
+        INSERT INTO T_SYS_USERINFO (
+        	USER_ID ,
+        	LOGIN_NAME ,
+        	PASSWORD ,
+        	USER_REALNAME ,
+        	USER_NO ,
+        	ORG_ID ,
+        	DEPT_ID ,
+        	SEX ,
+        	MOBILETEL ,
+        	FAX ,
+        	EMAIL ,
+        	ZIP ,
+        	STATE ,
+        	USER_LOGINCOUNT ,
+        	USER_TYPE ,
+        	DREDGE_TIME ,
+        	SORT_NUM ,
+        	CREATE_MAN ,
+        	LOGIN_IP ,
+        	LOGIN_DATE ,
+        	CREATE_DATE 
+        ) VALUES (
+        
+        	#{userId,jdbcType=VARCHAR} ,
+        
+        	#{loginName,jdbcType=VARCHAR} ,
+        
+        	#{password,jdbcType=VARCHAR} ,
+        
+        	#{userRealname,jdbcType=VARCHAR} ,
+        
+        	#{userNo,jdbcType=VARCHAR} ,
+        
+        	#{orgId,jdbcType=VARCHAR} ,
+        
+        	#{deptId,jdbcType=VARCHAR} ,
+        
+        	#{sex,jdbcType=VARCHAR} ,
+        
+        	#{mobiletel,jdbcType=VARCHAR} ,
+        
+        	#{fax,jdbcType=VARCHAR} ,
+        
+        	#{email,jdbcType=VARCHAR} ,
+        
+        	#{zip,jdbcType=VARCHAR} ,
+        
+        	#{state,jdbcType=VARCHAR} ,
+        
+        	#{userLogincount,jdbcType=DECIMAL} ,
+        
+        	#{userType,jdbcType=VARCHAR} ,
+        
+        	#{dredgeTime,jdbcType=VARCHAR} ,
+        
+        	#{sortNum,jdbcType=DECIMAL} ,
+        
+        	#{createMan,jdbcType=VARCHAR} ,
+        
+        	#{loginIp,jdbcType=VARCHAR} ,
+        
+        	#{loginDate,jdbcType=VARCHAR} ,
+        
+        	#{createDate,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysUserinfo">
+        UPDATE T_SYS_USERINFO SET
+	        LOGIN_NAME = #{loginName,jdbcType=VARCHAR} ,
+	        PASSWORD = #{password,jdbcType=VARCHAR} ,
+	        USER_REALNAME = #{userRealname,jdbcType=VARCHAR} ,
+	        USER_NO = #{userNo,jdbcType=VARCHAR} ,
+	        ORG_ID = #{orgId,jdbcType=VARCHAR} ,
+	        DEPT_ID = #{deptId,jdbcType=VARCHAR} ,
+	        SEX = #{sex,jdbcType=VARCHAR} ,
+	        MOBILETEL = #{mobiletel,jdbcType=VARCHAR} ,
+	        FAX = #{fax,jdbcType=VARCHAR} ,
+	        EMAIL = #{email,jdbcType=VARCHAR} ,
+	        ZIP = #{zip,jdbcType=VARCHAR} ,
+	        STATE = #{state,jdbcType=VARCHAR} ,
+	        USER_LOGINCOUNT = #{userLogincount,jdbcType=DECIMAL} ,
+	        USER_TYPE = #{userType,jdbcType=VARCHAR} ,
+	        DREDGE_TIME = #{dredgeTime,jdbcType=VARCHAR} ,
+	        SORT_NUM = #{sortNum,jdbcType=DECIMAL} ,
+	        CREATE_MAN = #{createMan,jdbcType=VARCHAR} ,
+	        LOGIN_IP = #{loginIp,jdbcType=VARCHAR} ,
+	        LOGIN_DATE = #{loginDate,jdbcType=VARCHAR} ,
+	        CREATE_DATE = #{createDate,jdbcType=VARCHAR} 
+        WHERE 
+	        USER_ID = #{userId,jdbcType=VARCHAR} 
+	</update>
+	<!-- 用户停用 -->
+	 <update id="changeUserState" parameterType="map" >
+ 		update T_SYS_USERINFO 
+ 		<set>
+ 			<if test="state != null and '' != state">
+	        	state = #{state,jdbcType=VARCHAR} 
+	        </if>
+ 		</set>
+ 		WHERE  USER_ID = #{userId,jdbcType=VARCHAR} 
+    </update>
+    <update id="updateBySelective" parameterType="com.creatorblue.cbitedu.system.domain.TsysUserinfo">
+		UPDATE T_SYS_USERINFO
+		<set>
+			<if test="loginName != null and '' != loginName">
+				LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null and '' != password">
+				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="userRealname != null and '' != userRealname">
+				USER_REALNAME = #{userRealname,jdbcType=VARCHAR},
+			</if>
+			<if test="userNo != null and '' != userNo">
+				USER_NO = #{userNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orgId != null and '' != orgId">
+				ORG_ID = #{orgId,jdbcType=VARCHAR},
+			</if>
+			<if test="deptId != null and '' != deptId">
+				DEPT_ID = #{deptId,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null and '' != sex">
+				SEX = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="mobiletel != null and '' != mobiletel">
+				MOBILETEL = #{mobiletel,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null and '' != fax">
+				FAX = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null and '' != email">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="zip != null and '' != zip">
+				ZIP = #{zip,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null and '' != state">
+				STATE = #{state,jdbcType=VARCHAR},
+			</if>
+			<if test="userLogincount != null and '' != userLogincount">
+				USER_LOGINCOUNT = #{userLogincount,jdbcType=DECIMAL},
+			</if>
+			<if test="userType != null and '' != userType">
+				USER_TYPE = #{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="dredgeTime != null and '' != dredgeTime">
+				DREDGE_TIME = #{dredgeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNum != null and '' != sortNum">
+				SORT_NUM = #{sortNum,jdbcType=DECIMAL},
+			</if>
+			<if test="createMan != null and '' != createMan">
+				CREATE_MAN = #{createMan,jdbcType=VARCHAR},
+			</if>
+			<if test="loginIp != null and '' != loginIp">
+				LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+			</if>
+			<if test="loginDate != null and '' != loginDate">
+				LOGIN_DATE = #{loginDate,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null and '' != createDate">
+				CREATE_DATE = #{createDate,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE
+		USER_ID = #{userId,jdbcType=VARCHAR}
+	</update>
+	<!-- 重置密码 -->
+	 <update id="resetPassword" parameterType="map" >
+ 		update T_SYS_USERINFO set password = #{password,jdbcType=VARCHAR}
+ 		WHERE  USER_ID = #{userId,jdbcType=VARCHAR} 
+    </update>
+    
+     <update id="updateBySort" parameterType="com.creatorblue.cbitedu.system.domain.TsysUserinfo">
+        UPDATE T_SYS_USERINFO SET
+	       SORT_NUM = #{sortNum,jdbcType=DECIMAL} 
+        WHERE 
+	         USER_ID = #{userId} 
+	</update>
+	
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_USERINFO WHERE
+	        USER_ID = #{userId,jdbcType=VARCHAR} 
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+ select u.*,p.post_name post_name,p.post_id post_id
+ from t_sys_userinfo u left join t_user_post up on(u.user_id = up.user_id)
+	left join t_sys_post p on (up.post_id = p.post_id)
+	where  u.USER_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTsysUserinfoByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_USERINFO T WHERE 1=1
+	        <if test="loginName != null and '' != loginName">
+	        	AND T.LOGIN_NAME like '%'||#{loginName}||'%'
+	        </if>
+	         <if test="password != null and '' != password">
+	        	AND T.password = #{password,jdbcType=VARCHAR} 
+	        </if>
+	        <if test="user_realname != null and '' != user_realname">
+	        	AND T.USER_REALNAME like '%'||#{user_realname}||'%' 
+	        </if>
+	        <if test="mobiletel != null and '' != mobiletel">
+	        	AND T.MOBILETEL like '%'||#{mobiletel}||'%'
+	        </if>
+	        <if test="sex != null and '' != sex">
+	        	AND T.sex = #{sex,jdbcType=VARCHAR} 
+	        </if>
+	        <if test="state != null and '' != state">
+	        	AND T.state = #{state,jdbcType=VARCHAR} 
+	        </if>
+	         <if test="org_id != null and '' != org_id">
+	          AND T.org_id  = #{org_id,jdbcType=VARCHAR}
+            </if>
+	         <if test="orgList != null ">
+	          AND T.org_id in  
+				<foreach item="item" index="index" collection="orgList" open="(" separator="," close=")">  
+				    #{item,jdbcType=VARCHAR}
+				</foreach> 
+            </if>
+            order by T.SORT_NUM
+ </select>
+ 
+  <select id="selectExitsUserByUsername" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_USERINFO T WHERE 1=1
+	        <if test="loginName != null and '' != loginName">
+	        	AND T.LOGIN_NAME = #{loginName,jdbcType=VARCHAR}
+	        </if>
+            order by T.SORT_NUM
+ </select>
+ 
+  <select id="selectUserinfoByOrgId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_USERINFO 
+	        
+	        <if test="_parameter!=null and _parameter!=''">
+	         WHERE  ORG_ID=#{_parameter}
+	        </if>
+	        order by sort_num
+ </select>
+ 
+ 
+    
+<select id="selectPageTsysUserinfo" resultMap="BaseResultMap" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_USERINFO  order by sort_num
+ </select>
+ <!-- 机构树专用 -->
+ <select id="selectSysOrgInfo" resultType="com.creatorblue.cbitedu.system.domain.ZtreeInfo" >
+	    SELECT T.ORG_ID ID,T.PARENT_ID PID,T.ORG_NAME NAME FROM T_SYS_ORG T 
+ </select>
+ 
+ <!-- 角色树专用 -->
+ <select id="selectRoleInfo" resultType="com.creatorblue.cbitedu.system.domain.ZtreeInfo" >
+	    SELECT T.ROLE_ID ID,T.ROLE_NAME NAME FROM T_SYS_ROLE T 
+ </select>
+ 
+ <!-- 根据ORGID获取用户数目 -->
+ <select id="queryUserCountByOrgId" parameterType="java.lang.String" resultType="Integer">
+	    SELECT count(*) count FROM T_SYS_USERINFO T where  t.org_id = #{orgId}
+ </select>
+ 
+ <select id="getSortNumByOrgId" parameterType="java.lang.String" resultType="hashmap">
+	    SELECT org_id orgId,count(*) userCount,max(t.sort_num) sortNum FROM T_SYS_USERINFO t
+        where t.ORG_ID = #{orgId}
+        group by org_id
+ </select>
+
+ <!-- 岗位树专用 -->
+ <select id="selectSysPostInfo" resultType="com.creatorblue.cbitedu.system.domain.TsysPostTreeinfo" parameterType="map">
+	    select post_id id,post_name text,'closed' state, 
+	    	(select count(*) from t_sys_post where parent_postid=t.post_id group by parent_postid) count
+	    from t_sys_post t where 1=1 
+ 		<if test="post_id != null and '' != post_id">
+	        	AND parent_postid = #{post_id,jdbcType=VARCHAR} 
+	    </if>	    
+ 		<if test="post_id == null or '' == post_id">
+	        	AND parent_postid is null
+	    </if>
+ </select>
+ <select id="selectChildByOrgId" resultType="String" parameterType="map">
+	   SELECT T.ORG_ID FROM T_SYS_ORG T
+	    where t.parent_id in
+	    <foreach item="item" collection="pids"  open="(" separator="," close=")" index="index">
+	      #{item,jdbcType=VARCHAR}
+	    </foreach>
+	    <!-- 此处的collection对应为Map里面传质的Key值 -->
+ </select> 
+</mapper>
+

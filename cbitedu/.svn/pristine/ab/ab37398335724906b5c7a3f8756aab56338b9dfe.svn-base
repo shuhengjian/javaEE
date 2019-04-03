@@ -1,0 +1,110 @@
+1、flexigrid参数说明:
+    height: 200, //flexigrid插件的高度，单位为px
+    width: 'auto', //宽度值，auto表示根据每列的宽度自动计算，在IE6下建议设置具体值否则会有问题
+    striped: true, //是否显示斑纹效果，默认是奇偶交互的形式
+    novstripe: false,//没用过这个属性
+    minwidth: 30, //列的最小宽度
+    minheight: 80, //列的最小高度
+    resizable: false, //resizable table是否可伸缩
+    url: false, //ajax url,ajax方式对应的url地址
+    method: 'POST', // data sending method,数据发送方式
+    dataType: 'json', // type of data loaded,数据加载的类型，xml,json
+    errormsg: '发生错误', //错误提升信息
+    usepager: false, //是否分页
+    nowrap: true, //是否不换行
+    page: 1, //current page,默认当前页
+    total: 1, //total pages,总页面数
+    useRp: true, //use the results per page select box,是否可以动态设置每页显示的结果数
+    rp: 25, // results per page,每页默认的结果数
+    rpOptions: [10, 15, 20, 25, 40, 100], //可选择设定的每页结果数
+    title: false, //是否包含标题
+    pagestat: '显示记录从{from}到{to}，总数 {total} 条', //显示当前页和总页面的样式
+    procmsg: '正在处理数据，请稍候 ...', //正在处理的提示信息
+    query: '', //搜索查询的条件
+    qtype: '', //搜索查询的类别
+    qop: "Eq", //搜索的操作符
+    nomsg: '没有符合条件的记录存在', //无结果的提示信息
+    minColToggle: 1, //允许显示的最小列数
+    showToggleBtn: true, //是否允许显示隐藏列，该属性有bug设置成false点击头脚本报错。
+    hideOnSubmit: true, //是否在回调时显示遮盖
+    showTableToggleBtn: false, //是否显示【显示隐藏Grid】的按钮
+    autoload: true, //自动加载，即第一次发起ajax请求
+    blockOpacity: 0.5, //透明度设置
+    onToggleCol: false, //当在行之间转换时，可在此方法中重写默认实现，基本无用
+    onChangeSort: false, //当改变排序时，可在此方法中重写默认实现，自行实现客户端排序
+    onSuccess: false, //成功后执行
+    onSubmit: false, // 调用自定义的计算函数，基本没用  
+    gridClass: "bbit-grid"//样式          
+}, p);
+
+----------------------------------------------------------------------------------------------
+
+2、支持ajax跨域：
+    url中加callback=?
+    后台获得callback函数的名字
+    返回json数据格式为:print(callbackName+"("+jsonString+")");
+
+----------------------------------------------------------------------------------------------
+
+3、Flexigrid(HUGO.CM修改版v1.1)使用说明:
+    1、加载flexigrid。p：选项参数集合
+        $(“”).flexigrid(p);
+    2、重新加载数据。
+        $(“”).flexReload(p);
+    3、更改flexigrid参数。P：选项参数集合
+        $(“”).flexOptions (p);
+    4、隐藏/显示列。cid：列索引，visible：bool
+        $(“”).flexToggleCol (cid, visible);
+    5、绑定数据。Data：数据源
+        $(“”).flexAddData (data);
+    6、no select plugin by me 。不知道做什么用的
+        $(“”).noSelect (p);
+    7、重新指定宽度和高度。
+        $(“”).flexResize(w,h);
+    8、翻页。type：first、prev、next、last、input
+        $(“”).changePage(type);
+
+----------------------------------------------------------------------------------------------
+
+4、Flexigrid——colModel:
+    属性名    类型    描述
+    display    string    显示的列名
+    name    string    绑定的列名
+    sortable bool    是否可以排序
+    align    string    对其方式
+    width    int    列的宽度
+    hide    bool    是否隐藏该列
+    pk    bool    是否为主键标识、如果是则隐藏该列，值存入隐藏域中
+    process    function    
+    customValue function    自定义显示值。(如性别：数据库为Bit类型，通过customValue方法返回“男/女”)参数：value,i
+
+----------------------------------------------------------------------------------------------
+
+5、Flexigrid——事件
+    事件名        参数                    描述            返回值
+    onDragCol    dcoln,dcolt                拖动列后触发         无
+    onToggleCol    cid,visible                隐藏/显示列后触发    无
+    onChangeSort    sortname,sortorder            自定义排序事件        无
+    onChangePage    newp                    自定义翻页事件        无
+    onSuccess    无                    数据获取成功时触发    无
+    onError        XMLHttpRequest,textStatus,errorThrown   出现错误时触发        无
+    onSubmit    无                    在获取数据前时触发    bool
+    onRowSelect    this                    行选中事件        无
+
+----------------------------------------------------------------------------------------------
+
+6、Flexigrid——buttons
+    属性名        类型        描述
+    name        string        按钮名称
+    bgclass        string        样式
+    onpress        function    点击触发的方法
+    separator    bool        分割线
+
+----------------------------------------------------------------------------------------------
+
+7、Flexigrid——searchitems
+    属性名        类型        描述
+    display        string        搜索类型下拉列表框：显示的列名
+    name        string        搜索类型下拉列表框：绑定的列名
+    isdefault    bool        是否为默认搜索类型
+    //注：如果searchitems：true，则自动根据所有字段生成下拉列表框

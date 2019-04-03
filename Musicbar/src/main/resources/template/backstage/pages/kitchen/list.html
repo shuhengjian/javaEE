@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>商品管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css" th:href="@{'/backstage/static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css" th:href="@{'/backstage/static/css/weadmin.css'}">
+		<link rel="stylesheet" href="kitchen.css" th:href="@{'/backstage/pages/kitchen/kitchen.css'}">
+		<script src="../jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	    <style type="text/css">
+	    	#goods_name{
+				position: absolute;
+				left: 10px;
+				bottom: 5px;	    	
+	    	}
+	    	#kitchen_flish{
+	    		background-color: orange;
+	    		border: 0;width: 50px;
+	    		height: 30px;
+	    		border-radius: 2px;
+	    		color: white;
+	    		position: absolute;
+	    		right: 10px;
+	    		top: 35px;
+	    	}
+	    	#del_good{
+	    		width: 20px;
+	    		height: 20px;
+	    		border-radius: 50%;
+	    		text-align: center;
+	    		line-height: 20px;
+	    		background-color: red;
+	    		color: white;position: absolute;
+	    		 top: 2px;
+	    		 right: 2px;
+	    	}
+	    </style>
+	</head>
+
+	<body>
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">厨房管理</a>
+      </span>
+			<a class="layui-btn layui-btn-sm" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="layui-icon" style="line-height:30px">&#x1002;</i></a>
+		</div>
+		<div class="weadmin-body" style="display: flex;">
+			
+			<!--等待烹饪列表-->
+			<div id="menu_right" >
+				<div id="menu_right_top" >
+					<p style="margin-left: 10px;">等待烹饪的菜肴/0份</p>
+				</div>
+				<ul id="wait_list" style="border: ;">
+					<th:block th:each="kitchen : ${list}">
+					<a th:href="'update?kitState=1&&ordersInfoId='+${kitchen.ordersId}">
+						<li th:data-id="${kitchen.ordersId}">
+							<img th:src="@{'/file/'} + ${kitchen.fileUel}" />
+							<p style="width: 100%;height: 20px;line-height: 20px;text-align: center;">[[${kitchen.goodsName}]]</p>
+						</li>
+					</a>
+					</th:block>
+				</ul>
+				
+			</div>
+			<!--正在烹饪-->
+			<div id="menu_left" >
+				<div  id="menu_left_top" >
+					<b style="margin-left: 10px;font-size: 20px;">正在烹饪...</b>
+				</div>
+				<ul id="menu_left_list">
+				<th:block th:each="kitchen : ${list1}">
+					<li id="shop" th:data-id="${kitchen.ordersId}">
+						<img th:src="@{'/file/'}+${kitchen.fileUel}" />
+						<p id="goods_name">[[${kitchen.goodsName}]]</p>
+						<button id="kitchen_flish" type="button">
+							<a th:href="'update?kitState=2&&ordersInfoId='+${kitchen.ordersId}">出锅</a>
+						</button>
+						<div id="del_good"><a th:href="'update?kitState=0&&ordersInfoId='+${kitchen.ordersId}">x</a></div>
+					</li>
+				</th:block>
+				</ul>
+			</div>
+		</div>
+		<!--<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
+		<script src="../../lib/layui/layui.js" charset="utf-8" th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+		<script src="../../static/js/eleDel.js" type="text/javascript" charset="utf-8" th:src="@{'/backstage/static/js/eleDel.js'}"></script>
+		<script language="javascript" type="text/javascript"> 
+		/* 页面每秒自动刷新 */
+		function Refresh(){
+			window.location.reload();
+		}
+		setTimeout("Refresh()",10000); 
+		/* 分页显示左边菜品 */
+	    /* window.kitchen_query = function(pageNum){
+	    	kitchen_query(pageNum)
+        } */
+		function kitchen_query(pageNum){
+			let kitState = $("a").val();//商品状态
+			let ordersInfoId = $("a").val();//获得订单详情id
+			$.ajax({
+				url:"kitchen_query",
+				type:"post",
+				data:{kitState:kitState,pageNum:pageNum,ordersInfoId:ordersInfoId},
+				success:function(res){
+					let kitchen_page = JSON.parse(res);
+					let list = kitchen_page[0].list;
+					//表格 -- 开始
+					$("#wait_list").html("");//清空
+					for(let i=0;i<list.length;i++){
+						let kit_state;
+						for(let k=0;k<$("#wait_list li").length;k++){
+							if($("#wait_list li")[k].value==list[i].kitState){
+								kit_state = $($("#wait_list li")[k]).html();
+							}
+						}
+						$("#wait_list").append("\
+								<a href="'update?kitState=1&&ordersInfoId='\""+${kitchen.ordersId}+"\>\
+									<li data-id=\""+${kitchen.ordersId}"\">\
+		    							<img src=\""+@{'/file/'} + ${kitchen.fileUel}"\" />\
+		    							<p style='width: 100%;height: 20px;line-height: 20px;text-align: center;'>"+list[i].goodsName+"</p>\
+	    							</li>\
+								</a>");
+					}
+				}
+			})
+		}
+			/*倒计时 开始*/
+			/* var interval = 1000; 
+			var i =0;
+			function ShowCountDown() { 
+				var now = new Date(); 
+				var endDate = new Date(now.getYear(),now.getMonth(),now.getDay(),now.getHours(),now.getMinutes()+5,now.getSeconds()-i); 
+				i++;
+				var leftTime=endDate.getTime()-now.getTime();
+				var leftsecond = parseInt(leftTime/1000); 
+				//var day1=parseInt(leftsecond/(24*60*60*6)); 
+				var day1=Math.floor(leftsecond/(60*60*24)); 
+				var hour=Math.floor((leftsecond-day1*24*60*60)/3600); 
+				var minute=Math.floor((leftsecond-day1*24*60*60-hour*3600)/60); 
+				var second=Math.floor(leftsecond-day1*24*60*60-hour*3600-minute*60); 
+				var cc = document.getElementsByClassName("timeshow"); 
+				for(var j=0;;j++){
+					cc[j].innerHTML = minute+":"+second; 
+				}
+			} 
+			window.setInterval(function(){ShowCountDown()}, interval); */ 
+			/*倒计时结束*/
+			
+			/* 页面每秒自动刷新 */
+			/* function Refresh(){
+				window.location.reload();
+			}
+			setTimeout("Refresh()",10000); */
+			
+			/* 将左边的菜品移到右边 */
+			
+			/* 烹饪最大数的增加与减少 */
+			/* function add(){
+		        var txt = document.getElementById("num");
+		        var a = num.value;
+		        if(a<5){       
+		        	a++;
+		        	num.value = a;
+		        }else{
+		        	num.value = 5;
+		        }
+		       
+		    }
+		    function minus(){
+		        var txt = document.getElementById("num");
+		        var a = num.value;
+		        if(a>1){
+		            a--;
+		            num.value = a;
+		        }else{
+		        	num.value = 1;
+		        }
+		    } */
+		</script> 
+	</body>

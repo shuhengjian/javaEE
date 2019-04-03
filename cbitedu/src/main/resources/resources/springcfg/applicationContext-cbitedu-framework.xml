@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<import resource="applicationContext-cbitedu-ehcache.xml"/>
+	<aop:aspectj-autoproxy />
+	<bean id="springContextHolder"
+		class="com.creatorblue.cbitedu.core.utils.SpringContextHolder"
+		lazy-init="false" />
+	<bean id="propertyConfigurerForProject_framework"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="order" value="1" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="location">
+			<value>classpath:jdbc.properties</value>
+		</property>
+	</bean>
+	<!-- 数据源配置, 使用druid数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${pool.minconn}" />
+		<property name="minIdle" value="3" />
+		<property name="maxActive" value="${pool.maxconn}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<!-- wall预防SQL攻击，stat统计监控数据 -->
+		<property name="filters" value="log4j" />
+		<!-- sql合并,druid.stat.slowSqlMillis=5000打印超过5秒的SQL -->
+		<property name="connectionProperties" value="druid.stat.mergeSql=true" />
+		<!-- 多数据源监控数据合并 -->
+		<property name="useGloalDataSourceStat" value="true" />
+	</bean>
+	<!-- 获取bean工具注入 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="plugins">
+			<list>
+				<ref bean="paginationInterceptor" />
+				<ref bean="acInterceptor" />
+			</list>
+		</property>
+		<property name="mapperLocations"
+			value="classpath*:com/creatorblue/cbitedu/**/*.xml"  />
+
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 可以定义多个包，包与包间用逗号隔开 -->
+		<property name="basePackage" value="com.creatorblue.cbitedu.system.persistence,com.creatorblue.cbitedu.workflow.persistence,com.creatorblue.cbitedu.item.persistence,com.creatorblue.cbitedu.ty.persistence" />
+	</bean>
+	<!-- 扫描范围 -->
+	<context:component-scan base-package="com.creatorblue">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!-- 开启AOP监听 只对当前配置文件有效 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource" />
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 加入针对具体数据库的分页AOP,dbtype标识是mysql,oracle,db2,sql server -->
+	<bean id="paginationInterceptor"
+		class="com.creatorblue.cbitedu.core.interceptor.PaginationInterceptor"
+		init-method="initDialect">
+		<property name="dbtype" value="mysql"></property>
+	</bean>
+	<bean id="acInterceptor"
+		class="com.creatorblue.cbitedu.core.interceptor.ACInterceptor">
+	</bean>
+	<!-- mybatis日志打印 ,如果使用druid则屏蔽此设置 <bean class="org.apache.ibatis.logging.LogFactory" 
+		init-method="useStdOutLogging"></bean> -->
+	<!-- spring jdbc ibatis mybatis初始化数据导入 -->
+	<!--加入druid方法执行监控配置 
+	<bean id="druid-stat-interceptor"
+		class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+	</bean>
+	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut"
+		scope="prototype">
+		<property name="patterns">
+			<list>
+				<value>com.creatorblue.cbitedu.system.service.*</value>
+				<value>com.cbitedu.workflow.service.*</value>
+				<value>com.creatorblue.cbitedu.item.service.*</value>
+			</list>
+		</property>
+	</bean>
+	<aop:config>
+		<aop:advisor advice-ref="druid-stat-interceptor"
+			pointcut-ref="druid-stat-pointcut" />
+	</aop:config>
+	-->
+	<jdbc:initialize-database data-source="dataSource"
+		enabled="false" ignore-failures="ALL">
+		<jdbc:script location="classpath:/resources/dbcfg/initframework_mysql.sql"
+			encoding="UTF-8" />
+	</jdbc:initialize-database>
+	<aop:config>
+		<aop:pointcut id="myPointCut"
+			expression="execution(* com.creatorblue.cbitedu.system.service..*.*(..))||execution(* com.creatorblue.cbitedu.workflow.service..*.*(..))||execution(* com.creatorblue.cbitedu.item.service..*.*(..))" />
+		<aop:advisor pointcut-ref="myPointCut" advice-ref="txAdvice" />
+	</aop:config>
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="delete*" propagation="REQUIRED"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="insert*" propagation="REQUIRED"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="*" propagation="SUPPORTS" />
+		</tx:attributes>
+	</tx:advice>
+</beans>

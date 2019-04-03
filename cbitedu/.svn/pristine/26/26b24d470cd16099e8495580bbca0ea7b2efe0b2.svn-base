@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysCustomvaluesMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysCustomvalues">
+        <result column="VALUEID" jdbcType="VARCHAR" property="valueid"/>
+        <result column="CUSTOMIZED_ID" jdbcType="VARCHAR" property="customizedId"/>
+        <result column="CUSTOM_FIELD_ID" jdbcType="VARCHAR" property="customFieldId"/>
+        <result column="VALUE" jdbcType="CHAR" property="value"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		VALUEID,CUSTOMIZED_ID,CUSTOM_FIELD_ID,VALUE
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysCustomvalues">
+        INSERT INTO T_SYS_CUSTOMVALUES (
+        	VALUEID ,
+        	CUSTOMIZED_ID ,
+        	CUSTOM_FIELD_ID ,
+        	VALUE 
+        ) VALUES (
+        
+        	#{valueid,jdbcType=VARCHAR} ,
+        
+        	#{customizedId,jdbcType=VARCHAR} ,
+        
+        	#{customFieldId,jdbcType=VARCHAR} ,
+        
+        	#{value,jdbcType=CHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysCustomvalues">
+        UPDATE T_SYS_CUSTOMVALUES SET
+	        CUSTOMIZED_ID = #{customizedId,jdbcType=VARCHAR} ,
+	        CUSTOM_FIELD_ID = #{customFieldId,jdbcType=VARCHAR} ,
+	        VALUE = #{value,jdbcType=CHAR} 
+        WHERE 
+	        VALUEID = #{valueid,jdbcType=VARCHAR} 
+	</update>
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_CUSTOMVALUES WHERE
+	        VALUEID = #{valueid,jdbcType=VARCHAR} 
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_CUSTOMVALUES WHERE
+	        VALUEID = #{valueid,jdbcType=VARCHAR} 
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTsysCustomvaluesByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_CUSTOMVALUES
+ </select>
+    
+<select id="selectPageTsysCustomvalues" resultMap="BaseResultMap" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_CUSTOMVALUES
+ </select>
+</mapper>
+

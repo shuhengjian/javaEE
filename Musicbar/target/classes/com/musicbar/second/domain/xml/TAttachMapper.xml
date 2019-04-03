@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TAttachMapper">
+	<resultMap id="BaseResultMap" type="com.musicbar.second.domain.TAttach">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
+		<result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+		<result column="update_time" jdbcType="VARCHAR" property="updateTime" />
+		<result column="file_uel" jdbcType="VARCHAR" property="fileUel" />
+		<result column="file_name" jdbcType="VARCHAR" property="fileName" />
+		<result column="pkid" jdbcType="VARCHAR" property="pkid" />
+		<result column="file_size" jdbcType="VARCHAR" property="fileSize" />
+		<result column="file_suffix" jdbcType="VARCHAR" property="fileSuffix" />
+		<result column="file_remark" jdbcType="VARCHAR" property="fileRemark"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		att.id, att.create_user_id, att.create_time,
+		att.update_user_id,
+		att.update_time, att.file_uel,
+		att.file_name,
+		att.pkid, att.file_size, att.file_suffix,
+		att.file_remark
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_attach
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据关联的ID查询类型图片 -->
+	<select id="selectByPkID" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_attach att
+		where pkid = #{value}
+		limit 1
+	</select>
+	<!-- 查询上架的商品  图片 -->
+	<select id="selectAllGoodsAttach" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_attach att join t_goods_info g on att.pkid=g.goods_id
+		<where>
+			goods_state =1
+			<if test="typeId!=null and typeId.trim()!=''">
+				and g.type_id=#{typeId}
+			</if>
+			<if test="goodsSpecial!=null and goodsSpecial.trim()!=''">
+				and goods_special=#{goodsSpecial}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		t_attach
+		where pkid = #{id,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteAll">
+		delete from t_attach
+		where pkid in
+		<foreach collection="list" open="(" close=")" separator="," item="item">
+			#{item}
+		</foreach>
+	</delete>
+	<insert id="insert" parameterType="com.musicbar.second.domain.TAttach" >
+       insert into t_attach
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="createUserId != null" >
+                create_user_id,
+                 create_time,
+            </if>
+            <if test="updateUserId != null" >
+                update_user_id,
+                  update_time,
+            </if>
+            <if test="fileUel != null" >
+                file_uel,
+            </if>
+            <if test="fileName != null" >
+                FILE_NAME,
+            </if>
+            <if test="pkid != null" >
+                PKID,
+            </if>
+            <if test="fileSize != null" >
+                FILE_SIZE,
+            </if>
+             <if test="fileSuffix != null" >
+                FILE_SUFFIX,
+            </if>
+            <if test="fileRemark != null" >
+                FILE_REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null" >
+                #{createUserId,jdbcType=VARCHAR},
+                now(),
+            </if>
+            <if test="updateUserId != null" >
+                #{updateUserId,jdbcType=VARCHAR},
+                now(),
+            </if>
+            <if test="fileUel != null" >
+                #{fileUel,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null" >
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="pkid != null" >
+                #{pkid,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null" >
+                #{fileSize,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSuffix != null" >
+                #{fileSuffix,jdbcType=VARCHAR},
+            </if>
+            <if test="fileRemark != null" >
+                #{fileRemark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert> 
+	<insert id="insertSelective" parameterType="com.musicbar.second.domain.TAttach">
+		insert into t_attach
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="createUserId != null">
+				create_user_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateUserId != null">
+				update_user_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="fileUel != null">
+				file_uel,
+			</if>
+			<if test="fileName != null">
+				file_name,
+			</if>
+			<if test="pkid != null">
+				pkid,
+			</if>
+			<if test="fileSize != null">
+				file_size,
+			</if>
+			<if test="fileSuffix != null">
+				file_suffix,
+			</if>
+			<if test="fileRemark != null">
+				file_remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				#{createUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				#{updateUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="fileUel != null">
+				#{fileUel,jdbcType=VARCHAR},
+			</if>
+			<if test="fileName != null">
+				#{fileName,jdbcType=VARCHAR},
+			</if>
+			<if test="pkid != null">
+				#{pkid,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSize != null">
+				#{fileSize,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSuffix != null">
+				#{fileSuffix,jdbcType=VARCHAR},
+			</if>
+			<if test="fileRemark != null">
+				#{fileRemark,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.musicbar.second.domain.TAttach">
+		update t_attach
+		<set>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				update_user_id = #{updateUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="fileUel != null">
+				file_uel = #{fileUel,jdbcType=VARCHAR},
+			</if>
+			<if test="fileName != null">
+				file_name = #{fileName,jdbcType=VARCHAR},
+			</if>
+			<if test="pkid != null">
+				pkid = #{pkid,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSize != null">
+				file_size = #{fileSize,jdbcType=VARCHAR},
+			</if>
+			<if test="fileSuffix != null">
+				file_suffix = #{fileSuffix,jdbcType=VARCHAR},
+			</if>
+			<if test="fileRemark != null">
+				file_remark = #{fileRemark,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.musicbar.second.domain.TAttach">
+		update t_attach
+		set create_user_id = #{createUserId,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=VARCHAR},
+		update_user_id =
+		#{updateUserId,jdbcType=VARCHAR},
+		update_time =
+		#{updateTime,jdbcType=VARCHAR},
+		file_uel = #{fileUel,jdbcType=VARCHAR},
+		file_name = #{fileName,jdbcType=VARCHAR},
+		pkid =
+		#{pkid,jdbcType=VARCHAR},
+		file_size = #{fileSize,jdbcType=VARCHAR},
+		file_suffix = #{fileSuffix,jdbcType=VARCHAR},
+		file_remark = #{fileRemark,jdbcType=VARCHAR}
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</update>
+	<!--批量新增  -->
+	<insert id="insertAttach" parameterType="list">
+		insert into t_attach (id, create_user_id, create_time,
+									update_user_id,update_time, file_uel,
+									file_name,pkid, file_size, 
+									file_suffix,file_remark) 
+		values
+		<foreach collection="list" item="item" index="index" separator=","> 
+         (#{item.id,jdbcType=VARCHAR},
+			#{item.createUserId,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=VARCHAR},
+			#{item.updateUserId,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=VARCHAR},
+			#{item.fileUel,jdbcType=VARCHAR},
+			#{item.fileName,jdbcType=VARCHAR},
+			#{item.pkid,jdbcType=VARCHAR},
+			#{item.fileSize,jdbcType=VARCHAR},
+			#{item.fileSuffix,jdbcType=VARCHAR},
+			#{item.fileRemark,jdbcType=VARCHAR}) 
+     </foreach> 
+	</insert>
+	<!-- 根据关联的ID查询图片集合 -->
+	<select id="selectListByPkID" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_attach att
+		where pkid = #{value}
+	</select>
+	<!-- 根据备注与关联id删除图片 -->
+	<delete id="deleteByRemarkAndPkid" parameterType="string">
+		delete from
+		t_attach
+		where pkid = #{pkid,jdbcType=VARCHAR} and file_remark = #{fileRemark,jdbcType=VARCHAR}
+	</delete>
+	<!-- 根据备注与关联id查询路径 -->
+	<select id="selectFileUelByRemarkAndPkid" parameterType="string" resultType="string">
+		select file_uel from
+		t_attach
+		where pkid = #{pkid,jdbcType=VARCHAR} and file_remark = #{fileRemark,jdbcType=VARCHAR}
+	</select>
+</mapper>

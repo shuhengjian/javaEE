@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<!--<![endif]-->
+
+<head>
+<title>老树林音乐酒吧</title>
+<!-- Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=9" /> 
+<!-- 360浏览器默认采用高速模式渲染页面 -->
+<meta name="renderer" content="webkit">
+
+<meta name="keywords" content="Demo">
+<meta name="description" content="Demo">
+<meta name="author" content="">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="img/favicon.ico">
+<!-- Global CSS  -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<!--Custom Css-->
+<link rel="stylesheet" href="css/private.css">
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" href="css/line-icons.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="normalize.css">
+<link rel="stylesheet" type="text/css" th:href="@{/front/css/alert.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/front/css/loaders.css}">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="js/alert.min.js"></script>
+<script type="text/javascript" th:src="@{/front/js/comm.js}"></script>
+<script type="text/javascript" src="js/confirm.js"></script>
+<!-- Custom JS -->
+<script type="text/javascript">
+	
+</script>
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+</head>
+<!--[if !IE]>注释规范_Begin<![endif]-->
+<!--[if !IE]>注释规范_End<![endif]-->
+<body>
+	<div class="topTool navbar-fixed-top">
+		<div class="returnBtn">
+			<a href="#"><img class="img-responsive" src="img/returnBtn.png"></a>
+		</div>
+		<div class="menuBtn">
+			<div class="dropdown">
+				<button type="button" class="btn dropdown-toggle" id="dropdownMenu1"
+					data-toggle="dropdown"></button>
+				<ul class="dropdown-menu pull-right" role="menu"
+					aria-labelledby="dropdownMenu1">
+					<li role="presentation"><a href="activity.html"><span
+							class="glyphicon glyphicon-certificate"></span>活动</a></li>
+
+					<li role="presentation"><a th:href="@{/front/order_meal}"><span
+							class="glyphicon glyphicon-th"></span>点单</a></li>
+					<li role="presentation"><a th:href="@{/front/goGoodsCart}"><span
+							class="glyphicon glyphicon-shopping-cart"></span>购物车</a></li>
+
+					<li role="presentation"><a
+						th:href="@{/front/TOrFrontqueryAll}"><span
+							class="glyphicon glyphicon-th-list"></span>订单</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="currentPath">订单支付</div>
+	</div>
+
+	<div class="confirm">
+		<div class="orderPrompt">
+			<span class="glyphicon glyphicon-bell"></span>：暂不支持手机点单退款呦！请用户仔细核对订单内容
+		</div>
+		<div class="orderBox">
+			<div class="orderInfo">
+				<div class="attribute">订单号：</div>
+				<div class="attributeValue" id="code">[[${tOrders.ordersCode}]]</div>
+			</div>
+			<div class="orderInfo">
+				<div class="attribute">订单金额：</div>
+				<div class="attributeValue">[[${tOrders.ordersMoney}]]</div>
+			</div>
+			<div class="orderInfo">
+				<label> <input type="radio" class="custom-radio"
+					name="optionsRadios" id="wxzf" value="0" checked> <span
+					class="custom-radioInput"></span>
+					<div class="zfimg">
+						<img class="img-responsive" src="img/wxzf.png">
+					</div>
+				</label> <label> <input type="radio" class="custom-radio"
+					name="optionsRadios" id="zfb" value="1"> <span
+					class="custom-radioInput"></span>
+					<div class="zfimg">
+						<img class="img-responsive" src="img/zfb.png">
+					</div>
+				</label>
+			</div>
+		</div>
+		<a onclick="orders_click()"><div class="bigBtn">立即支付</div></a>
+	</div>
+		<div id="loadingwrapper">
+		<div class="loading-mask"></div>
+		<div class="loading-box-s">
+			<div class="loader-cicle"></div>
+			<p class="loading-text">正在加载</p>
+		</div>
+	</div>
+</body>

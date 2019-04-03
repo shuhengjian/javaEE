@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TActivityInfoMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TActivityInfo">
+    <id column="activ_id" jdbcType="VARCHAR" property="activId" />
+    <result column="activ_theme" jdbcType="VARCHAR" property="activTheme" />
+    <result column="activ_intro" jdbcType="VARCHAR" property="activIntro" />
+    <result column="activ_start_time" jdbcType="TIMESTAMP" property="activStartTime" />
+    <result column="activ_end_time" jdbcType="TIMESTAMP" property="activEndTime" />
+    <result column="activ_explain" jdbcType="VARCHAR" property="activExplain" />
+    <result column="activ_request" jdbcType="VARCHAR" property="activRequest" />
+    <result column="activ_state" jdbcType="VARCHAR" property="activState" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="modifi_time" jdbcType="TIMESTAMP" property="modifiTime" />
+ 	<association property="parameter" foreignColumn="para_type"
+			resultMap="com.musicbar.second.mapper.TParameterMapper.BaseResultMap" /> 
+  	<association property="attch" foreignColumn="pkid"
+			resultMap="com.musicbar.second.mapper.TAttachMapper.BaseResultMap" /> 
+  </resultMap>
+  <sql id="Base_Column_List">
+    activ_id, activ_theme, activ_intro, activ_start_time, activ_end_time, activ_explain, 
+    activ_request
+  </sql> 
+  <!-- 查询活动列表 -->
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TActivityInfo">
+  	select a.activ_id, a.activ_theme, a.activ_intro, a.activ_start_time, a.activ_end_time, a.activ_explain, 
+    a.activ_request, p.para_val as activ_state, a.creater, a.create_time, a.modifier, a.modifi_time
+  	from t_activity_info a
+  	inner join (select * from t_parameter where para_type ='activ_state') p on a.activ_state = p.para_no
+  	<where>
+		<if test="activTheme !=null and activTheme.trim()!=''">
+			<bind name="patt_name" value="'%' + activTheme  + '%'" />
+			and activ_theme like #{patt_name}
+		</if>
+	</where>
+  </select>
+  <!-- 查询活动主题 -->
+  <select id="selectActivTheme" resultType="int" parameterType="com.musicbar.second.domain.TActivityInfo">
+		select count(*) from t_activity_info
+		<where>
+			<if test="activTheme !=null">
+				and activ_theme = #{activTheme}
+			</if>
+			<if test="activId !=null and activId.trim() !=''">
+				and activ_id != #{activId}
+			</if>
+		</where>
+	</select>
+  <!-- 查询活动状态 -->
+	<select id="selectState" resultMap="BaseResultMap">
+  		select distinct	a.activ_state,p.para_val
+		from t_activity_info a,t_parameter p
+		WHERE
+ 		a.activ_state=p.para_no
+		and p.para_type='activ_state'
+  	</select>
+  	<!-- 添加页面查询活动状态 -->
+  	<select id="selectStates" resultMap="BaseResultMap">
+  		select distinct	para_val,para_no
+		from t_parameter
+		WHERE para_type='activ_state'
+  	</select>
+  <!-- 添加活动信息 -->
+  	<insert id="insertActive" parameterType="com.musicbar.second.domain.TActivityInfo">
+  		insert into t_activity_info(activ_id, activ_theme, activ_intro, activ_start_time, activ_end_time, activ_explain, 
+    activ_request, activ_state, creater, create_time, modifier, modifi_time)
+  		values (#{activId},#{activTheme},#{activIntro},#{activStartTime},#{activEndTime},#{activExplain},#{activRequest},#{activState},#{creater},
+  		#{createTime},#{modifier},#{modifiTime})
+  	</insert>
+	<!-- 修改活动信息 -->
+	<update id="updateActive" parameterType="com.musicbar.second.domain.TActivityInfo">
+		update t_activity_info g,t_attach a
+		<set>
+			g.activ_theme= #{activTheme},
+			g.activ_intro = #{activIntro},
+			g.activ_start_time = #{activStartTime},
+			g.activ_end_time = #{activEndTime},
+			g.activ_explain = #{activExplain},
+			g.activ_request = #{activRequest}
+			<if test="attch != null and attch.fileUel != null">
+				,a.file_uel = #{attch.fileUel}
+			</if>
+			where g.activ_id = a.pkid and
+			g.activ_id = #{activId}
+		</set>
+	</update>
+	<!-- 修改活动状态 -->
+	<update id="updateState" parameterType="com.musicbar.second.domain.TActivityInfo">
+		update t_activity_info
+		<set>
+			<if test="activState != null and activState !=''">
+				activ_state=#{activState}
+			</if>
+		</set>
+		where activ_id=#{activId}
+	</update>
+	<!-- 前端查询商品 -->
+	<!-- <select id="selecFronttAll" parameterType="com.musicbar.second.domain.TActivityInfo"
+		resultMap="BaseResultMap">
+		select
+		<include refid="front_Base_Column_List" />
+		,t.type_name,t.type_id,att.pkid,att.file_uel
+		from t_goods_info g,t_type
+		t,t_attach att
+		<where>
+			g.type_id=t.type_id
+			and g.goods_id=att.pkid
+			and goods_state=1
+			and
+			goods_stock &gt; 0
+			<if test="type!=null and type.typeId.trim()!=''">
+				and g.type_id=#{type.typeId}
+			</if>
+			<if test="goodsSpecial!=null and goodsSpecial.trim()!=''">
+				and goods_special=#{goodsSpecial}
+			</if>
+		</where>
+	</select> -->
+  <!-- 根据id查询活动 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />,a.file_uel
+		from t_activity_info t , t_attach a 
+		<where>
+			t.activ_id = a.PKID
+			and t.activ_id = #{activId,jdbcType=VARCHAR}
+		</where>
+	</select>
+	<!-- 删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_activity_info
+    where activ_id = #{activId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from t_activity_info where activ_id in
+		<foreach collection="list" open="(" close=")" separator="," item="item">
+			#{item}
+		</foreach>
+	</delete>
+  <insert id="insert" parameterType="com.musicbar.second.domain.TActivityInfo">
+    insert into t_activity_info (activ_id, activ_theme, activ_intro, 
+      activ_start_time, activ_end_time, activ_explain, 
+      activ_request, activ_state, creater, 
+      create_time, modifier, modifi_time
+      )
+    values (#{activId,jdbcType=VARCHAR}, #{activTheme,jdbcType=VARCHAR}, #{activIntro,jdbcType=VARCHAR}, 
+      #{activStartTime,jdbcType=TIMESTAMP}, #{activEndTime,jdbcType=TIMESTAMP}, #{activExplain,jdbcType=VARCHAR}, 
+      #{activRequest,jdbcType=VARCHAR}, #{activState,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{modifiTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.musicbar.second.domain.TActivityInfo">
+    insert into t_activity_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="activId != null">
+        activ_id,
+      </if>
+      <if test="activTheme != null">
+        activ_theme,
+      </if>
+      <if test="activIntro != null">
+        activ_intro,
+      </if>
+      <if test="activStartTime != null">
+        activ_start_time,
+      </if>
+      <if test="activEndTime != null">
+        activ_end_time,
+      </if>
+      <if test="activExplain != null">
+        activ_explain,
+      </if>
+      <if test="activRequest != null">
+        activ_request,
+      </if>
+      <if test="activState != null">
+        activ_state,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modifiTime != null">
+        modifi_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="activId != null">
+        #{activId,jdbcType=VARCHAR},
+      </if>
+      <if test="activTheme != null">
+        #{activTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="activIntro != null">
+        #{activIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="activStartTime != null">
+        #{activStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activEndTime != null">
+        #{activEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activExplain != null">
+        #{activExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="activRequest != null">
+        #{activRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="activState != null">
+        #{activState,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiTime != null">
+        #{modifiTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.musicbar.second.domain.TActivityInfo">
+    update t_activity_info
+    <set>
+      <if test="activTheme != null">
+        activ_theme = #{activTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="activIntro != null">
+        activ_intro = #{activIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="activStartTime != null">
+        activ_start_time = #{activStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activEndTime != null">
+        activ_end_time = #{activEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activExplain != null">
+        activ_explain = #{activExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="activRequest != null">
+        activ_request = #{activRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="activState != null">
+        activ_state = #{activState,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiTime != null">
+        modifi_time = #{modifiTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where activ_id = #{activId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.musicbar.second.domain.TActivityInfo">
+    update t_activity_info
+    set activ_theme = #{activTheme,jdbcType=VARCHAR},
+      activ_intro = #{activIntro,jdbcType=VARCHAR},
+      activ_start_time = #{activStartTime,jdbcType=TIMESTAMP},
+      activ_end_time = #{activEndTime,jdbcType=TIMESTAMP},
+      activ_explain = #{activExplain,jdbcType=VARCHAR},
+      activ_request = #{activRequest,jdbcType=VARCHAR},
+      activ_state = #{activState,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modifi_time = #{modifiTime,jdbcType=TIMESTAMP}
+    where activ_id = #{activId,jdbcType=VARCHAR}
+  </update>
+</mapper>

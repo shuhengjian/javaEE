@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysModuleoperateMapper">
+	<resultMap id="BaseResultMap"
+		type="com.creatorblue.cbitedu.system.domain.TsysModuleoperate">
+		<result column="OPERATE_ID" jdbcType="VARCHAR" property="operateId" />
+		<result column="MODULE_ID" jdbcType="VARCHAR" property="moduleId" />
+		<result column="OPERATE_NAME" jdbcType="VARCHAR" property="operateName" />
+		<result column="OPERATE_CODE" jdbcType="VARCHAR" property="operateCode" />
+		<result column="module_name" jdbcType="VARCHAR" property="moduleName" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Base_Column_List">
+		OPERATE_ID,MODULE_ID,OPERATE_NAME,OPERATE_CODE
+	</sql>
+	<insert id="insert" parameterType="com.creatorblue.cbitedu.system.domain.TsysModuleoperate">
+		INSERT INTO T_SYS_MODULEOPERATE (
+		OPERATE_ID ,
+		MODULE_ID ,
+		OPERATE_NAME ,
+		OPERATE_CODE
+		) VALUES (
+
+		#{operateId,jdbcType=VARCHAR} ,
+
+		#{moduleId,jdbcType=VARCHAR} ,
+
+		#{operateName,jdbcType=VARCHAR} ,
+
+		#{operateCode,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysModuleoperate">
+		UPDATE T_SYS_MODULEOPERATE SET
+		MODULE_ID = #{moduleId,jdbcType=VARCHAR} ,
+		OPERATE_NAME = #{operateName,jdbcType=VARCHAR} ,
+		OPERATE_CODE = #{operateCode,jdbcType=VARCHAR}
+		WHERE
+		OPERATE_ID = #{operateId,jdbcType=VARCHAR}
+	</update>
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM T_SYS_MODULEOPERATE WHERE
+		OPERATE_ID = #{operateId,jdbcType=VARCHAR}
+	</delete>
+	<select id="selectDetailById" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_MODULEOPERATE WHERE
+		OPERATE_ID = #{operateId,jdbcType=VARCHAR}
+	</select>
+	<!-- 实际业务需要增加的SQL语句 -->
+	<select id="selectPageTsysModuleoperateByMap" resultMap="BaseResultMap"
+		parameterType="map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM T_SYS_MODULEOPERATE
+	</select>
+
+	<select id="selectPageTsysModuleoperate" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM T_SYS_MODULEOPERATE mo
+		<where>
+			<if test="userId!=null and userId!=''">
+			AND mo.operate_id IN
+			(SELECT operate_id
+			FROM T_SYS_ROLEPRIVILEGE
+			WHERE role_id IN
+			(SELECT role_id FROM T_USER_ROLE WHERE user_id = #{userId})
+			UNION ALL
+			SELECT operateid FROM T_SYS_USERPRIVILEGE  WHERE userid = #{userId})
+			</if>
+		</where>
+	</select>
+
+	<!-- 获取菜单模块编码获取数据 -->
+	<select id="selectModuleoperateByMId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select a.operate_id,
+		a.module_id,
+		b.module_name,
+		a.operate_name,
+		a.operate_code
+		from T_SYS_MODULEOPERATE a, T_SYS_MODULE b
+		where a.module_id = b.module_id
+		and a.MODULE_ID = #{MODULE_ID,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据modouleID删除操作数据 -->
+	<delete id="deleteByModuleID" parameterType="java.lang.String">
+		DELETE FROM T_SYS_MODULEOPERATE WHERE
+		MODULE_ID = #{moduleId,jdbcType=VARCHAR}
+	</delete>
+	<!-- 获取用户的按钮权限 -->
+	<select id="selectModuleoperateByUser" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+		SELECT operate_code, module_code
+		FROM T_SYS_MODULEOPERATE mo, T_SYS_MODULE m
+		WHERE mo.module_id = m.module_id
+		<if test="userId!=null and userId!=''">
+			AND mo.operate_id IN
+			(SELECT operate_id
+			FROM T_SYS_ROLEPRIVILEGE
+			WHERE role_id IN
+			(SELECT role_id FROM T_USER_ROLE WHERE user_id = #{userId})
+			UNION ALL
+			SELECT operateid FROM T_SYS_USERPRIVILEGE  WHERE userid = #{userId})
+		</if>
+	</select>
+</mapper>
+

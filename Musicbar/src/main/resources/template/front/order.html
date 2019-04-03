@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh">
+<!--<![endif]-->
+
+<head>
+<title>Demo</title>
+<!-- Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<!-- 360浏览器默认采用高速模式渲染页面 -->
+<meta name="renderer" content="webkit">
+
+<meta name="keywords" content="Demo">
+<meta name="description" content="Demo">
+<meta name="author" content="">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="img/favicon.ico">
+<!-- Global CSS  -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<!--Custom Css-->
+<link rel="stylesheet" href="css/private.css">
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" href="css/line-icons.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="normalize.css">
+<link rel="stylesheet" type="text/css" th:href="@{/front/css/alert.css}">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!-- Custom JS -->
+<script type="text/javascript">
+	
+</script>
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+</head>
+<!--[if !IE]>注释规范_Begin<![endif]-->
+<!--[if !IE]>注释规范_End<![endif]-->
+<body>
+    <div class="topTool navbar-fixed-top">
+        <div class="returnBtn"><a href="#"><img class="img-responsive" src="img/returnBtn.png"></a></div>
+        <div class="menuBtn"></div>
+        <div class="currentPath">我的订单</div>
+    </div>
+    
+    <div class="orderpay">
+        <form class="bs-example bs-example-form margin_B20" role="form">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="input-group orderSearch">
+                        <input type="text" class="form-control" id="queryCode" placeholder="输入订单号查询">
+                        <span class="input-group-btn"> 
+                            <a onclick="queryCode()" class="btn btn-default"  type="button">查询</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ul id="inforTab" class="nav nav-tabs p-nav-tabs">
+            <li th:class="${active ==null || active=='0'}?'active':''"><a href="#infor" data-toggle="tab"><span class="glyphicon glyphicon-credit-card"></span><br>待付</a></li>
+            <li th:class="${active=='1'}?active:''"><a href="#infor" data-toggle="tab"><span class="glyphicon glyphicon-compressed"></span><br>待收</a></li>
+            <li th:class="${active=='2'}?active:''"><a href="#infor" data-toggle="tab"><span class="glyphicon glyphicon-thumbs-up"></span><br>完成</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content" style="padding-top:15px;">
+            <div class="tab-pane fade in active" id="infor">
+               <th:block th:each="orders : ${list}">
+               
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="orderNo"><b>订单号： [[${orders.ordersCode}]]</b><a th:if="${active == '0'}" th:href="@{'conFirm?id='+${orders.ordersId}}">去付款</a><a th:if="${active == '1'}" 	th:onclick="confirmGoods([[${orders.ordersId}]])">确认收货</a></div>
+                        <div class="orderTime" th:if="${active== '1' || active == '2'}">下单时间：[[${#dates.format(orders.paymentTime,'yyyy-MM-dd HH:mm')}]]</div>
+                        <div class="orderState">台号： [[${orders.tableNum}]]<font>状态： [[${orders.ordersState}]]</font></div>
+                        <div class="productNo">
+                            商品数量： [[${orders.ordersNum}]]
+                            <a data-toggle="collapse" data-parent="#accordion"
+                               th:href="'#'+${orders.ordersId}"><span class="glyphicon glyphicon-eye-open"></span>查看</a>
+                        </div>
+                    </div>
+                    <div th:id="${orders.ordersId}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="simpleInfo">
+                                <li th:each="ordersInfo : ${orders.tOrdersInfo}"><span class="glyphicon glyphicon-menu-right"></span>[[${ordersInfo.goodsName}]]<font>x[[${ordersInfo.goodsNum}]]</font></li>                                 
+                                <li class="totalPay"><font>客户电话： [[${orders.ordersMobile}]]</font>¥&nbsp;[[${orders.ordersMoney}]]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+              </th:block>
+            </div>
+        </div> 
+    </div>
+   
+    <div class="botTool navbar-fixed-bottom">
+		<ul class="mainMenu">
+			<li><a href="activity.html"><span
+					class="glyphicon glyphicon-certificate"></span><br>活动</a></li>
+			<li><a th:href="@{/front/order_meal}"><span
+					class="glyphicon glyphicon-th"></span><br>点单</a></li>
+			<li><a th:href="@{/front/goGoodsCart}" class="ms_car"><span
+					class="glyphicon glyphicon-shopping-cart"></span><br>购物车<span
+					class="cb_goods_car" style="font-size: 9px"></span></a></li>
+			<li><a th:href="@{/front/TOrFrontqueryAll}"><span
+					class="glyphicon glyphicon-th-list"></span><br>订单</a></li>
+		</ul>
+	</div>
+   	<script type="text/javascript" src="js/alert.min.js"></script>
+	<script type="text/javascript" th:src="@{/front/js/comm.js}"></script>
+	<script type="text/javascript">
+		var active;
+		var isExit;
+		var tx;
+		$(function() {
+			isExit = true;
+			tx = getContextPath();
+			$('#inforTab').on('show.bs.tab', function(e) {
+				active = $(e.target).parent().index();//获取当前active的在li中的位置，得到的是当前被选中的状态
+				//把active的状态放到事件中传过去，状态
+				console.log(active);
+				location = "TOrFrontqueryAll?active=" + active;//地址对象
+			})
+		});
+
+		function queryCode() {
+			let code = $("#queryCode").val();
+			//data ="active="+active+"&code="+code
+			location = "TOrFrontqueryAll?code=" + code;
+		}
+		function confirmGoods(orderId) {
+			if (!isExit) {
+				return;
+			}
+			console.log(orderId)
+			M.dialog3 = jqueryAlert({
+				'title' : '收货',
+				'content' : '是否确认收货？',
+				'modal' : true,
+				'buttons' : {
+					'是' : function() {
+						location.href = tx + "/front/accomplish?id=" + orderId;
+					},
+					'否' : function() {
+						isExit = true;
+						M.dialog3.close();
+					}
+				}
+			})
+			if (M.dialog3) {
+				isExit = false;
+				return M.dialog3.show();
+			}
+		}
+	</script>
+</body>

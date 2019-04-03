@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>参数管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css" th:href="@{'/backstage/static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css" th:href="@{'/backstage/static/css/weadmin.css'}">
+		<script src="../../lib/layui/layui.js" charset="utf-8" th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+		<script src="../jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+		
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	    <style type="text/css">
+	    	#para_page a{
+	    		cursor: pointer;
+	    	}
+	    </style>
+	</head>
+	<body id="para_body">
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="param_querylist">参数管理</a>
+      </span>
+			<a class="layui-btn layui-btn-sm" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="layui-icon" style="line-height:30px">&#x1002;</i></a>
+		</div>
+		
+		<div class="weadmin-body">
+			<div class="layui-row">
+				<form class="layui-form layui-col-md12 we-search">
+					<div class="layui-input-inline">
+					<select id="paraState" name="paraState" lay-filter="parastate" value="" onchange="change_()">
+						<option value="" name="state">参数状态</option>
+						<th:block th:each="para : ${paralist}">
+							<option th:if="${para.paraNo}==1" value="1">[[${para.paraVal}]]</option>
+							<option th:if="${para.paraNo}==0" value="0">[[${para.paraVal}]]</option>
+						</th:block>
+					</select>
+				</div>
+					<div class="layui-inline">
+						<input type="text"  id="paraName" placeholder="请输入参数名称" autocomplete="off" class="layui-input">
+					</div>
+					
+					<div class="layui-inline">
+						<input type="text" id="paraType" placeholder="请输入参数编码" autocomplete="off" class="layui-input">
+					</div>
+					<button class="layui-btn" id="query" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+				</form>
+			</div>
+			<div class="weadmin-block">
+				<button class="layui-btn" onclick="WeAdminShow('添加参数','param_edit',500,400)"><i class="layui-icon"></i>添加</button>
+				<th:block th:each="para : ${paralist}">
+					<button class="layui-btn enable" id="param_start" th:if="${para.paraNo}==1" >[[${para.paraVal}]]</button>
+					<button class="layui-btn layui-btn-danger binable" id="param_stop" th:if="${para.paraNo}==0" >[[${para.paraVal}]]</button>
+				</th:block>
+				<span class="fr" style="line-height:40px">共有数据：<span id="num" th:text="${page.total}">88</span>  条</span>
+			</div>
+			<table class="layui-table table" id="memberList">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" id="selectAll" />
+						</th>
+						<th>参数名称</th>
+						<th>参数编码</th>
+						<th>字典名称</th>
+						<th>字典值</th>
+						<th>参数状态</th>
+						<th>排序号</th>
+						<th>是否默认</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="param_tbody">
+				<th:block th:each="parameter:${page.list}">
+					<tr th:data-id="${parameter.paraId}">
+						<td>
+							<input type="checkbox" name="select"/>
+						</td>
+						<td th:text="${parameter.paraName}"></td>
+						<td th:text="${parameter.paraType}"></td>
+						<td th:text="${parameter.paraVal}"></td>
+						<td th:text="${parameter.paraNo}"></td>
+						<th:block th:each="para : ${paralist}">
+   							<td class="parastate" th:if="${para.paraNo}==${parameter.paraState}" th:text="${para.paraVal}">已启用</td>
+   						</th:block>
+						<td th:text="${parameter.paraNum}"></td>
+						<th:block th:each="para : ${paralist1}">
+   							<td class="isdefault" th:if="${para.paraNo}==${parameter.isdefault}" th:text="${para.paraVal}">已启用</td>
+   						</th:block>
+						<td class="td-manage" th:data-id="${parameter.paraId}"></td>
+					</tr>
+					</th:block>
+				</tbody>
+			</table>
+			<div style="text-align:center;">
+				<div class="layui-box layui-laypage layuipage-molv" id="para_page" th:data-id="${page.pages}">
+					<span class="layui-laypage-count">共<em id="num">[[${page.total}]]</em>条</span>
+					<!-- 上一页start -->
+					<a th:if="${page.pageNum}==1" class="layui-laypage-prev layui-disabled" data-page="0">上一页</a>
+					<a th:if="${page.pageNum}>1" class="layui-laypage-prev" th:onclick="@{'para_query('+${page.prePage}+')'}" data-page="0">上一页</a>
+					<!-- 上一页 end -->
+					<!-- 页码部分   start-->
+					<th:bolck th:each="i :${#numbers.sequence(page.navigateFirstPage, page.navigateLastPage)}">
+						<th:block th:if="${i}<6">
+							<a th:onclick="@{'para_query('+${i}+')'}"
+								th:text="${i}"  th:style="${page.pageNum == i}? 'background-color:#009587;color:white;' :'' "
+								th:data-id="${page.pageNum == i}? 1:0" >
+							</a>
+						</th:block>
+					</th:bolck >
+					<th:block th:if="${page.pages}==6">
+							<a th:onclick="@{'para_query('+${page.pages}+')'}"
+								th:text="${page.pages}">
+							</a>
+					</th:block>
+					<th:block th:if="${page.pages}>=7">
+							<span>...</span>
+							<a th:onclick="@{'para_query('+${page.pages}+')'}"
+								th:text="${page.pages}">
+							</a>
+					</th:block>
+					<!-- 页码部分   end-->
+					<!-- 下一页 start -->
+					<a th:if="${page.pageNum}==${page.total}" class="layui-laypage-next layui-disabled">下一页</a>
+					<a th:if="${page.pageNum}<${page.total}" th:onclick="@{'para_query('+${page.nextPage}+')'}" class="layui-laypage-next">下一页</a>
+					<!-- 下一页 end -->
+					<span class="layui-laypage-skip">到第
+						<input type="text" min="1" value="1" class="layui-input" id="page_num">页
+						<button type="button" class="layui-laypage-btn" id="para_page_btn">确定</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<!--<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
+		<script src="../../lib/layui/layui.js" charset="utf-8" th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+		<script src="../../static/js/eleDel.js" type="text/javascript" charset="utf-8" th:src="@{'/backstage/static/js/eleDel.js'}"></script>
+		<script type="text/javascript">
+		
+			//分页输入查询   -- 开始
+			$("#para_page_btn").click(function(){
+				//获得总页数
+				let page_num = $("#para_page").data("id");
+				if(parseInt($("#page_num").val())>parseInt(page_num)){
+					//输入的数字大于总页数提示
+					layer.alert("输入的数字不能大于总页数"+page_num);
+				}else{
+					para_query($("#page_num").val());
+				}
+			})
+			//分页输入查询   -- 结束
+		
+			//所有操作全选 -- 开始
+			$("#selectAll").click(function(){
+				let checkbox = $("input[type='checkbox']");
+				if(this.checked){
+					for(let i=0;i<checkbox.length;i++){
+						$(checkbox[i]).prop("checked",true);
+					}
+				}else{
+					for(let i=0;i<checkbox.length;i++){
+						$(checkbox[i]).prop("checked",false);
+					}
+				}
+			})//全选，结束
+			
+			//所有反选 --开始
+			let checkbox = $("input[name='select']");
+			$("input[name='select']").click(function(){
+				var x = 0;//选中的个数
+				console.log(checkbox.length);
+				for(var i=0;i<checkbox.length;i++){
+					if($($("input[name='select']")[i]).prop("checked")){
+						x++;
+					}
+				}
+				console.log(x);
+				if(x==checkbox.length){
+					$("#selectAll").prop("checked",true);
+				}else{
+					$("#selectAll").prop("checked",false);
+				}
+			})//反选，结束
+				
+			//操作，开始
+			let td = $("tr").find(".td-manage");
+			for(let i=0; i<td.length; i++){
+				let para_id = $(td[i]).data("id");
+				$(td[i]).html("\
+						<a title=\"编辑\"  onclick=\"WeAdminEdit('修改参数','param_edit?paraId="+para_id+"','"+para_id+"', 600, 400)\">\
+							<i class=\"layui-icon\">&#xe642;</i>\
+						</a>&nbsp; &nbsp;\
+						<a title=\"删除\" onclick=\"param_del(this)\" >\
+							<i class=\"layui-icon\">&#xe640;</i>\
+						</a>");
+			}
+			//操作，结束
+			
+			// 模糊查询  -- 开始
+    		$("#query").click(function(){
+    			para_query(1);//条件查询
+    		});
+			
+    		//根据参数状态进行查询 -- 开始
+    		layui.use("form", function () {
+			    var form = layui.form;
+			    form.on('select(parastate)', function(data){
+			        para_query(1);//条件查询
+			     });  
+			})
+	    		
+			/* 模糊查询 */
+    		function para_query(pageNum){
+    			let paraState = $("select").val();//角色状态
+    			let paraName = $("#paraName").val();//获得输入的值
+    			let paraType = $("#paraType").val();
+    			paraName = paraName.replace(" ","");
+    			paraType = paraType.replace(" ","");
+				$.ajax({
+					url:"param_query",
+					type:"post",
+					data:{paraName:paraName,paraType:paraType,paraState:paraState,pageNum:pageNum},
+					success:function(res){
+						let para_page = JSON.parse(res);
+    					let list = para_page[0].list;
+    					$("#param_tbody").html("");//清空表格
+    					for(let i=0;i<list.length;i++){
+    						let para_state;
+    						let ISDEFAULT = "是";
+    						for(let k=0;k<$("select option").length;k++){
+    							if($("select option")[k].value==list[i].paraState){
+    								para_state = $($("select option")[k]).html();
+    							}
+    						}
+    							if(list[i].isdefault=="0"){
+    								ISDEFAULT = "否";
+    							}
+    					
+    						$("#param_tbody").append("<tr data-id='1'>\
+   								<td data-id=\""+list[i].paraId+"\">\
+	    							<input type=\"checkbox\"/>\
+	    						</td>\
+								<td>"+list[i].paraName+"</td>\
+								<td>"+list[i].paraType+"</td>\
+								<td>"+list[i].paraVal+"</td>\
+								<td>"+list[i].paraNo+"</td>\
+								<td class=\"parastate\">"+para_state+"</td>\
+								<td>"+list[i].paraNum+"</td>\
+								<td class=\"isdefault\">"+ISDEFAULT+"</td>\
+								<td class='td-manage' data-id=\'"+list[i].paraId+"\' >\
+									<a title='编辑' onclick=\"WeAdminEdit('编辑','param_edit?paraId="+list[i].paraId+"', '"+list[i].paraId+"', 500, 400)\" href='javascript:;'>\
+										<i class='layui-icon'>&#xe642;</i>\
+									</a>\
+									<a title='删除' onclick='param_del(this)' href='javascript:;'>\
+										<i class='layui-icon'>&#xe640;</i>\
+									</a>\
+								</td>\
+							</tr>");
+    					}
+   					//统计数据条数 -- 开始
+    				$("#num").html(para_page[0].total);
+	    			//统计数据条数 -- 结束
+   					//分页 -- 开始
+   					$("#para_page").html("");
+   					let pages = para_page[0].pages;//总页数
+					let pageNum = para_page[0].pageNum;//当前页码
+					let prePage = para_page[0].prePage;//前一页
+					let nextPage = para_page[0].nextPage;//下一页
+					$("#para_page").prop("data-id",pages);
+					//总记录
+					$("#para_page").append('<span class="layui-laypage-count" >共 <em id="num">'+para_page[0].total+'</em>条</span>');
+					//上一页
+					if(para_page[0].hasPreviousPage){
+						$("#para_page").append('<a class="prev" class="layui-laypage-prev" onclick="para_query('+prePage+')">上一页</a>');
+					}else{
+						$("#para_page").append('<a class="layui-laypage-prev layui-disabled" data-page="0">上一页</a>');
+					}
+					//页码少于等于6页
+					if(pages<=6){
+						for(let i =0;i<pages; i++){
+							if(pageNum == (i+1)){
+								$("#para_page").append('<a onclick="para_query('+(i+1)+')" data-id="'+(i+1)+'" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+							}else{
+								$("#para_page").append('<a onclick="para_query('+(i+1)+')" data-id="'+(i+1)+'">'+(i+1)+'</a>');
+							}
+						}
+					}
+					//6页以上
+					if(pages>6){
+						//当前页码少于3
+						if(pageNum<=3){
+							for(let i =0;i<5; i++){
+								if(pageNum == (i+1)){
+									$("#para_page").append('<a onclick="para_query('+(i+1)+')" data-id="1" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+								}else{
+									$("#para_page").append('<a onclick="para_query('+(i+1)+')" data-id="0">'+(i+1)+'</a>');
+								}
+							}
+							$("#para_page").append('<span>...</span>');
+							$("#para_page").append('<a onclick="para_query('+pages+')" data-page="0">'+pages+'</a>');
+						}
+						//页码大于3少于总页数-3
+						if(pageNum>3&&pageNum<pages-3){
+							$("#para_page").append('<a onclick="para_query(1)" data-page="0">1</a>');
+							$("#para_page").append('<span>...</span>');
+							let page_size = 0;//分页显示个数
+							$("#para_page").append('<a onclick="para_query('+(pageNum-1)+')" data-id="0">'+(pageNum-1)+'</a>');
+							for(let i =pageNum;i<pages; i++){
+								if(page_size<2){
+									if(pageNum == i){
+										$("#para_page").append('<a onclick="para_query('+(i)+')" data-id="1" style="background-color:#009587;color:white;">'+(i)+'</a>');
+										page_size++;
+									}else{
+										$("#para_page").append('<a onclick="para_query('+(i)+')" data-id="0">'+(i)+'</a>');
+										page_size++;
+									}
+								}
+							}
+							$("#para_page").append('<span>...</span>');
+							$("#para_page").append('<a onclick="para_query('+pages+')" data-page="0">'+pages+'</a>');
+						}
+						//页码大于或者等于总页数-3
+						if(pageNum>=pages-3){
+							$("#para_page").append('<a onclick="para_query(1)" data-page="0">1</a>');
+							$("#para_page").append('<span>...</span>');
+							$("#para_page").append('<a onclick="para_query('+(pages-4)+')" data-page="0">'+(pages-4)+'</a>');
+							for(let i =pages-4;i<pages; i++){
+								if(pageNum == (i+1)){
+									$("#para_page").append('<a onclick="para_query('+(i+1)+')" data-id="1" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+								}else{
+									$("#para_page").append('<a onclick="para_query('+(i+1)+')" data-id="0">'+(i+1)+'</a>');
+								}
+							}
+						}
+					}
+					//下一页
+					if(para_page[0].hasNextPage){
+						$("#para_page").append('<a class="layui-laypage-next" onclick="para_query('+nextPage+')">下一页</a>');
+					}else{
+						$("#para_page").append('<a class="layui-laypage-next layui-disabled">下一页</a>');
+					}
+					//输入页码跳转
+					$("#para_page").append('<span class="layui-laypage-skip">到第\
+							<input type="text" min="1" value="'+pageNum+'" class="layui-input" id="page_num">页\
+							<button type="button" class="layui-laypage-btn" id="para_page_btn">确定</button>\
+						</span>');
+					//分页 -- 结束
+					//分页输入查询   -- 开始
+					$("#para_page_btn").click(function(){
+						//获得总页数
+						let page_num = $("#para_page").data("id");
+						if(parseInt($("#page_num").val())>parseInt(page_num)){
+							//输入的数字大于总页数提示
+							layer.alert("输入的数字不能大于总页数"+page_num);
+						}else{
+							para_query($("#page_num").val());
+						}
+					})
+					//分页输入查询   -- 结束 
+				}
+			})
+    	}
+			
+		//启用  --  开始
+	    	$("#param_start").click(function(){
+	    		let para_state = 0;//选中角色的个数
+	    		let checkbox_ = null;
+	    		let checked = $("input[type='checkbox']");
+	    		for(var i=0;i<checked.length;i++){
+	    			if($(checked[i]).prop("checked")){
+	    				para_state++;
+	    				checkbox_ = checked[i];
+	    			}
+	    		}
+	    		if(para_state==0){
+	    			layer.alert("请选中一条记录");
+	    			return false;
+	    		}
+	    		let state_txt =$(checkbox_).parents("tr").children("td")[2].innerHTML;//获得状态
+	    		let para_id =$(checkbox_).parents("td").data("id"); 
+	    		if(state_txt == $(this).html()){
+	    			layer.alert("操作无效，该参数已经启用！");
+	    			return false;
+	    		}
+	    		$.ajax({
+	    			url:"param_state",
+	    			data:{paraState:"1",paraId:para_id},
+	    			dataType:"json",
+	    			type:"post",
+	    			success:function(res){
+	    				layer.alert(res.msg, {
+	                        title: "提示",
+	                        btn: ['确定']
+	                    },function (index, item) {
+	                    	page_change();//保存分页选择
+	                        layer.close(index);
+	                    });
+	    			}
+	    		})
+	    	})
+	    	//启用  --  结束
+		
+	    	//停用  --  开始
+	    	$("#param_stop").click(function(){
+	    		let para_state = 0;//选中角色的个数
+	    		let checkbox_ = null;
+	    		let checked = $("input[type='checkbox']");
+	    		for(var i=0;i<checked.length;i++){
+	    			if($(checked[i]).prop("checked")){
+	    				para_state++;
+	    				checkbox_ = checked[i];
+	    			}
+	    		}
+	    		if(para_state==0){
+	    			layer.alert("请选中一条记录");
+	    			return false;
+	    		}
+	    		let state_txt =$(checkbox_).parents("tr").children("td")[2].innerHTML;//获得状态
+	    		let para_id =$(checkbox_).parents("td").data("id"); //获得id
+	    		if(state_txt == $(this).html()){
+	    			layer.alert("操作无效，该参数已经禁用！");
+	    			return false;
+	    		}
+	    		$.ajax({
+	    			url:"param_state",
+	    			data:{paraState:"0",paraId:para_id},
+	    			dataType:"json",
+	    			type:"post",
+	    			success:function(res){
+	    				layer.alert(res.msg, {
+	                        title: "提示",
+	                        btn: ['确定']
+	                    },function (index, item) {
+	                    	page_change();//保存分页选择
+	                        layer.close(index);
+	                    });
+	    			}
+	    		})
+	    	})
+	    	//停用  --  结束
+			
+			//删除
+	    	function param_del(tag){
+	    		let id = $(tag).parents("td").data("id");//获得id
+	    		let name = $(tag).parents("tr").find(".para_name").html();
+	    		layui.use('layer', function(){
+	    			layer.confirm('确认要删除吗？', {
+	    			    btn: ['确定','取消'],
+	    			    time: 200000, //20s后自动关闭
+	    			    },function(index){
+	    				$.ajax({
+			    			url:"param_delete",
+			    			data:{paraId:id},
+			    			type:"post",
+			    			dataType:"json",
+			    			success:function(res){
+			    				layer.alert(res.msg, {
+			                        title: "提示",
+			                        btn: ['确定']
+			                    },function (index, item) {
+			                    	page_change();
+			                        layer.close(index);
+			                    });
+			    			}
+			    		})
+	    			    layer.close(index);
+	    			});
+	    		})
+	    	}
+	    	//保存分页选择 -- 开始
+	    	function page_change(){
+	    		let page_len = $("#para_page a").length;
+                let num ;
+                for(var i=0;i<page_len;i++){
+                	if($($("#para_page a")[i]).data("id")=="1"){
+                		num = $($("#para_page a")[i]).html();
+                	}
+                	//获得总页数
+					let page_num = $("#para_page").data("id");
+                	if(num>page_num){
+                		num--;
+                	}
+                }
+                para_query(num);//保存分页选择             
+}
+		</script>
+	</body>
+
+</html>

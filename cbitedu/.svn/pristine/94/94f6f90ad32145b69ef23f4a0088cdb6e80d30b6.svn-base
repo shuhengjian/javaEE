@@ -1,0 +1,102 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	default-autowire="byName"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util-3.2.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+	<description>Spring MVC 3配置 </description>
+	<!-- 自动扫描且只扫描@Controller -->
+	<context:component-scan
+		base-package="com.creatorblue.cbitedu.system.controller,com.creatorblue.cbitedu.workflow.controller,com.creatorblue.cbitedu.item.controller,com.creatorblue.cbitedu.ty.back.controller,com.creatorblue.cbitedu.ty.front.controller">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!-- 使用缓存mvc注解配置 -->
+	<mvc:interceptors>
+		<bean id="shareRenderVariableInterceptor"
+			class="com.creatorblue.cbitedu.core.interceptor.SharedRenderVariableInterceptor"></bean>
+		<!-- 方便调试， 开发阶段取消此配置 -->
+	 <bean class="com.creatorblue.cbitedu.core.interceptor.SessionInterceptor" />   
+	</mvc:interceptors> 
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 将StringHttpMessageCOnverter的默认编码设为UTF-8 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- spring mvc 的静态资源处理 -->
+	<mvc:resources mapping="/ui_widget/**" location="/ui_widget/" />
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
+		<property name="prefix" value="/WEB-INF/jsp/" ></property>
+		<property name="suffix" value=".jsp" > </property>
+		<property name="order" value="1" ></property>
+	</bean> 
+	<!-- SpringMVC错误异常输出 <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> 
+		<property name="exceptionMappings"> <props> <prop key="com.creatorblue.cbitedu.core.exception.GenericException"> 
+		GenericExceptionPage </prop> <prop key="java.lang.Exception">error</prop> 
+		</props> </property> </bean> -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/plain;charset=UTF-8</value>
+							<value>application/json;charset=UTF-8</value>
+							<value>application/xml;charset=UTF-8</value>
+						</list>
+					</property>
+					<property name="objectMapper">
+						<bean class="com.creatorblue.cbitedu.core.utils.JacksonUtils"></bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!--文件分段上傳 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>104857600</value>
+		</property>
+		<property name="maxInMemorySize">
+			<value>1024000</value>
+		</property>
+	</bean>
+	<!--国际化属性配置文件 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/resources/propertiescfg/ApplicationResources
+				</value>
+				<value>classpath:/resources/propertiescfg/SystemGlobals</value>
+				<value>classpath:/resources/propertiescfg/error</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	<bean id="methodNameResolver"
+		class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver">
+		<property name="paramName">
+			<value>method</value>
+		</property>
+		<property name="defaultMethodName" value="list" />
+	</bean>
+</beans>

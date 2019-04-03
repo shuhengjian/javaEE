@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TuserRoleMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TuserRole">
+        <result column="USER_ROLEID" jdbcType="VARCHAR" property="userRoleid"/>
+        <result column="USER_ID" jdbcType="VARCHAR" property="userId"/>
+        <result column="ROLE_ID" jdbcType="VARCHAR" property="roleId"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		USER_ROLEID,USER_ID,ROLE_ID
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TuserRole">
+        INSERT INTO T_USER_ROLE (
+        	USER_ROLEID ,
+        	USER_ID ,
+        	ROLE_ID 
+        ) VALUES (
+        	#{userRoleid,jdbcType=VARCHAR} ,
+        	#{userId,jdbcType=VARCHAR} ,
+        	#{roleId,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TuserRole">
+        UPDATE T_USER_ROLE SET
+	        USER_ID = #{userId,jdbcType=VARCHAR} ,
+	        ROLE_ID = #{roleId,jdbcType=VARCHAR} 
+        WHERE 
+	        USER_ROLEID = #{userRoleid,jdbcType=VARCHAR} 
+	</update>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_USER_ROLE WHERE
+	        USER_ROLEID = #{userRoleid,jdbcType=VARCHAR} 
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTuserRoleByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_USER_ROLE
+ </select>
+    <select id="selectPageTuserRole" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.system.domain.TuserRole">
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_USER_ROLE
+	    <where>
+	    	<if test="roleId!=null and roleId!=''">
+	    		AND ROLE_ID=#{roleId}
+	    	</if>
+	    </where>
+ </select>
+ 
+ <delete id="deleteByMap" parameterType="map">
+ 		delete from T_USER_ROLE 
+ 		  <where>
+	    	<if test="roleId!=null and roleId!=''">
+	    		AND ROLE_ID=#{roleId}
+	    	</if>
+	    	<if test="userId!=null and userId!=''">
+	    		AND USER_ID=#{userId}
+	    	</if>
+	    </where>
+ </delete>
+<delete id="delete" parameterType="string">
+ 	<if test="_parameter!=null and _parameter!='' ">
+ 		delete from T_USER_ROLE where USER_ROLEID=#{_parameter}
+ 	</if>
+ </delete>
+</mapper>
+

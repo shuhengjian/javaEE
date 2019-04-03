@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>添加用户</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css" th:href="@{'static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css" th:href="@{'static/css/weadmin.css'}">
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	</head>
+
+	<body>
+		<div class="weadmin-body">
+			<form id = "userForm" class="layui-form" enctype="multipart/form-data">
+			<input type="hidden" id="dataId" name="userId" >
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red">*</span>用户姓名
+		            </label>
+					<div class="layui-input-inline">
+						<input th:value="${user}!=null?${user.userName}:''" type="text" id="L_username" name="userName" lay-verify="required|nikename" autocomplete="off" class="layui-input" maxlength="10">
+					</div>
+				</div>				
+				<div class="layui-form-item">
+					<label for="L_phone" class="layui-form-label">
+		                <span class="we-red">*</span>手机号
+		            </label>
+					<div class="layui-input-inline">
+						<input th:value="${user}!=null?${user.userMobile}:''" type="text" id="L_phone" name="userMobile" lay-verify="required|mobile" autocomplete="off" class="layui-input" maxlength="11"
+						onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red">*</span>身份证号
+		            </label>
+					<div class="layui-input-inline">
+						<input th:value="${user}!=null?${user.userIdcard}:''" type="text" id="L_username" name="userIdcard" lay-verify="required|idcard" autocomplete="off" class="layui-input" maxlength="18"
+						onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+		               	 <span class="we-red">*</span>用户状态
+		            </label>
+					<div class="layui-input-inline">
+						<select name="userState">
+							<option value="">请选择</option>
+							<th:block th:each="stateList : ${TParameter}">
+			                     <option th:value="${stateList.paraNo}" th:if="${user != null && stateList.paraNo == user.userState}" selected="selected" th:text="${stateList.paraVal}">在职</option>
+			                     <option th:value="${stateList.paraNo}" th:unless="${user!= null  && stateList.paraNo  == user.userState} " th:text="${stateList.paraVal}">在职</option>
+			                </th:block>
+						</select>
+					</div>
+				</div>
+				</div>				
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+	                	<span class="we-red">*</span>用户角色
+		            </label>
+					<div class="layui-input-inline">
+						<select name="role.roleId">
+							<option value="">请选择</option>
+							<th:block th:each="roleList : ${TRole}">
+			                     <option th:value="${roleList.roleId}" th:if="${user != null && roleList.roleId == user.role.roleId}" selected="selected" th:text="${roleList.roleName}">服务员</option>
+			                     <option th:value="${roleList.roleId}" th:unless="${user != null && roleList.roleId == user.role.roleId}" th:text="${roleList.roleName}">服务员</option>
+			                </th:block>       	
+						</select>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+	                	<span class="we-red">*</span>用户角色
+		            </label>
+					<div class="layui-input-inline">
+						<select name="role.roleId">
+							<option value="">请选择</option>
+							<th:block th:each="roleList : ${TRole}">
+			                     <option th:value="${roleList.roleId}" th:if="${user != null && roleList.roleId == user.role.roleId}" selected="selected" th:text="${roleList.roleName}">服务员</option>
+			                     <option th:value="${roleList.roleId}" th:unless="${user != null && roleList.roleId == user.role.roleId}" th:text="${roleList.roleName}">服务员</option>
+			                </th:block>       	
+						</select>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red">*</span>头像
+		            </label>
+					<div class="layui-input-inline" style="position: relative;">
+						<input type="file" name="txFile" style="width: 100px;height: 100px;position: absolute;top: 0;left: 0;opacity: 0;"/>
+						<th:block th:switch="'1'">
+							<th:block th:if="${user}">
+								<th:block th:each="attach,iterStat : ${user.attach}" >
+									<th:block th:if="!${#strings.isEmpty(attach.fileRemark)}">
+										<img id="imgshow" th:case="${#strings.contains(attach.fileRemark,'头像')}?'1':'0'" th:if="${#strings.contains(attach.fileRemark,'头像')}" th:src="${#strings.prepend(attach.fileUel,'/musicbar/file/')}" style="width: 100px;height: 100px;" />
+									</th:block>
+								</th:block>
+							</th:block>
+							<img  id="imgshow" th:case="*"  src="pages/img_load.png" style="width: 100px;height: 100px;" />
+						</th:block>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red">*</span>身份证正面
+		            </label>
+					<div class="layui-input-inline" style="position: relative;">
+						<input type="file" name="sfzZMFile" style="width: 100px;height: 100px;position: absolute;top: 0;left: 0;opacity: 0;"/>
+						<th:block th:switch="'1'">
+							<th:block th:if="${user}">
+								<th:block th:each="attach,iterStat : ${user.attach}">
+									<th:block th:if="!${#strings.isEmpty(attach.fileRemark)}">
+										<img id="imgshow" th:case="${#strings.contains(attach.fileRemark,'身份证正面')}?'1':'0'" th:if="${#strings.contains(attach.fileRemark,'身份证正面')}" th:src="${#strings.prepend(attach.fileUel,'/musicbar/file/')}" style="width: 100px;height: 100px;" />
+									</th:block>
+								</th:block>
+							</th:block>
+							<img  id="imgshow" th:case="*" src="pages/img_load.png" style="width: 100px;height: 100px;" />
+						</th:block>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red">*</span>身份证反面
+		            </label>
+					<div class="layui-input-inline" style="position: relative;">
+						<input type="file" name="sfzFMFile" style="width: 100px;height: 100px;position: absolute;top: 0;left: 0;opacity: 0;"/>
+						<th:block th:switch="'1'">
+							<th:block th:if="${user}">
+								<th:block th:each="attach,iterStat : ${user.attach}">
+									<th:block th:if="!${#strings.isEmpty(attach.fileRemark)}">
+										<img id="imgshow" th:case="${#strings.contains(attach.fileRemark,'身份证反面')}?'1':'0'" th:if="${#strings.contains(attach.fileRemark,'身份证反面')}" th:src="${#strings.prepend(attach.fileUel,'/musicbar/file/')}" style="width: 100px;height: 100px;" />
+									</th:block>							
+								</th:block>
+							</th:block>
+							<img  id="imgshow" th:case="*"  src="pages/img_load.png" style="width: 100px;height: 100px;" />
+						</th:block>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red">*</span>健康证正面
+		            </label>
+					<div class="layui-input-inline" style="position: relative;">
+						<input type="file" name="jkzZMFile" style="width: 100px;height: 100px;position: absolute;top: 0;left: 0;opacity: 0;"/>
+						<th:block th:switch="'1'">
+							<th:block th:if="${user}">
+								<th:block th:each="attach,iterStat : ${user.attach}">
+									<th:block th:if="!${#strings.isEmpty(attach.fileRemark)}">
+										<img id="imgshow" th:case="${#strings.contains(attach.fileRemark,'健康证正面')}?'1':'0'" th:if="${#strings.contains(attach.fileRemark,'健康证正面')}" th:src="${#strings.prepend(attach.fileUel,'/musicbar/file/')}" style="width: 100px;height: 100px;" />
+									</th:block>							
+								</th:block>
+							</th:block>
+							<img  id="imgshow"  src="pages/img_load.png" style="width: 100px;height: 100px;" />
+						</th:block>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red">*</span>健康证反面
+		            </label>
+					<div class="layui-input-inline" style="position: relative;">
+						<input type="file" name="jkzFMFile" style="width: 100px;height: 100px;position: absolute;top: 0;left: 0;opacity: 0;"/>
+						<th:block th:switch="'1'">
+							<th:block th:if="${user}">
+								<th:block th:each="attach,iterStat : ${user.attach}">
+									<th:block th:if="!${#strings.isEmpty(attach.fileRemark)}">
+										<img id="imgshow" th:case="${#strings.contains(attach.fileRemark,'健康证反面')}?'1':'0'" th:if="${#strings.contains(attach.fileRemark,'健康证反面')}" th:src="${#strings.prepend(attach.fileUel,'/musicbar/file/')}" style="width: 100px;height: 100px;" />
+									</th:block>							
+								</th:block>
+							</th:block>
+							<img  id="imgshow" th:case="*"  src="pages/img_load.png" style="width: 100px;height: 100px;" />
+						</th:block>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-inline">
+						<input th:value="${user}!=null?${user.userPassword}:''" type="hidden" id="L_pass" name="userPassword" lay-verify="required|pass" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<!-- <div class="layui-form-item">
+					<label for="L_repass" class="layui-form-label">
+                  		<span class="we-red">*</span>确认密码
+              		</label>
+					<div class="layui-input-inline">
+						<input th:value="${user}!=null?${user.userPassword}:''" type="password" id="L_repass" name="userPassword" lay-verify="required|repass" autocomplete="off" class="layui-input">
+					</div>
+				</div> -->
+				<div class="layui-form-item">
+					<label for="L_repass" class="layui-form-label"></label>
+					<button class="layui-btn" lay-filter="add" type="button" id="save">确定</button>
+				</div>
+			</form>
+		</div>
+		<script src="../jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+		<script src="../../lib/layui/layui.js" charset="utf-8" th:src="@{'lib/layui/layui.js'}"></script>
+		<script src="../../static/js/eleDel.js" type="text/javascript" charset="utf-8" th:src="@{'static/js/eleDel.js'}"></script>
+		<script>	
+			/*图片加载效果*/
+			$("input[type='file']").change(function (){
+				let imgSrc;
+				let img = $(this);
+				let filePath = this.files[0];
+				let reader = new FileReader();
+				reader.readAsDataURL(filePath);
+				reader.onload = function() {
+					imgSrc = reader.result;
+					img.nextAll("img").attr("src", imgSrc);
+	                /* $("img").load(function(){
+	                }); */
+			  	};
+			})	
+		    
+		 	/*保存*/
+		    $("#save").click(function(){
+		    	let mobilePattern =/^((0\d{2,3}-\d{7,8})|(1[35847]\d{9}))$/; //验证手机号
+		    	//let idCardPattern = /^[1-9]\d{5}(18|19|2([0-9]))\d{2}(0[0-9]|10|11|12)([0-2][1-9]|30|31)\d{3}[0-9Xx]$/;//验证身份证
+		    	if($("input[name='userName']").val()==""){
+		    		layer.msg('姓名不能为空', {icon: 6}); 
+		    		return false;
+		    	}
+		    	if($("input[name='userMobile']").val()==""){
+		    		layer.msg('手机号不能为空', {icon: 6}); 
+		    		return false;
+		    	}
+		    	if(!mobilePattern.test($("input[name='userMobile']").val())){
+		    		layer.msg('手机号格式不正确', {icon: 6}); 
+		    		return false;
+		    	}
+		    	if($("input[name='userIdcard']").val() ==""){
+		    		layer.msg('身份证号不能为空', {icon: 6});
+		    		return false;
+		    	}
+		    	/* if(!idCardPattern.test($("input[name='userIdcard']").val())){
+		    		layer.msg('身份证格式不正确', {icon: 6}); 
+		    		return false;
+		    	} */
+		    	if($("select[name='userState']").val() ==""){
+		    		layer.msg('用户状态不能为空', {icon: 6});
+		    		return false;
+		    	}
+		    	let formData = new FormData($("#userForm")[0]);
+		    	$.ajax({
+		    		url:"user_save",
+		    		data:formData,
+		    		type:"post",
+		    		dataType:"json",
+		    		processData:false,
+		          	contentType: false,
+		    		success:function(res){
+		    			console.log(res);
+		    			if(res.flag){
+							layer.alert(res.msg, {
+		                        title: "提示",
+		                        btn: ['确定']
+		                    },function (index, item) {
+		                    	parent.location.href="user_list";//刷新页面
+								x_admin_close();//关闭窗口
+		                    });
+						}else{
+							layer.alert(res.msg);//失败提示
+						}
+		    		}
+		    	})
+		    })
+		    function x_admin_close() {
+				var index = parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
+			}
+		</script>
+	</body>
+
+</html>

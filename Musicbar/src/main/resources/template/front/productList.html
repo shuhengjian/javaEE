@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh">
+<!--<![endif]-->
+
+<head>
+<title>老树林音乐酒吧</title>
+<!-- Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<!-- 360浏览器默认采用高速模式渲染页面 -->
+<meta name="renderer" content="webkit">
+<meta name="keywords" content="Demo">
+<meta name="description" content="Demo">
+<meta name="author" content="">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+<!-- Favicon -->
+<link rel="shortcut icon" th:href="@{/front/img/favicon.ico}">
+<!-- Global CSS  -->
+<link rel="stylesheet" th:href="@{/front/css/bootstrap.min.css}">
+<!--Custom Css-->
+<link rel="stylesheet" th:href="@{/front/css/private.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/front/css/common.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/front/css/catalog.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/front/css/alert.css}">
+<script type="text/javascript" th:src="@{/front/js/jquery.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/front/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/iscroll.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/comm.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/alert.min.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/productList.js}"></script>
+<script type="text/javascript"
+	th:src="@{/front/js/jquery.lazyload.min.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/jquery.fly.min.js}"></script>
+<!-- Custom JS -->
+<script type="text/javascript">
+	var myScroll, myScrollri;
+	var $ulLeft;
+	var cataId = 0;
+
+	function pullUpAction() {
+		setTimeout(function() {
+			myScrollri.refresh();
+		}, 500);
+	}
+
+	function init_left_li() {
+		var total_hei = $ulLeft.height();//总高度
+		var li_height = $ulLeft.find("li").height();//单个li高度
+		var li_num = $ulLeft.find("li").length;//个数
+		console.log($ulLeft.find(".off").offset().top);
+	}
+	/**
+	 * 初始化iScroll控件
+	 */
+	function loaded() {
+		$ulLeft = $("#con_left");
+		myScroll = new IScroll("#con_left", {
+			mouseWheel : true,
+			click : true,
+			preventDefault : false,
+			preventDefaultException : {
+				tagName : /^(INPUT|TEXTAREA|BUTTON|SELECT|A)$/
+			}
+		})
+		myScrollri = new IScroll("#con_right", {
+			mouseWheel : true,
+			click : true
+		})
+		myScrollri.on("scrollStart", function() {
+			pullUpAction();
+		});
+		myScrollri.on("scroll", function() {
+			pullUpAction();
+		});
+		myScrollri.on("scrollEnd", function() {
+			$('.fr_ite_' + cataId).find("img").lazyload({
+				threshold : 200
+			}).on('load', function() {
+				pullUpAction();
+			});
+		});
+		$('.job_sub li').eq(0).click();
+	}
+	document.addEventListener('DOMContentLoaded', loaded, true);
+</script>
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+</head>
+<!--[if !IE]>注释规范_Begin<![endif]-->
+<!--[if !IE]>注释规范_End<![endif]-->
+<body>
+	<div class="topTool navbar-fixed-top">
+		<div class="returnBtn">
+			<a href="javascript:void(0)"><img class="img-responsive"
+				src="img/returnBtn.png"></a>
+		</div>
+		<div class="menuBtn"></div>
+		<div class="currentPath">老树林音乐酒馆</div>
+	</div>
+
+	<div class="orderPage">
+		<div class="l_left" id="con_left">
+			<!--标题-->
+			<ul class="job_sub" id="scroller1">
+				<li data-cataid="beer" th:each="typeList:${typeList}"
+					th:data-tid="${typeList.typeId}"
+					th:class="${type!=null and type.typeId!=null and type.typeId==typeList.typeId}?'off car_item':'car_item'"><a
+					href="javascript:void(0)"
+					th:href="@{/front/order_meal?typeId=}+${typeList.typeId}">[[${typeList.typeName}]]<span
+						class="goods_car_num" style="font-size: 13px"></span></a></li>
+				<!--   <li data-cataid="cocktail" class=""><a href="javascript:void(0)">鸡尾酒</a></li>
+                <li data-cataid="wine" class=""><a href="javascript:void(0)">洋酒</a></li>
+                <li data-cataid="redwine" class=""><a href="javascript:void(0)">葡萄酒</a></li>
+                <li data-cataid="drinks" class=""><a href="javascript:void(0)">饮料&果汁</a></li>
+                <li data-cataid="salad" class=""><a href="javascript:void(0)">沙拉</a></li>
+                <li data-cataid="snack" class=""><a href="javascript:void(0)">小吃Snacks</a></li>
+                <li data-cataid="cigarette" class=""><a href="javascript:void(0)">烟</a></li>
+                <li data-cataid="other" class=""><a href="javascript:void(0)">其它</a></li> -->
+				<li data-cataid="beer"
+					th:class="${goodsSpecial=='1'}?'off car_item':'car_item'"><a
+					href="javascript:void(0)"
+					th:href="@{/front/order_meal?goodsSpecial=1}">特价推荐<span
+						class="goods_car_num"></span></a></li>
+			</ul>
+		</div>
+		<div class="l_right" id="con_right">
+			<div class="rightBox" id="scroller">
+				<!-- 	[if !IE]>啤酒_Begin<![endif]   -->
+				<div class="fr_ite fr_ite_beer" data-cataid="beer"
+					th:data-pageNum="${pageInfo.pageNum}"
+					th:data-pages="${pageInfo.pages}">
+					<div class="typeName">[[${type.typeName}]]</div>
+					<img class="img-responsive" src="img/product/beer/beer.jpg"
+						th:src="${attchType}!=null?@{'/file/'+${attchType.fileUel}}:'img/product/beer/beer.jpg'">
+					<ul class="productLine" th:each="goods:${pageInfo.list}">
+						<li class="productName">[[${goods.goodsName}]]</li>
+						<li class="productImg"><img class="img-responsive"
+							src="img/product/beer/001.jpg"
+							th:src="${goods.attch}!=null?@{'/file/'+${goods.attch.fileUel}}:'img/product/beer/001.jpg'"></li>
+						<li class="productInfo" th:data-tid="${goods.type.typeId}"
+							th:data-gid="${goods.goodsId}">
+							<div class="infoRow">
+								<div class="productCapacity">[[${goods.goodsQuantity}]][[${goods.goodsUnits}]]</div>
+								<div class="productPrice">¥&nbsp;[[${goods.goodsPrice}]]/[[${goods.goodsStandard}]]</div>
+							</div>
+							<div class="infoRow">
+								<div class="productFabulous">
+									<span class="glyphicon glyphicon-heart-empty"></span>[[${goods.goodsSales}]]
+								</div>
+								<div class="buyBtn">
+									<span class="glyphicon glyphicon-plus"></span>
+								</div>
+							</div>
+						</li>
+						<li class="driver"></li>
+						<div style="clear:both;">  </div>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="botTool navbar-fixed-bottom">
+		<ul class="mainMenu">
+			<li><a href="activity.html"><span
+					class="glyphicon glyphicon-certificate"></span><br>活动</a></li>
+			<li><a th:href="@{/front/order_meal}"><span
+					class="glyphicon glyphicon-th"></span><br>点单</a></li>
+			<li><a th:href="@{/front/goGoodsCart}" class="ms_car"><span
+					class="glyphicon glyphicon-shopping-cart"></span><br>购物车<span
+					class="cb_goods_car" style="font-size: 9px"></span></a></li>
+			<li><a th:href="@{/front/TOrFrontqueryAll}"><span
+					class="glyphicon glyphicon-th-list"></span><br>订单</a></li>
+		</ul>
+	</div>
+</body>
+</html>

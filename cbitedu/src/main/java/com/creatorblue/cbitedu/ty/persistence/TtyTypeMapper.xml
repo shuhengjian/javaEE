@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TtyTypeMapper">
+
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.ty.domain.TtyType">
+		<id column="type_id" property="typeId" jdbcType="VARCHAR" />
+		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
+		<result column="type_start" property="typeStart" jdbcType="INTEGER" />
+		<result column="type_state" property="typeState" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		type_id, type_name,type_start,type_state
+	</sql>
+
+	<select id="select" resultMap="BaseResultMap" 
+		parameterType="com.creatorblue.cbitedu.ty.domain.TtyType">
+		select
+		<include refid="Base_Column_List" />
+		from t_ty_type
+		where  type_state=1
+		<if test="typeId!=null">
+			and type_id = #{typeId,jdbcType=VARCHAR}
+		</if>
+		
+	</select>
+	
+	<select id="selectCountProduct" parameterType="String" resultType="int">
+	 	select count(*) from t_ty_product where type_id = #{typeId}
+	</select>
+	
+	<!-- 条件查询，查询所有 -->
+	<select id="selectPageTtyTypeByMap" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+        from t_ty_type b
+        <where>
+			<if test="typeName != null and '' != typeName">
+				AND type_name LIKE CONCAT(CONCAT('%', #{typeName}),'%')
+			</if>
+			<if test="typeStart != null and '' != typeStart">
+				AND type_start LIKE CONCAT(CONCAT('%', #{typeStart}),'%')
+			</if>
+			<if test="typeState != null and '' != typeState">
+		       	  and type_state = #{typeState}
+		    </if>
+		</where>
+	</select>
+	<!-- 根据类查询类型名称是否存在 -->
+	<select id="checkTheNameWithParentId" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyType">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM t_ty_type
+			 <where>
+		       <if test="typeName != null and '' != typeName">
+		       	  and type_name = #{typeName} 
+		        </if>
+		<if test="typeId != null and '' != typeId">
+		       	  and type_id != #{typeId} 
+		        </if>
+	        </where>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="Base_Column_List" />
+        from t_ty_type b 
+        where type_id = #{value,jdbcType=VARCHAR}
+    </select>
+    
+     <delete id="deleteByPrimaryKey" parameterType="string" >
+        delete  from t_ty_type
+        where type_id = #{typeId,jdbcType=VARCHAR}
+    </delete>
+    
+     <insert id="insert" parameterType="com.creatorblue.cbitedu.ty.domain.TtyType" >
+     	insert into t_ty_type (type_id, type_name,type_start,type_state)
+        values (#{typeId,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, #{typeStart,jdbcType=VARCHAR},#{typeState,jdbcType=VARCHAR})
+    </insert>
+    
+    <insert id="insertSelective" parameterType="com.creatorblue.cbitedu.ty.domain.TtyType" >
+        insert into t_ty_type
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="typeId != null" >
+                type_id,
+            </if>
+            <if test="typeName != null" >
+                type_name,
+            </if>
+            <if test="typeStart != null" >
+                type_start,
+            </if>
+            <if test="typeState != null" >
+                type_state,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="typeId != null and typeId != ''" >
+                #{typeId,jdbcType=VARCHAR},
+            </if>
+            <if test="typeName != null and typeName != ''" >
+                #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeStart != null and typeStart != ''" >
+                #{typeStart,jdbcType=VARCHAR},
+            </if>
+               <if test="typeState != null and typeState != ''" >
+                #{typeState,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateTypeStateByPrimaryKey" parameterType="com.creatorblue.cbitedu.ty.domain.TtyType" >
+        update t_ty_type
+        <set >
+            <if test="typeState != null and typeState != ''" >
+                type_state = #{typeState,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where type_id = #{typeId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="update" parameterType="com.creatorblue.cbitedu.ty.domain.TtyType" >
+        update t_ty_type
+        <set >
+            <if test="typeName != null and typeName != ''" >
+                type_name = #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeStart != null and typeStart != ''" >
+                type_start = #{typeStart,jdbcType=VARCHAR},
+            </if>
+            <if test="typeState != null and typeState != ''" >
+                type_state = #{typeState,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where type_id = #{typeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

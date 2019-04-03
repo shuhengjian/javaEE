@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TOrdersMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TOrders">
+    <id column="orders_id" jdbcType="VARCHAR" property="ordersId" />
+    <result column="table_num" jdbcType="INTEGER" property="tableNum" />
+    <result column="orders_money" jdbcType="DECIMAL" property="ordersMoney" />
+    <result column="orders_num" jdbcType="INTEGER" property="ordersNum" />
+    <result column="orders_code" jdbcType="VARCHAR" property="ordersCode" />
+    <result column="payment_mode" jdbcType="VARCHAR" property="paymentMode" />
+    <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime" />
+    <result column="orders_mobile" jdbcType="VARCHAR" property="ordersMobile" />
+    <result column="orders_state" jdbcType="VARCHAR" property="ordersState" />
+    <result column="orders_way" jdbcType="VARCHAR" property="ordersWay" />
+    <result column="orders_deal" jdbcType="VARCHAR" property="ordersDeal" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <collection property="tOrdersInfo"  column="orders_id" fetchType="lazy" javaType="list" select="com.musicbar.second.mapper.TOrdersInfoMapper.selectByOdersId">
+ 	</collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    orders_id, table_num, orders_money, orders_num, orders_code, payment_mode, payment_time, 
+    orders_mobile, orders_state, orders_way, orders_deal, create_user, create_time
+  </sql>
+  <sql id="Base_Column_Orders_List">
+    o.orders_id,  o.table_num,  o.orders_money,  o.orders_num,  o.orders_code,  o.payment_mode,  o.payment_time, 
+     o.orders_mobile,  o.orders_state,  o.orders_way,  o.orders_deal,  o.create_user,  o.create_time,oi.goods_name
+     ,oi.goods_num
+  </sql>
+  <!-- 根据条件查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TOrders">
+  	select
+  	<include refid="Base_Column_List"></include>
+  	from t_orders
+  	<where>
+ 		<if test="ordersCode!=null and ordersCode.trim()!=''">
+			and orders_code like concat('%',#{ordersCode},'%')
+		</if>
+		<if test="ordersWay != null and ordersWay.trim() != ''">
+			and orders_way = #{ordersWay}
+		</if>
+		<if test="ordersState != null and ordersState.trim() != ''">
+			and orders_state = #{ordersState}
+		</if>
+		<if test="paymentMode != null and paymentMode.trim() != ''">
+			and payment_mode = #{paymentMode}
+		</if>
+
+ 	</where>
+  </select>
+  <!-- 查询订单详细 -->
+  <select id="selectorder" resultMap="BaseResultMap" parameterType="String">
+  	select 
+  	table_num, orders_money, orders_num, orders_code, payment_mode, payment_time, 
+    orders_mobile, orders_state, orders_way, orders_deal
+    from t_orders
+  	where orders_id = #{ordersId}
+  </select>
+  <select id="selectgoods" resultMap="BaseResultMap" parameterType="String">
+  	select
+  	goods_name,goods_quantity, goods_units, goods_price, goods_standard, goods_num
+  	from t_orders,t_orders_info
+  	where t_orders_info.order_id = t_orders.orders_id and t_orders.orders_id = #{value}
+  </select>
+  <!-- 查询所有 -->
+  <select id="selectOrderAll" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"></include>
+  	from t_orders
+  </select>
+  <!-- 根据id查询 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_orders
+    where orders_id = #{ordersId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据订单号进行查询 -->
+  <select id="selectCode" parameterType="String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from t_orders
+  	where orders_code = #{ordersCode};
+  </select>
+  
+  <!-- 根据状态进行查询 -->
+  <select id="selectState" parameterType="String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from  from t_orders
+  	where orders_state = #{ordersState};
+  </select>
+  
+  <!-- 根据订单手机号查询订单商品信息 -->
+  <select id="selectOrdInfo" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TOrders">
+  	select  
+  	 o.orders_id,  o.table_num,  o.orders_money,  o.orders_num,  o.orders_code,  o.payment_mode,  o.payment_time, 
+     o.orders_mobile, o.orders_way,  o.orders_deal,  o.create_user,  o.create_time,
+     p.para_val as orders_state
+	from t_orders o
+	INNER JOIN (select * from t_parameter where para_type ='orders_state') p on  o.orders_state=p.para_no
+	<where>
+		<if test="ordersCode != null and '' != ordersCode and ordersCode.trim()!=''">
+			and o.orders_code = #{ordersCode}
+		</if>
+		<if test="ordersState != null and '' != ordersState and ordersState.trim()!=''">
+			and o.orders_state = #{ordersState}
+		</if>
+		<if test="ordersMobile != null and '' != ordersMobile and ordersMobile.trim()!=''">
+			and o.orders_mobile = #{ordersMobile}
+		</if>
+	</where>
+	order by create_time desc;
+  </select>
+  
+  <!-- 订单新增session手机号查询 -->
+  <select id="selectseMobileSe" parameterType="String" resultMap="BaseResultMap">
+  	select 
+	<include refid="Base_Column_List" />
+	from t_orders
+	where orders_mobile = #{ordersMobile} order by create_time desc LIMIT 1;
+  </select>
+  
+  <!-- 关联参数表根据手机号查询 -->
+  <select id="selectParameter" resultMap="BaseResultMap"
+		parameterType="String">
+  	SELECT orders_code,orders_money,payment_time,p.para_val as orders_state,pl.para_val as payment_mode
+	 FROM t_orders o
+	 INNER JOIN (select * from t_parameter where para_type ='orders_state') p on  o.orders_state=p.para_no
+	 INNER JOIN (select * from t_parameter where para_type ='payment_mode') pl on  o.payment_mode=pl.para_no
+	 WHERE  orders_mobile =#{value}
+	 order by create_time  desc
+	 LIMIT 1
+  </select>
+  <!-- 关联参数表根据id查询 -->
+  <select id="selectParameterId" resultMap="BaseResultMap"
+		parameterType="String">
+  	SELECT orders_code,orders_money,payment_time,p.para_val as orders_state,pl.para_val as payment_mode
+	 FROM t_orders o
+	 INNER JOIN (select * from t_parameter where para_type ='orders_state') p on  o.orders_state=p.para_no
+	 INNER JOIN (select * from t_parameter where para_type ='payment_mode') pl on  o.payment_mode=pl.para_no
+	 WHERE  orders_id =#{value}
+	 order by create_time  desc
+	 LIMIT 1
+  </select>
+  <!-- 按下单时间降序查询当天最大时间的订单号 -->
+  <select id="selectPayCode" resultMap="BaseResultMap">
+  		select orders_code from t_orders 
+  		where to_days(create_time) = to_days(now()) order by create_time desc LIMIT 1
+  </select>
+  
+  <!-- 根据订单号查询订单商品信息 -->
+  <select id="selectOrdCode" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TOrders">
+  	 select 
+	  	 <include refid="Base_Column_Orders_List" />
+	 from t_orders o,t_orders_info oi
+	where o.orders_id = oi.orders_id
+	and o.orders_code = #{ordersCode}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_orders
+    where orders_id = #{ordersId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.musicbar.second.domain.TOrders">
+    insert into t_orders (orders_id, table_num, orders_money, 
+      orders_num, orders_code, payment_mode, 
+      payment_time, orders_mobile, orders_state, 
+      orders_way, orders_deal, create_user, 
+      create_time)
+    values (#{ordersId,jdbcType=VARCHAR}, #{tableNum,jdbcType=INTEGER}, #{ordersMoney,jdbcType=DECIMAL}, 
+      #{ordersNum,jdbcType=INTEGER}, #{ordersCode,jdbcType=VARCHAR}, #{paymentMode,jdbcType=VARCHAR}, 
+      #{paymentTime,jdbcType=TIMESTAMP}, #{ordersMobile,jdbcType=VARCHAR}, #{ordersState,jdbcType=VARCHAR}, 
+      #{ordersWay,jdbcType=VARCHAR}, #{ordersDeal,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.musicbar.second.domain.TOrders">
+    insert into t_orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ordersId != null">
+        orders_id,
+      </if>
+      <if test="tableNum != null">
+        table_num,
+      </if>
+      <if test="ordersMoney != null">
+        orders_money,
+      </if>
+      <if test="ordersNum != null">
+        orders_num,
+      </if>
+      <if test="ordersCode != null">
+        orders_code,
+      </if>
+      <if test="paymentMode != null">
+        payment_mode,
+      </if>
+      <if test="paymentTime != null">
+        payment_time,
+      </if>
+      <if test="ordersMobile != null">
+        orders_mobile,
+      </if>
+      <if test="ordersState != null">
+        orders_state,
+      </if>
+      <if test="ordersWay != null">
+        orders_way,
+      </if>
+      <if test="ordersDeal != null">
+        orders_deal,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ordersId != null">
+        #{ordersId,jdbcType=VARCHAR},
+      </if>
+      <if test="tableNum != null">
+        #{tableNum,jdbcType=INTEGER},
+      </if>
+      <if test="ordersMoney != null">
+        #{ordersMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="ordersNum != null">
+        #{ordersNum,jdbcType=INTEGER},
+      </if>
+      <if test="ordersCode != null">
+        #{ordersCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentMode != null">
+        #{paymentMode,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null">
+        #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ordersMobile != null">
+        #{ordersMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersState != null">
+        #{ordersState,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersWay != null">
+        #{ordersWay,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersDeal != null">
+        #{ordersDeal,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.musicbar.second.domain.TOrders">
+    update t_orders
+    <set>
+      <if test="tableNum != null">
+        table_num = #{tableNum,jdbcType=INTEGER},
+      </if>
+      <if test="ordersMoney != null">
+        orders_money = #{ordersMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="ordersNum != null">
+        orders_num = #{ordersNum,jdbcType=INTEGER},
+      </if>
+      <if test="ordersCode != null">
+        orders_code = #{ordersCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentMode != null">
+        payment_mode = #{paymentMode,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null">
+        payment_time = #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ordersMobile != null">
+        orders_mobile = #{ordersMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersState != null">
+        orders_state = #{ordersState,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersWay != null">
+        orders_way = #{ordersWay,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersDeal != null">
+        orders_deal = #{ordersDeal,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where orders_id = #{ordersId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.musicbar.second.domain.TOrders">
+    update t_orders
+    set table_num = #{tableNum,jdbcType=INTEGER},
+      orders_money = #{ordersMoney,jdbcType=DECIMAL},
+      orders_num = #{ordersNum,jdbcType=INTEGER},
+      orders_code = #{ordersCode,jdbcType=VARCHAR},
+      payment_mode = #{paymentMode,jdbcType=VARCHAR},
+      payment_time = #{paymentTime,jdbcType=TIMESTAMP},
+      orders_mobile = #{ordersMobile,jdbcType=VARCHAR},
+      orders_state = #{ordersState,jdbcType=VARCHAR},
+      orders_way = #{ordersWay,jdbcType=VARCHAR},
+      orders_deal = #{ordersDeal,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where orders_id = #{ordersId,jdbcType=VARCHAR}
+  </update>
+  <!-- 订单号 -->
+  <update id="updateCode" parameterType="com.musicbar.second.domain.TOrders">
+    update t_orders
+    set 
+      payment_time = #{paymentTime,jdbcType=TIMESTAMP},
+      payment_mode = #{paymentMode,jdbcType=TIMESTAMP},
+      orders_state = #{ordersState,jdbcType=VARCHAR}
+    where orders_code = #{ordersCode,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 统计订单总数量，总销售额，总销量 -->
+  <select id="selectTotal" parameterType="map" resultType="map">
+  	SELECT count(*) orderTotal , SUM(o.orders_money) moneyTotal , SUM(o.orders_num) numTotal
+  	FROM t_orders o 
+  	where orders_state = '2' AND payment_time &gt;= #{startTime} AND payment_time &lt;= #{endTime}
+  </select>
+  <!-- 根据时间按商品分类名称与商品名称统计销售量 -->
+  <select id="selectNumTotalByTypeNameAndGoodsName" parameterType="map" resultType="map">
+  	select orsi.goods_name goodsName,MAX(ty.type_name) typeName,SUM(orsi.goods_num) goodsNum  
+	FROM t_orders ors RIGHT JOIN  t_orders_info orsi ON ors.orders_id = orsi.orders_id 
+	LEFT JOIN  t_goods_info gos ON orsi.goods_id = gos.goods_id 
+	LEFT JOIN t_type ty ON gos.type_id = ty.type_id 
+	where ors.orders_state = '2' 
+	AND ors.payment_time &gt;= #{startTime} AND ors.payment_time &lt;= #{endTime} 
+  	GROUP BY orsi.goods_name;
+  </select>
+  <!-- 查询订单的最大时间与最小 -->
+  <select id="selectMaxAndMinTime" resultType="map">
+  	SELECT MIN(ors.payment_time) minTime,MAX(ors.payment_time) maxTime 
+  	FROM t_orders ors 
+  	WHERE ors.orders_state = '2';
+  </select>
+  <!-- 往年对比查询一年的总和 -->
+  <select id="selectFormerYears" resultType="map" parameterType="string">
+  	SELECT count(*) orderTotal , SUM(o.orders_money) moneyTotal , SUM(o.orders_num) numTotal 
+  	FROM t_orders o 
+  	where orders_state = '2'
+ 	AND payment_time LIKE CONCAT(#{time},'%');
+  </select>
+</mapper>

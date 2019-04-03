@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+<!--<![endif]-->
+
+<head>
+<title>老树林音乐酒吧</title>
+<!-- Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<!-- 360浏览器默认采用高速模式渲染页面 -->
+<meta name="renderer" content="webkit">
+
+<meta name="keywords" content="Demo">
+<meta name="description" content="Demo">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="img/favicon.ico" th:href="@{'img/favicon.ico'}">
+<!-- Global CSS  -->
+<link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{'css/bootstrap.min.css'}">
+<!--Custom Css-->
+<link rel="stylesheet" href="css/private.css" th:href="@{'css/private.css'}">
+<!-- CSS Implementing Plugins -->
+<!-- <link rel="stylesheet" href="css/line-icons.css" th:href="@{'css/line-icons.css'}">
+<link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{'css/font-awesome.min.css'}">
+<link rel="stylesheet" href="normalize.css" th:href="@{'normalize.css'}"> -->
+
+<script type="text/javascript" src="js/jquery.min.js" th:src="@{'js/jquery.min.js'}"></script>
+<script type="text/javascript" src="js/bootstrap.min.js" th:src="@{'js/bootstrap.min.js'}"></script>
+<!-- Custom JS -->
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+</head>
+<!--[if !IE]>注释规范_Begin<![endif]-->
+<!--[if !IE]>注释规范_End<![endif]-->
+<body class="activity-bg">
+    <div class="topTool navbar-fixed-top">
+        <div class="returnBtn"><a href="#"><img class="img-responsive" src="img/returnBtn.png"></a></div>
+        <div class="menuBtn"></div>
+        <div class="currentPath">主题活动嗨不完</div>
+    </div>
+    <div class="activityList">
+    	
+    </div>
+    <div class="botTool navbar-fixed-bottom">
+        <ul class="mainMenu">
+            <li><a href="activity.html"><span class="glyphicon glyphicon-certificate"></span><br>活动</a></li>
+            <li><a href="order_meal"><span class="glyphicon glyphicon-th"></span><br>点单</a></li>
+            <li><a href="goGoodsCart"><span class="glyphicon glyphicon-shopping-cart"></span><br>购物车</a></li>
+            <li><a href="TOrFrontqueryAll"><span class="glyphicon glyphicon-th-list"></span><br>订单</a></li>
+        </ul>   
+    </div>
+    <div class="page">
+		<div class="pagination">
+			<a class="prev" href="">&lt;&lt;</a>
+			<a class="num" href="">1</a>
+			<a class="next" href="">&gt;&gt;</a>
+		</div>
+	</div>
+    <script type="text/javascript">
+	$(function(){
+		/* 查询活动列表 */
+		queryAll(1);
+	})
+	//重新渲染表单
+		function renderForm(){
+		  layui.use('form', function(){
+		   var form = layui.form;//高版本建议把括号去掉，有的低版本，需要加()
+		   form.render();
+		  });
+		 }
+		/*查询活动状态*/
+		function selectState(){
+			$.ajax({
+				url:"active_state",
+				type:"post",
+				dataType:"json",
+				success:function(res){
+					$("[name=state]").nextAll().remove();
+				$.each(res,function(i,o){
+					$("[name=state]").after("<option value='"+o.activState+"'>"+o.activState+"</option>");
+					 renderForm();
+				})
+				}
+			})
+		}
+		/* 查询活动列表 */
+		function queryAll(pageNum){
+			$.ajax({
+				url:"active_frontQueryAll",
+				type:"post",
+				data:{pageNum:pageNum},
+				success: function(res){
+					let all =JSON.parse(res);
+					let list =all[0].list;
+					//总页数
+					let pages = all[0].pages;
+					console.log(all)
+					//当前页码
+					let pageNum =all[0].pageNum;
+					$(".activityList").empty();
+					for(let i = 0; i<list.length ; i++){
+						/* 列表追加 */
+						console.log(i)
+						$(".activityList").append("<div class='activityModel maringB30'>"+
+								"<img class='img-responsive' src='img/activity/huodong3.jpg'>"+
+								"<div class='activityName'>"+
+								list[i].activTheme+
+								"<a class='seeBtn' href='goActiveInfo?activId="+list[i].activId+"'>"+
+								"详情"+
+								"</a>"+
+								"</div>"+
+								"<div class='driver'></div>"+
+								"<div class='activityInfo'>"+
+								list[i].activIntro+
+								"</div>"+
+								"</div>")
+				   }
+				 $(".pagination a").remove();
+					if(pageNum == 1){
+						$(".pagination").append('<a class="prev" href="">&laquo;</a>');
+					}else{
+						$(".pagination").append('<a href="javascript:queryAll('+(pageNum-1)+')">&lt;&lt;</a>');
+					}					
+					for(let i =0;i<pages; i++){
+						if(pageNum == (i+1)){
+							$(".pagination").append('<a href="javascript:queryAll('+(i+1)+')">'+(i+1)+'</a>');
+						}else{
+							$(".pagination").append('<a href="javascript:queryAll('+(i+1)+')">'+(i+1)+'</a>');
+						}
+					} 
+					if(pageNum == pages){
+						$(".pagination").append('<a href="#">&raquo;</a>');
+					}else{
+						$(".pagination").append('<a href="javascript:queryAll('+(pageNum+1)+')">&raquo;</a>');
+					}  
+				} 
+			})
+		}
+</script>
+</body>

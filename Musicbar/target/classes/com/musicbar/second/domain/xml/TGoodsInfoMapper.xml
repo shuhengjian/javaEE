@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TGoodsInfoMapper">
+	<resultMap id="BaseResultMap" type="com.musicbar.second.domain.TGoodsInfo">
+		<id column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+		<result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+		<result column="goods_units" jdbcType="VARCHAR" property="goodsUnits" />
+		<result column="goods_quantity" jdbcType="VARCHAR" property="goodsQuantity" />
+		<result column="goods_price" jdbcType="DECIMAL" property="goodsPrice" />
+		<result column="goods_standard" jdbcType="VARCHAR" property="goodsStandard" />
+		<result column="goods_inventory_warning" jdbcType="VARCHAR"
+			property="goodsInventoryWarning" />
+		<result column="goods_stock" jdbcType="BIGINT" property="goodsStock" />
+		<result column="goods_sales" jdbcType="BIGINT" property="goodsSales" />
+		<result column="goods_state" jdbcType="VARCHAR" property="goodsState" />
+		<result column="goods_special" jdbcType="VARCHAR" property="goodsSpecial" />
+		<result column="goods_spell" jdbcType="VARCHAR" property="goodsSpell" />
+		<result column="create_user" jdbcType="TIMESTAMP" property="createUser" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="cook" jdbcType="VARCHAR" property="cook" />
+		<result column="goods_sort"  property="goodsSort" />
+		<association property="type" foreignColumn="type_id"
+			resultMap="com.musicbar.second.mapper.TTypeMapper.BaseResultMap" />
+		<association property="attch" foreignColumn="pkid"
+			resultMap="com.musicbar.second.mapper.TAttachMapper.BaseResultMap" />
+		<association property="parameter" foreignColumn="para_type"
+			resultMap="com.musicbar.second.mapper.TParameterMapper.BaseResultMap" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		g.goods_id, t.type_name,g.type_id,g.goods_name, g.goods_code, g.goods_units, g.goods_quantity,
+		g.goods_price,g.goods_sort,
+		g.goods_standard, g.goods_inventory_warning, g.goods_stock, g.goods_sales, g.goods_state,
+		g.goods_special,
+		g.goods_spell, g.create_user, g.create_time, g.update_user, g.update_time, g.cook
+	</sql> 
+
+<sql id="front_Base_Column_List">
+		g.goods_id,g.goods_name,
+		g.goods_quantity, g.goods_price,
+		g.goods_stock, g.goods_sales,p1.para_val as goods_units,p2.para_val as
+		goods_standard
+	</sql>
+	<!-- 查询商品列表 -->
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.musicbar.second.domain.TGoodsInfo">
+		select 
+		g.goods_id,g.goods_name,g.goods_code,g.goods_quantity,g.goods_price,g.goods_inventory_warning,
+		g.goods_stock,g.goods_sort,g.goods_sales,t.type_name,a.file_uel,p.para_val as goods_state,p1.para_val as goods_special,
+		p2.para_val as goods_units,p3.para_val as goods_standard
+		from t_goods_info g
+		inner join (select * from t_parameter where para_type ='goods_state') p on g.goods_state = p.para_no
+		inner join (select * from t_parameter where para_type ='goods_special') p1 on g.goods_special = p1.para_no
+		inner join (select * from t_parameter where para_type ='goods_units') p2 on g.goods_units = p2.para_no
+		inner join (select * from t_parameter where para_type ='goods_standard') p3 on g.goods_standard = p3.para_no
+		inner join (select * from t_type) t on g.type_id=t.type_id
+		inner join (select * from t_attach) a on g.goods_id=a.pkid
+		<where>
+			g.type_id=t.type_id
+			<if test="goodsName !=null and goodsName.trim()!=''">
+				<bind name="patt_name" value="'%' + goodsName  + '%'" />
+				and g.goods_name like #{patt_name}
+			</if>
+			<if test="goodsState !=null and goodsState.trim()!=''">
+				and g.goods_state = #{goodsState}
+			</if>
+			<if test="type!=null and type.typeId.trim()!=''">
+				and g.type_id=#{type.typeId}
+			</if>
+		</where>
+		ORDER BY g.goods_sort DESC
+	</select>
+	<!-- 查询商品名称、编号 -->
+	<select id="selectGoodsName" resultType="int" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		select count(*) from t_goods_info
+		<where>
+			<if test="goodsName !=null">
+				and goods_name = #{goodsName}
+			</if>
+			<if test="goodsCode !=null">
+				and goods_code = #{goodsCode}
+			</if>
+			<if test="goodsId !=null and goodsId.trim() !=''">
+				and goods_id != #{goodsId}
+			</if>
+		</where>
+	</select>
+		<!-- 查询购物车商品 -->
+	<select id="selectGoodsCar" resultMap="BaseResultMap"
+		parameterType="string">
+		select
+		<include refid="front_Base_Column_List" />,att.pkid,att.file_uel
+		from t_goods_info g 
+		inner join t_attach att  on att.pkid=g.goods_id
+		inner join (select * from t_parameter where para_type ='goods_units') p1 on g.goods_units = p1.para_no
+		inner join (select * from t_parameter where para_type ='goods_standard') p2 on g.goods_standard = p2.para_no
+		WHERE goods_id =#{value}
+	</select>
+
+  	<!-- 添加商品信息 -->
+  	<insert id="insertGoods" parameterType="com.musicbar.second.domain.TGoodsInfo">
+  		insert into t_goods_info(goods_id,goods_name,type_id,goods_code,goods_units,goods_quantity,goods_price,goods_standard,goods_inventory_warning
+  		,goods_stock,goods_sales,goods_state,goods_special,goods_spell,cook,goods_sort)
+  		values (#{goodsId},#{goodsName},#{type.typeId},#{goodsCode},#{goodsUnits},#{goodsQuantity},#{goodsPrice},#{goodsStandard},#{goodsInventoryWarning},
+  		#{goodsStock},#{goodsSales},#{goodsState},#{goodsSpecial},#{goodsSpell},#{cook},#{goodsSort})
+  	</insert>
+  	
+  	
+	<!-- 修改商品信息 -->
+	<update id="updateGoods" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		update t_goods_info g,t_attach a
+		<set>
+			g.goods_name = #{goodsName},
+			g.type_id= #{type.typeId},
+			g.goods_code = #{goodsCode},
+			g.goods_units = #{goodsUnits},
+			g.goods_quantity = #{goodsQuantity},
+			g.goods_price = #{goodsPrice},
+			g.goods_standard = #{goodsStandard},
+			g.goods_inventory_warning = #{goodsInventoryWarning},
+			g.goods_stock = #{goodsStock},
+			g.goods_sales = #{goodsSales},
+			g.goods_state = #{goodsState},
+			g.goods_special = #{goodsSpecial},
+			g.goods_spell = #{goodsSpell},
+			g.cook=#{cook}
+			<if test="attch != null and attch.fileUel != null">
+				,a.file_uel = #{attch.fileUel}
+			</if>
+			where g.goods_id = a.pkid and
+			g.goods_id = #{goodsId}
+		</set>
+	</update>
+	
+	<!-- 修改商品状态 -->
+	<update id="updateState" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		update t_goods_info
+		<set>
+			<if test="goodsState != null and goodsState !=''">
+				goods_state=#{goodsState}
+			</if>
+		</set>
+		where goods_id=#{goodsId}
+	</update>
+		<!-- 前端查询商品 -->
+	<select id="selecFronttAll" parameterType="com.musicbar.second.domain.TGoodsInfo"
+		resultMap="BaseResultMap">
+		select
+		<include refid="front_Base_Column_List" />
+		,t.type_name,t.type_id,att.pkid,att.file_uel
+		from t_goods_info g
+		inner join (select * from t_parameter where para_type ='goods_units') p1 on g.goods_units = p1.para_no
+		inner join (select * from t_parameter where para_type ='goods_standard') p2 on g.goods_standard = p2.para_no
+		inner join t_type t on g.type_id=t.type_id
+		inner join t_attach att on g.goods_id=att.pkid
+		<where>
+			goods_state=1
+			and goods_stock &gt; 0
+			<if test="type!=null and type.typeId.trim()!=''">
+				and g.type_id=#{type.typeId}
+			</if>
+			<if test="goodsSpecial!=null and goodsSpecial.trim()!=''">
+				and goods_special=#{goodsSpecial}
+			</if>
+		</where>
+		order by goods_sort desc
+	</select>
+
+
+	<!-- 根据id查询商品 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />,a.file_uel
+		from t_goods_info g,t_type t, t_attach a 
+		<where>
+			g.type_id=t.type_id
+			and g.goods_id = a.PKID
+			and g.goods_id = #{goodsId,jdbcType=VARCHAR}
+		</where>
+	</select>
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_goods_info
+		where goods_id = #{goodsId,jdbcType=VARCHAR}
+	</delete>
+	<!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from t_goods_info where goods_id in
+		<foreach collection="list" open="(" close=")" separator="," item="item">
+			#{item}
+		</foreach>
+	</delete>
+	<insert id="insert" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		insert into t_goods_info (goods_id, type_id, goods_name,
+		goods_code, goods_units, goods_quantity,
+		goods_price, goods_standard, goods_inventory_warning,
+		goods_stock, goods_sales, goods_state,
+		goods_special, goods_spell, create_user,
+		create_time, update_user, update_time,
+		cook)
+		values (#{goodsId,jdbcType=VARCHAR}, #{typeId,jdbcType=VARCHAR},
+		#{goodsName,jdbcType=VARCHAR},
+		#{goodsCode,jdbcType=VARCHAR}, #{goodsUnits,jdbcType=VARCHAR}, #{goodsQuantity,jdbcType=VARCHAR},
+		#{goodsPrice,jdbcType=DECIMAL}, #{goodsStandard,jdbcType=VARCHAR},
+		#{goodsInventoryWarning,jdbcType=VARCHAR},
+		#{goodsStock,jdbcType=BIGINT}, #{goodsSales,jdbcType=BIGINT},
+		#{goodsState,jdbcType=VARCHAR},
+		#{goodsSpecial,jdbcType=VARCHAR}, #{goodsSpell,jdbcType=VARCHAR}, #{createUser,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{cook,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		insert into t_goods_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goodsId != null">
+				goods_id,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
+			<if test="goodsName != null">
+				goods_name,
+			</if>
+			<if test="goodsCode != null">
+				goods_code,
+			</if>
+			<if test="goodsUnits != null">
+				goods_units,
+			</if>
+			<if test="goodsQuantity != null">
+				goods_quantity,
+			</if>
+			<if test="goodsPrice != null">
+				goods_price,
+			</if>
+			<if test="goodsStandard != null">
+				goods_standard,
+			</if>
+			<if test="goodsInventoryWarning != null">
+				goods_inventory_warning,
+			</if>
+			<if test="goodsStock != null">
+				goods_stock,
+			</if>
+			<if test="goodsSales != null">
+				goods_sales,
+			</if>
+			<if test="goodsState != null">
+				goods_state,
+			</if>
+			<if test="goodsSpecial != null">
+				goods_special,
+			</if>
+			<if test="goodsSpell != null">
+				goods_spell,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateUser != null">
+				update_user,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="cook != null">
+				cook,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=VARCHAR},
+			</if>
+			<if test="typeId != null">
+				#{typeId,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsName != null">
+				#{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsCode != null">
+				#{goodsCode,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsUnits != null">
+				#{goodsUnits,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsQuantity != null">
+				#{goodsQuantity,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsPrice != null">
+				#{goodsPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="goodsStandard != null">
+				#{goodsStandard,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsInventoryWarning != null">
+				#{goodsInventoryWarning,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsStock != null">
+				#{goodsStock,jdbcType=BIGINT},
+			</if>
+			<if test="goodsSales != null">
+				#{goodsSales,jdbcType=BIGINT},
+			</if>
+			<if test="goodsState != null">
+				#{goodsState,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpecial != null">
+				#{goodsSpecial,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpell != null">
+				#{goodsSpell,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cook != null">
+				#{cook,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		update t_goods_info
+		<set>
+			<if test="typeId != null">
+				type_id = #{typeId,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsName != null">
+				goods_name = #{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsCode != null">
+				goods_code = #{goodsCode,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsUnits != null">
+				goods_units = #{goodsUnits,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsQuantity != null">
+				goods_quantity = #{goodsQuantity,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsPrice != null">
+				goods_price = #{goodsPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="goodsStandard != null">
+				goods_standard = #{goodsStandard,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsInventoryWarning != null">
+				goods_inventory_warning = #{goodsInventoryWarning,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsStock != null">
+				goods_stock = #{goodsStock,jdbcType=BIGINT},
+			</if>
+			<if test="goodsSales != null">
+				goods_sales = #{goodsSales,jdbcType=BIGINT},
+			</if>
+			<if test="goodsState != null">
+				goods_state = #{goodsState,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpecial != null">
+				goods_special = #{goodsSpecial,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpell != null">
+				goods_spell = #{goodsSpell,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				update_user = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cook != null">
+				cook = #{cook,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where goods_id = #{goodsId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		update t_goods_info
+		set type_id = #{typeId,jdbcType=VARCHAR},
+		goods_name = #{goodsName,jdbcType=VARCHAR},
+		goods_code = #{goodsCode,jdbcType=VARCHAR},
+		goods_units = #{goodsUnits,jdbcType=VARCHAR},
+		goods_quantity = #{goodsQuantity,jdbcType=VARCHAR},
+		goods_price = #{goodsPrice,jdbcType=DECIMAL},
+		goods_standard = #{goodsStandard,jdbcType=VARCHAR},
+		goods_inventory_warning = #{goodsInventoryWarning,jdbcType=VARCHAR},
+		goods_stock = #{goodsStock,jdbcType=BIGINT},
+		goods_sales = #{goodsSales,jdbcType=BIGINT},
+		goods_state = #{goodsState,jdbcType=VARCHAR},
+		goods_special = #{goodsSpecial,jdbcType=VARCHAR},
+		goods_spell = #{goodsSpell,jdbcType=VARCHAR},
+		create_user = #{createUser,jdbcType=TIMESTAMP},
+		create_time = #{createTime,jdbcType=TIMESTAMP}, update_user =
+		#{updateUser,jdbcType=VARCHAR}, update_time =
+		#{updateTime,jdbcType=TIMESTAMP}
+		cook = #{cook,jdbcType=VARCHAR} where goods_id =
+		#{goodsId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectArray" resultMap="BaseResultMap"
+		parameterType="com.musicbar.second.domain.TGoodsInfo">
+		SELECT 
+		goods_name,goods_units,goods_quantity,goods_price,goods_standard
+		FROM t_goods_info 
+		WHERE goods_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+       	 	#{item}
+    	</foreach>
+	</select>
+	
+	<!-- 下单修改库存数 -->
+	<update id="updataStock" parameterType="com.musicbar.second.domain.TGoodsInfo">
+		update t_goods_info
+			set goods_stock = #{goodsStock}
+			where goods_id = #{goodsId}
+	</update>
+	<!-- 获取下一条记录 -->
+	<select id="infoBySortafter"  resultMap="BaseResultMap">
+        SELECT * from t_goods_info c WHERE c.goods_sort &lt; #{sort} ORDER BY c.goods_sort DESC limit 0,1
+    </select>
+    <!-- 获取上一条记录 -->
+     <select id="infoBySortbefer"  resultMap="BaseResultMap">
+        SELECT * from t_goods_info c WHERE c.goods_sort &gt; #{sort} ORDER BY c.goods_sort limit 0,1
+    </select>
+    <!-- 修改排序号 -->
+    <update id="updateBySort" parameterType="com.musicbar.second.domain.TGoodsInfo">
+        UPDATE t_goods_info SET goods_sort=#{goodsSort} WHERE goods_id=#{goodsId}
+    </update>
+    <!-- 查询预警商品 -->
+    <select id="selectByWarning" resultMap="BaseResultMap">
+    	select 
+		g.goods_id,g.goods_name,g.goods_code,g.goods_quantity,g.goods_price,g.goods_inventory_warning,
+		g.goods_stock,g.goods_sort,g.goods_sales,t.type_name,a.file_uel,p.para_val as goods_state,p1.para_val as goods_special,
+		p2.para_val as goods_units,p3.para_val as goods_standard
+		from t_goods_info g
+		inner join (select * from t_parameter where para_type ='goods_state') p on g.goods_state = p.para_no
+		inner join (select * from t_parameter where para_type ='goods_special') p1 on g.goods_special = p1.para_no
+		inner join (select * from t_parameter where para_type ='goods_units') p2 on g.goods_units = p2.para_no
+		inner join (select * from t_parameter where para_type ='goods_standard') p3 on g.goods_standard = p3.para_no
+		inner join (select * from t_type) t on g.type_id=t.type_id
+		inner join (select * from t_attach) a on g.goods_id=a.pkid
+		WHERE g.goods_stock &lt; goods_inventory_warning AND g.type_id=t.type_id
+    </select>
+    <!-- 查询排序号最大的值 -->
+   <select id="selectMaxSort" resultMap="BaseResultMap">
+   		SELECT MAX(goods_sort) as goods_sort FROM t_goods_info
+   </select>
+</mapper>

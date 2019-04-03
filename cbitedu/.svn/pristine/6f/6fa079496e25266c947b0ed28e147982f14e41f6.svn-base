@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysOrgMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysOrg">
+        <result column="ORG_ID" jdbcType="VARCHAR" property="orgId"/>
+        <result column="ORG_SN" jdbcType="DECIMAL" property="orgSn"/>
+        <result column="ORG_NAME" jdbcType="VARCHAR" property="orgName"/>
+        <result column="PARENT_ID" jdbcType="VARCHAR" property="parentId"/>
+        <result column="LAYER" jdbcType="DECIMAL" property="layer"/>
+        <result column="CREATE_DATE" jdbcType="VARCHAR" property="createDate"/>
+        <result column="CREATOR" jdbcType="VARCHAR" property="creator"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="ORG_TYPE" jdbcType="VARCHAR" property="orgType"/>
+        <result column="ADDR" jdbcType="VARCHAR" property="addr"/>
+        <result column="ZIP" jdbcType="VARCHAR" property="zip"/>
+        <result column="EMAIL" jdbcType="VARCHAR" property="email"/>
+        <result column="LEADER" jdbcType="VARCHAR" property="leader"/>
+        <result column="PHONE" jdbcType="VARCHAR" property="phone"/>
+        <result column="FAX" jdbcType="VARCHAR" property="fax"/>
+        <result column="STATE" jdbcType="VARCHAR" property="state"/>
+        <result column="MOBILE" jdbcType="VARCHAR" property="mobile"/>
+        <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="ANCESTRY" jdbcType="VARCHAR" property="ancestry"/>
+	</resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		ORG_ID,ORG_SN,ORG_NAME,PARENT_ID,LAYER,CREATE_DATE,CREATOR,REMARK,ORG_TYPE,ADDR,ZIP,EMAIL,LEADER,PHONE,FAX,STATE,MOBILE,ORG_CODE
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysOrg">
+        INSERT INTO T_SYS_ORG (
+        	ORG_ID ,
+        	ORG_SN ,
+        	ORG_NAME ,
+        	PARENT_ID ,
+        	LAYER ,
+        	CREATE_DATE ,
+        	CREATOR ,
+        	REMARK ,
+        	ORG_TYPE ,
+        	ADDR ,
+        	ZIP ,
+        	EMAIL ,
+        	LEADER ,
+        	PHONE ,
+        	FAX ,
+        	STATE ,
+        	MOBILE,
+        	ORG_CODE,
+        	ANCESTRY
+        ) VALUES (
+        
+        	#{orgId,jdbcType=VARCHAR} ,
+        
+        	#{orgSn,jdbcType=DECIMAL} ,
+        
+        	#{orgName,jdbcType=VARCHAR} ,
+        
+        	#{parentId,jdbcType=VARCHAR} ,
+        
+        	#{layer,jdbcType=DECIMAL} ,
+        
+        	#{createDate,jdbcType=VARCHAR} ,
+        
+        	#{creator,jdbcType=VARCHAR} ,
+        
+        	#{remark,jdbcType=VARCHAR} ,
+        
+        	#{orgType,jdbcType=VARCHAR} ,
+        
+        	#{addr,jdbcType=VARCHAR} ,
+        
+        	#{zip,jdbcType=VARCHAR} ,
+        
+        	#{email,jdbcType=VARCHAR} ,
+        
+        	#{leader,jdbcType=VARCHAR} ,
+        
+        	#{phone,jdbcType=VARCHAR} ,
+        
+        	#{fax,jdbcType=VARCHAR} ,
+        
+        	#{state,jdbcType=VARCHAR} ,
+        
+        	#{mobile,jdbcType=VARCHAR},
+        	
+        	#{orgCode,jdbcType=VARCHAR} ,
+        	
+        	#{ancestry,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysOrg">
+        UPDATE T_SYS_ORG SET
+	        ORG_NAME = #{orgName,jdbcType=VARCHAR} ,
+	        REMARK = #{remark,jdbcType=VARCHAR} ,
+	        ORG_TYPE = #{orgType,jdbcType=VARCHAR} ,
+	        ADDR = #{addr,jdbcType=VARCHAR} ,
+	        ZIP = #{zip,jdbcType=VARCHAR} ,
+	        EMAIL = #{email,jdbcType=VARCHAR} ,
+	        LEADER = #{leader,jdbcType=VARCHAR} ,
+	        PHONE = #{phone,jdbcType=VARCHAR} ,
+	        FAX = #{fax,jdbcType=VARCHAR} ,
+	        STATE = #{state,jdbcType=VARCHAR} ,
+	        MOBILE = #{mobile,jdbcType=VARCHAR}, 
+	        ORG_CODE=#{orgCode,jdbcType=VARCHAR}
+        WHERE 
+	        ORG_ID = #{orgId,jdbcType=VARCHAR} 
+	</update>
+	
+	 <update id="updateStatus" parameterType="java.lang.String">
+       UPDATE T_SYS_ORG SET	        
+	        STATE =2
+        WHERE 
+	        ORG_ID = #{orgId,jdbcType=VARCHAR} 
+	</update>
+	
+	 <update id="updateSeq" parameterType="java.lang.String">
+        UPDATE T_SYS_SEQUENCE SET
+	        SEQ_ID = #{seqId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	 <update id="updateSeqByDel" >
+        UPDATE T_SYS_SEQUENCE SET
+	        SEQ_ID =SEQ_ID-1
+	</update>
+	
+	<update id="updateSortId"  parameterType="java.lang.Integer">
+        UPDATE T_SYS_ORG SET
+	        ORG_SN =ORG_SN-1 WHERE ORG_SN&gt;#{sortId}
+	</update>
+	
+	
+	  <update id="updateBySort" parameterType="com.creatorblue.cbitedu.system.domain.TsysOrg">
+        UPDATE T_SYS_ORG SET
+	        ORG_SN = #{orgSn} ,
+	        PARENT_ID = #{parentId}, 
+	        ANCESTRY=#{ancestry}
+        WHERE 
+	        ORG_ID = #{orgId} 
+	</update>
+	 
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_ORG WHERE
+	        ORG_ID = #{orgId,jdbcType=VARCHAR} 
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_ORG WHERE
+	        ORG_ID = #{orgId,jdbcType=VARCHAR} 
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTsysOrgByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_ORG 
+	     <where>
+	       <if test="org_id!=null and org_id!='' ">
+	         AND ANCESTRY like CONCAT(CONCAT('%.', #{org_id}),'.%')
+	       </if>
+	         <if test="orgCode!=null and orgCode!='' ">
+	         AND ORG_CODE like CONCAT(CONCAT('%', #{orgCode}),'%')
+	       </if>
+	         <if test="orgName!=null and orgName!='' ">
+	         AND ORG_NAME like CONCAT(CONCAT('%', #{orgName}),'%')
+	       </if>
+	         <if test="state!=null and state!='' ">
+	         AND STATE=#{state}  
+	       </if>
+	         <if test="orgType!=null and orgType!='' ">
+	         AND ORG_TYPE=#{orgType} 
+	       </if>
+	        <if test="userId!=null and userId!='' ">
+	         AND ORG_ID in(select ORG_ID from t_org_user where USER_ID=#{userId})
+	       </if>
+	     </where> 
+ </select>
+ <select id="selectSysOrgInfo" resultType="com.creatorblue.cbitedu.system.domain.ZtreeInfo" parameterType="com.creatorblue.cbitedu.system.domain.TsysOrg">
+	    SELECT T.ORG_ID ID,T.PARENT_ID PID,T.ORG_NAME NAME FROM T_SYS_ORG T  
+	     <if test="state!=0">
+	     WHERE STATE=#{state} 
+	    </if>
+	    ORDER BY T.ORG_SN
+ </select>   
+  <select id="selectSysSeqMaxId" resultType="com.creatorblue.cbitedu.system.domain.TsysOrg">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	      FROM T_SYS_ORG ORDER BY ORG_ID DESC
+ </select>
+  <select id="selectSysSequInfo" resultType="java.lang.String" >
+	    SELECT SEQ_ID FROM T_SYS_SEQUENCE  
+ </select>
+ 
+ <select id="selectSysOrgAncesty" resultType="java.lang.String" >
+	    SELECT ANCESTRY FROM T_SYS_ORG WHERE ORG_ID=#{orgId}  
+ </select>
+
+ 
+<select id="selectPageTsysOrg" resultMap="BaseResultMap" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_ORG
+ </select>
+ <select id="selectOrgIdByOrgObject"  resultMap="BaseResultMap" parameterType="map">
+	    SELECT  
+	     <include refid="Base_Column_List" />
+	     FROM T_SYS_ORG 
+	     <where>
+	       <if test="type=='1'.toString()">
+	           ORG_ID=#{orgId}
+	       </if>
+	        <if test="type=='2'.toString()">
+	           PARENT_ID=#{orgId}
+	       </if>
+	       <if test="type=='3'.toString()">
+	           ORG_NAME=#{orgName} and PARENT_ID=#{parentId}
+	       </if>
+	       <if test="type=='4'.toString()">
+	           ORG_CODE=#{orgCode}
+	       </if>
+	     </where>
+ </select>
+ <select id="selectChildCount" resultType="java.lang.String" >
+	    SELECT  COUNT(*) FROM T_SYS_ORG WHERE PARENT_ID=#{orgId}
+ </select>
+ <select id="selectOrgCount" resultType="java.lang.Integer" >
+	    SELECT  COUNT(*) FROM T_SYS_ORG where state=1
+ </select>
+ <select id="selectChildById" resultMap="BaseResultMap">
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	    FROM T_SYS_ORG 
+	     <where>
+	       <if test="_parameter!=null and _parameter!='' ">
+	          ANCESTRY like CONCAT(CONCAT('%.', #{parameter}),'.%')
+	       </if>        
+	     </where> 
+	    
+ </select>
+ 
+</mapper>
+

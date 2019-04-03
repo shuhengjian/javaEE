@@ -1,0 +1,222 @@
+﻿/*@media (max-width: 767px) {}
+@media (min-width: 768px) and (max-width: 991px) 
+@media (min-width: 992px) and (max-width: 1199px)
+@media (min-width: 1200px) {}*/
+
+@media (max-width: 767px) {
+/*--------------------公共导航--------------------*/
+/*--header-bar--*/
+.cb-header-tool { display:none;}
+.cb-header-tool .input-group { margin-top:0px;}
+
+.cb-navbar { min-height:50px;}
+.cb-navbar img { height:40px; margin-top:5px;}
+.cb-navbar .navbar-collapse { width:auto; background:#fff; z-index:10000; position:absolute; right:15px !important;}
+/*.cb-navbar .cb-navbar-nav { width:100%; background:#fff; margin-top:0; z-index:10000; position:absolute;}*/
+/*响应式菜单按钮*/
+.cb-navbar-toggle { margin-top:8px; margin-bottom:8px; border-color:#555!important;}
+.cb-navbar-toggle:hover,
+.cb-navbar-toggle:focus {  border-color:#fd0000!important; background-color:transparent!important;}
+.cb-navbar-toggle .icon-bar { background-color:#555!important;}
+.cb-navbar-toggle:hover .icon-bar,
+.cb-navbar-toggle:focus .icon-bar { background-color:#fd0000!important;}
+
+.cb-navbar .cb-navbar-nav > li > a {  font-size:14px; font-weight:500;}
+.cb-navbar .cb-navbar-nav > li > a span { font-size:12px; margin-right:5px; display:inline-block;}
+
+.cb-footer { width:100%; margin:25px auto;}
+
+/*--------------------首页--------------------*/
+/*轮播广告_Begin*/
+/*选择按钮用长条方块的设置*/
+.carousel-indicators { bottom:5px;}
+
+/*--平行进口车--*/
+.cb-import-index .cb-left-area { width:100%;}
+.cb-import-index .cb-right-area { width:100%; padding-left:0;}
+/*车*/
+.cb-car-body .cb-car-child { width:100%; padding:5px; margin:0; float:left;}
+
+/*--新推荐--*/
+.cb-recom-area .cb-recommend-box,
+.cb-recom-area:hover .cb-recommend-box:hover,
+.cb-recom-area:hover .cb-recommend-box { width:100%;}
+
+/*--新闻--*/
+.cb-news-index .cb-hot-img { height:200px; padding-right:0;}
+.cb-news-index .cb-hot-news .cb-news-line .cb-news-title { width:70%;}
+.cb-news-index .cb-hot-news .cb-news-info { height:auto; line-height:1.75; overflow:hidden; padding-right:0; padding-top:5px; padding-bottom:5px;}
+
+.cb-news-index .cb-newsline-box { padding-left:60px;}
+.cb-news-index .cb-newsline-box .cb-news-sort { width:40px; text-align:left; font-size:30px;}
+
+.cb-news-index .cb-newsline-box .cb-news-line { padding-left:0;}
+.cb-news-index .cb-newsline-box .cb-news-line .cb-news-title { width:100%;}
+.cb-news-index .cb-newsline-box .cb-news-line .cb-news-date { display:none;}
+.cb-news-index .cb-newsline-box .cb-news-info { height:48px;}
+
+/*--综合--*/
+.cb-comprehensive-index .cb-comprehensive-us { width:100%; padding-right:0;}
+.cb-comprehensive-index .cb-comprehensive-us .cb-us-img,
+.cb-comprehensive-index .cb-comprehensive-us .cb-us-index { width:100%;}
+
+.cb-comprehensive-index .cb-comprehensive-knowledge { width:100%; padding-left:0;}
+
+.cb-modular { width:100%; padding:0; margin:0 auto; overflow:hidden;}
+/*--------------------平行进口车 & 中规车--------------------*/
+/*分类*/
+.cb-nav-brand li { width:18%;}
+.cb-nav-brand li a { font-size:12px;}
+
+/*--------------------关于我们--------------------*/
+/*关于我们*/	
+.cb-about-name { font-size:20px; padding:15px 0;}
+#c-about .carousel-indicators { width:100%; height:50px; left:0; top:0;}
+    #c-about .carousel-indicators div,
+	#c-about .carousel-indicators .active,
+	#c-about .carousel-indicators .active:hover { width:25%; height:40px; line-height:40px; margin:0; float:left;;}
+	#c-about .carousel-indicators .active,
+	#c-about .carousel-indicators .active:hover { background:rgba(255,255,255,0.8)}
+
+#c-about .c-infoBox { width:100%; margin:60px 0 0; padding:0 15px;}
+
+/*--------------------联系我们--------------------*/
+#contactus .cb-contact-box { width:100%; height:auto; top:80px; margin: 0 auto; overflow:hidden; position:absolute;}
+#contactus .cb-contact-box .cb-contact-word { width:100%; padding:0 15px; margin-bottom:25px;}
+#contactus .cb-contact-box .cb-contact-wechart { width:100%;}
+    .cb-ul-info li.cb-cp-name { line-height:40px; font-size:20px; text-align:center; margin-bottom:30px;}
+
+/*--------------------车辆阅读详情页--------------------*/
+#carCarousel .carousel-inner { height:210px;}
+
+.cb-car-introduce .cb-car-name {line-height:2; font-size:24px;}
+.cb-car-introduce .cb-car-price {line-height:40px; font-size:16px;}
+
+	}
+	
+@media (min-width: 768px) and (max-width: 991px) {
+/*--header-bar--*/
+.cb-header-tool .cb-cp-logo img { height:auto; margin-top:15px; z-index:100;}
+.cb-header-tool .cb-cp-tel { font-size:16px;}
+
+.cb-footer { width:100%; margin:25px auto; padding:0 15px;}
+
+/*--------------------首页--------------------*/
+/*平行进口车*/
+.cb-import-index { width:100%; margin:25px 0; padding:0 15px;}
+.cb-import-index .cb-right-area { padding-left:15px;}
+
+.cb-type-body .cb-type-box,
+.cb-type-body .cb-type-source { width:33.33%;}
+.cb-type-body .cb-type-pricerange { width:50%;}
+
+.cb-car-body .cb-car-child .cb-car-box .cb-img { height:110px;}
+.cb-car-body .cb-car-child .cb-car-box .cb-car-price { line-height:1.75;}
+
+
+/*新推荐*/
+.cb-recom-index { width:100%; margin:25px 0; padding:0 15px;}
+.cb-recom { height:40px; line-height:40px; font-size:14px; overflow:hidden;}
+.cb-recom font { font-size:20px;}
+
+.cb-recom-area .cb-recommend-box { height:95px;}
+
+.cb-recom-area .cb-recommend-box .cb-car-img { height:95px;}
+.cb-recom-area:hover .cb-recommend-box:hover .cb-car-info { height:95px;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-name { height:24px; line-height:24px;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-otherinfo { display:none;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-price { height:30px; line-height:30px; font-size:14px;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-btn-line { height:30px; line-height:30px;}
+
+/*新闻*/
+.cb-news-index { width:100%; margin:25px 0; padding:0 15px;}
+
+.cb-modular { width:100%; padding:0 15px;}
+/*--------------------平行进口车 & 中规车--------------------*/
+/*分类*/
+.cb-nav-brand li { width:12%;}
+
+.cb-car-box .cb-img { height:95px;}
+.cb-car-box .cb-car-price { line-height:1.75;}
+
+/*--------------------新闻中心--------------------*/
+.cb-news-box .cb-img-box { height:120px;}
+.cb-news-box .cb-news-title { font-size:14px;}
+
+/*--------------------联系我们--------------------*/
+#contactus .cb-contact-box { width:90%; height:200px; top:50%; margin:-100px 5% auto 5%; overflow:hidden; position:absolute;}
+
+/*--------------------车辆阅读详情页--------------------*/
+#carCarousel .carousel-inner { height:260px;}
+.cb-car-introduce .cb-car-name {line-height:30px; font-size:20px;}
+.cb-car-introduce .cb-car-price {line-height:50px; font-size:16px;}
+
+	}
+	
+@media (min-width: 992px) and (max-width: 1199px) {
+.cb-footer { width:100%; margin:25px auto; padding:0 15px;}	
+
+/*--------------------首页--------------------*/
+/*平行进口车*/
+.cb-import-index { width:100%; margin:25px 0; padding:0 15px;}
+
+.cb-import-index .cb-right-area { padding-left:15px;}
+
+.cb-type-body .cb-type-box,
+.cb-type-body .cb-type-pricerange,
+.cb-type-body .cb-type-source { width:33.33%;}
+
+.cb-car-body .cb-car-child .cb-car-box .cb-img { height:140px;}
+.cb-car-body .cb-car-child .cb-car-box .cb-car-info { height:72px;}
+
+/*新推荐*/
+.cb-recom-index { width:100%; margin:25px 0; padding:0 15px;}
+.cb-recom { height:40px; line-height:40px; overflow:hidden;}
+.cb-recom font { font-size:24px;}
+
+.cb-recom-area .cb-driver { height:130px;}
+.cb-recom-area .cb-recommend-box { height:130px;}
+
+.cb-recom-area .cb-recommend-box .cb-car-img { height:130px;}
+.cb-recom-area:hover .cb-recommend-box:hover .cb-car-info { height:130px;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-name { height:24px; line-height:24px;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-otherinfo { height:36px; line-height:1.25;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-price { height:24px; line-height:24px;}
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-btn-line { height:30px; line-height:30px;}
+
+/*--新闻--*/
+.cb-news-index { width:100%; margin:25px 0; padding:0 15px;}
+
+.cb-news-index .cb-newsline-box .cb-news-line .cb-news-title { width:70%;}
+.cb-news-index .cb-newsline-box .cb-news-info { height:54px;}
+
+.cb-modular { width:100%; padding:0 15px;}
+/*--------------------平行进口车 & 中规车--------------------*/
+/*分类*/
+.cb-nav-brand li { width:6%;}
+.cb-nav-brand li a { font-size:12px;}
+
+.cb-car-box .cb-img { height:125px;}
+.cb-car-box .cb-car-price { line-height:1.75;}
+
+/*--------------------新闻中心--------------------*/
+.cb-news-box .cb-img-box { height:120px;}
+.cb-news-box .cb-news-title { font-size:14px;}
+
+/*--------------------联系我们--------------------*/
+#contactus .cb-contact-box { width:80%; height:200px; top:50%; margin:-100px 10% auto 10%; overflow:hidden; position:absolute;}
+
+/*--------------------车辆阅读详情页--------------------*/
+.cb-car-introduce .cb-car-name {line-height:30px;}
+
+
+	}
+	
+@media (min-width: 1200px) {
+/*/*平行进口车*/
+.cb-type-header { height:50px; line-height:50px;}
+
+.cb-type-area { margin-bottom:14px;}
+.cb-type-body .cb-type-pricerange,
+.cb-type-body .cb-type-source { height:40px; line-height:40px; padding:0 5px;}*/
+	}

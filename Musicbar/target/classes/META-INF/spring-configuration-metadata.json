@@ -1,0 +1,72 @@
+{
+  "groups": [
+    {
+      "name": "musicbar",
+      "type": "com.musicbar.second.comm.config.ConfigProperties",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "musicbar.access-path",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.active-path",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.goods-path",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.goods-size",
+      "type": "java.lang.Integer",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.page-size",
+      "type": "java.lang.Integer",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.path",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.suthentication-logout",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.suthentication-url",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.suthenticationauthc",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.suthenticationdo-login",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.type-path",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    },
+    {
+      "name": "musicbar.user-path",
+      "type": "java.lang.String",
+      "sourceType": "com.musicbar.second.comm.config.ConfigProperties"
+    }
+  ],
+  "hints": []
+}

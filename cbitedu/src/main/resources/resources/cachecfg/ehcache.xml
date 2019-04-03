@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false"
+	monitoring="autodetect" dynamicConfig="true">
+	<diskStore path="java.io.tmpdir" />
+	<defaultCache maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+		maxEntriesLocalDisk="100000" diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU">
+		<persistence strategy="localTempSwap" />
+	</defaultCache>
+	<!-- 字典管理缓存 -->
+	<cache name="dict_cache" overflowToDisk="true"
+		eternal="false" diskPersistent="false" timeToLiveSeconds="3600"
+		timeToIdleSeconds="3600" maxElementsInMemory="10000"
+		memoryStoreEvictionPolicy="LRU" />
+	<!-- 单位数据缓存 -->
+	<cache name="orginfo_cache" overflowToDisk="true" eternal="false"
+		diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" />
+		
+	<cache name="parameter_cache" overflowToDisk="true" eternal="false"
+		diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" />
+	<!-- 用户基本缓存
+	<cache name="userinfo_cache" overflowToDisk="true" eternal="false"
+		diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" /> -->
+</ehcache>

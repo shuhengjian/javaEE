@@ -1,0 +1,1487 @@
+﻿@charset "utf-8";
+/*----These are the default style _ Begin----*/
+/* Remove margin padding */
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li,
+	pre, form, fieldset, legend, button, input, textarea, th, td {
+	margin: 0;
+	padding: 0;
+}
+
+/* Default Font */
+body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+	font-family: 'Microsoft YaHei', '黑体', '宋体', Tahoma, Helvetica, Arial,
+		"\5b8b\4f53", sans-serif;
+	color: #555555;
+	font-size: 14px;
+}
+
+address, cite, dfn, em, var {
+	font-style: normal;
+}
+
+code, kbd, pre, samp {
+	font-family: Microsoft YaHei, courier, monospace;
+}
+
+small {
+	font-size: 12px;
+}
+
+ul, ol {
+	list-style: none;
+}
+
+sup {
+	vertical-align: text-top;
+}
+
+sub {
+	vertical-align: text-bottom;
+}
+
+legend {
+	color: #000;
+}
+
+fieldset, img {
+	border: 0;
+}
+
+button, input, select, textarea {
+	font-size: 100%;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.col-main {
+	float: left;
+	width: 100%;
+	min-height: 1px;
+}
+
+.col-sub, .col-extra {
+	float: left;
+}
+
+.layout:after, .main-wrap:after, .col-sub:after, .col-extra:after {
+	content: '\20';
+	display: block;
+	height: 0;
+	clear: both;
+}
+
+.layout, .main-wrap, .col-sub, .col-extra {
+	zoom: 1;
+}
+
+/* Common Features */
+.hidden {
+	display: none;
+}
+
+.invisible {
+	visibility: hidden;
+}
+
+/* Remove Float */
+.clear {
+	display: block;
+	height: 0;
+	overflow: hidden;
+	clear: both;
+}
+
+.clearfix:after {
+	content: '\20';
+	display: block;
+	height: 0;
+	clear: both;
+}
+
+.clearfix {
+	*zoom: 1;
+}
+
+/* For non ie browsers also display the vertical scroll bar by default, to prevent the flicker caused by the scroll bar */
+<!--
+html {
+	overflow-y: scroll;
+}
+
+--> /*----These are the default style _ End----*/
+a, a:active, a:focus {
+	color: #555555;
+	outline: none;
+}
+
+a:hover {
+	color: #fd0000;
+}
+
+a:link, a:visited {
+	text-decoration: none;
+}
+
+a.cb-btn {
+	color: #fff;
+	letter-spacing: 2px;
+	border-radius: 15px;
+	outline: none;
+	background-color: #fd0000;
+	padding: 5px 10px;
+	box-shadow: 2px 2px 3px rgba(255, 255, 255, 0); /*opera或ie9*/
+	-moz-box-shadow: 2px 2px 3px rgba(255, 255, 255, 0); /*firefox*/
+	-webkit-box-shadow: 2px 2px 3px rgba(255, 255, 255, 0); /*webkit*/
+}
+
+a.cb-btn:hover {
+	text-decoration: none;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.65); /*opera或ie9*/
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.65); /*firefox*/
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.65); /*webkit*/
+}
+/*----文字样式----*/
+/*文字超出自动隐藏*/
+.cb-texthidden {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: left;
+}
+
+/*文字位置*/
+.cb-word-center {
+	text-align: center
+}
+
+.cb-word-left {
+	text-align: left;
+}
+
+.cb-word-right {
+	text-align: right;
+}
+/*--------*/
+
+/*--------------------公共导航--------------------*/
+/*--header-bar--*/
+.cb-header-tool {
+	width: 100%;
+	height: 60px;
+	padding: 5px 15px;
+}
+
+.cb-header-tool .cb-cp-logo img {
+	height: 50px;
+	margin-top: 20px;
+	z-index: 100;
+}
+
+.cb-header-tool .cb-cp-tel {
+	font-size: 20px;
+	color: #fd0000;
+	font-weight: 600;
+	text-align: right;
+	line-height: 50px;
+	background: url(../images/ico-phone.png) no-repeat left center;
+	padding-left: 40px;
+	margin: 0;
+	float: right;
+}
+
+.cb-header-tool .input-group {
+	margin-top: 8px;
+}
+
+.cb-header-tool span {
+	margin-right: 10px;
+}
+
+/*网站导航*/
+.cb-navbar {
+	min-height: 40px;
+	border: none;
+	border-radius: 0;
+	background: none;
+	margin-bottom: 0;
+}
+
+.cb-navbar .cb-navbar-nav>li>a {
+	font-size: 16px;
+	transition: all 0.75s;
+	outline: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.cb-navbar .cb-navbar-nav>li>a:hover, .cb-navbar .cb-navbar-nav>li>a:focus
+	{
+	color: #fd0000;
+}
+
+.cb-navbar .cb-navbar-nav>.active>a, .cb-navbar .cb-navbar-nav>.active>a:hover,
+	.cb-navbar .cb-navbar-nav>.active>a:focus {
+	color: #fd0000;
+	background: none;
+}
+
+.cb-navbar .cb-navbar-nav>li>a span {
+	font-size: 14px;
+	margin-right: 5px;
+	display: none;
+}
+
+.cb-navbar .cb-navbar-nav>li.active>a span {
+	display: inline-block;
+}
+
+/*--------------------footer--------------------*/
+.footer {
+	width: 100%;
+	background-color: #efefef;
+	padding: 5px 0;
+}
+
+.cb-footer {
+	width: 90%;
+	margin: 25px 5%;
+	overflow: hidden;
+}
+
+.footer .cb-footer-menu {
+	width: 100%;
+	list-style: none;
+	padding: 0;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.footer .cb-footer-menu li {
+	height: 24px;
+	line-height: 24px;
+	padding-right: 5px;
+	margin: 0;
+	float: left;
+}
+
+.footer .cb-footer-menu .cb-driver {
+	width: 1px;
+	height: 16px;
+	background-color: #555;
+	margin: 4px 5px 4px 0;
+	float: left;
+}
+
+.footer .cb-footer-img {
+	width: 90%;
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+.footer .cb-footer-img img {
+	margin: 0 auto;
+}
+
+.footer .cb-content {
+	line-height: 2.25;
+}
+
+.footer .cb-content span {
+	font-size: 12px;
+	margin-right: 5px;
+}
+
+.footer .cb-copyright {
+	width: 100%;
+	text-align: left;
+	padding-top: 5px;
+}
+
+.footer .cb-copyright img {
+	margin-top: -4px;
+	margin-left: 10px;
+}
+/*--------------------首页--------------------*/
+/*--轮播--*/
+/*选择按钮用长条方块的设置*/
+.carousel-indicators {
+	bottom: 20px;
+}
+
+.carousel-indicators li {
+	width: 12px;
+	height: 12px;
+	border: none;
+	border-radius: 0;
+	background: none;
+	margin: 0 3px;
+}
+
+.carousel-indicators li div {
+	width: 12px;
+	height: 12px;
+	border-radius: 6px;
+	border: #FFF solid 2px;
+	background-color: #555;
+	transition: all 0.5s;
+}
+
+.carousel-indicators .active {
+	width: 28px;
+	height: 12px;
+	margin: 0 3px;
+	background-color: transparent;
+}
+
+.carousel-indicators li.active div {
+	width: 28px;
+	height: 12px;
+	border-radius: 6px;
+	border: #FFF solid 2px;
+	background-color: #fd0000;
+}
+/*左右选择用的span样式设置*/
+.carousel .carousel-control {
+	display: none;
+}
+
+.carousel:hover .carousel-control {
+	display: block;
+}
+
+.carousel-control {
+	width: auto;
+}
+
+.carousel-control.left {
+	background-image: none;
+	background-repeat: repeat-x;
+}
+
+.carousel-control.right {
+	right: 0;
+	left: auto;
+	background-image: none;
+	background-repeat: repeat-x;
+}
+/*方块左右箭头*/
+.carousel-control .p-blockLeft, .carousel-control .p-blockRight {
+	padding: 10px 5px;
+	background-color: #fd0000;
+	position: absolute;
+	top: 50%;
+	z-index: 5;
+	display: inline-block;
+	margin-top: -22px;
+}
+
+.carousel-control .p-blockLeft {
+	left: 0;
+	border-radius: 0 5px 5px 0;
+}
+
+.carousel-control .p-blockRight {
+	right: 0;
+	border-radius: 5px 0 0 5px;
+}
+/*----*/
+
+/*--平行进口车--*/
+.cb-import-index {
+	width: 90%;
+	margin: 25px 5%;
+	overflow: hidden;
+}
+
+.cb-import-index .cb-left-area {
+	width: 25%;
+	margin: 0;
+	float: left;
+}
+
+.cb-import-index .cb-right-area {
+	width: 75%;
+	padding-left: 30px;
+	margin: 0;
+	float: left;
+}
+
+/*分类*/
+.cb-type-area {
+	overflow: hidden;
+}
+
+.cb-type-header {
+	height: 30px;
+	line-height: 30px;
+	background-color: #555;
+	color: #fff;
+	padding: 0 5px;
+}
+
+.cb-type-header .cb-type-title {
+	font-size: 16px;
+	margin: 0;
+	float: left;
+}
+
+.cb-type-header a {
+	color: #fff;
+	font-size: 12px;
+}
+
+.cb-type-header a:hover {
+	color: #fd0000;
+}
+
+.cb-type-body {
+	width: 100%;
+	background-color: #efefef;
+	overflow: hidden;
+}
+
+.cb-type-body .cb-type-box, .cb-type-body .cb-type-pricerange,
+	.cb-type-body .cb-type-source {
+	width: 25%;
+	padding: 5px;
+	margin: 0;
+	float: left;
+}
+
+.cb-type-body .cb-type-box .cb-brand-name {
+	font-size: 12px;
+	text-align: center;
+	background-color: #FFF;
+}
+
+.cb-type-body .cb-type-box:hover, .cb-type-body .cb-type-pricerange:hover,
+	.cb-type-body .cb-type-source:hover {
+	background-color: #d8d8d8;
+}
+
+/*车*/
+.cb-car-body {
+	width: 100%;
+	overflow: hidden;
+}
+
+.cb-car-body .cb-car-child {
+	width: 33.33%;
+	padding: 5px;
+	margin: 0;
+	float: left;
+}
+
+.cb-car-body .cb-car-child .cb-car-box {
+	margin-bottom: 0;
+}
+
+/*--新推荐--*/
+.cb-recom-index {
+	width: 90%;
+	margin: 25px 5%;
+	overflow: hidden;
+}
+
+.cb-recom {
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+	color: #888;
+	overflow: hidden;
+	margin-bottom: 15px;
+}
+
+.cb-recom span {
+	font-size: 20px;
+	margin-right: 10px;
+}
+
+.cb-recom font {
+	font-size: 24px;
+	color: #fd0000;
+	margin-right: 15px;
+}
+
+.cb-recom-area {
+	width: 100%;
+	overflow: hidden;
+}
+/*.cb-recom-area .cb-driver { width:1px; height:188px; background-color:#fff; margin-left:-1px; float:left; z-index:10; position:relative;}*/
+.cb-recom-area .cb-recommend-box {
+	width: 25%;
+	height: 188px;
+	transition: all 0.5s;
+	overflow: hidden;
+	border-right: #FFF solid 1px;
+	padding: 0;
+	margin: 0;
+	float: left;
+	position: relative;
+}
+
+.cb-recom-area:hover .cb-recommend-box:hover {
+	width: 40%;
+}
+
+.cb-recom-area:hover .cb-recommend-box {
+	width: 20%;
+}
+
+.cb-recom-area .cb-recommend-box .cb-car-img {
+	width: 100%;
+	height: 188px;
+	transition: all 0.5s;
+	overflow: hidden;
+	margin: 0;
+	float: left;
+}
+
+.cb-recom-area:hover .cb-recommend-box:hover .cb-car-img {
+	width: 50%;
+	background-color: #555;
+	border-top: #555 solid 2px;
+	border-bottom: #555 solid 2px;
+	border-left: #555 solid 3px;
+	margin: 0;
+	float: left;
+}
+
+.cb-recom-area .cb-recommend-box .cb-car-info {
+	width: 0%;
+	transition: all 0.5s;
+}
+
+.cb-recom-area:hover .cb-recommend-box:hover .cb-car-info {
+	width: 50%;
+	height: 188px;
+	border-top: #555 solid 2px;
+	border-right: #555 solid 3px;
+	border-bottom: #555 solid 2px;
+	padding: 5px 15px;
+	margin: 0;
+	float: left;
+}
+
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-name {
+	height: 50px;
+	line-height: 50px;
+	font-size: 14px;
+	font-weight: bolder;
+	overflow: hidden;
+}
+
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-otherinfo {
+	height: 50px;
+	line-height: 1.75;
+	color: #888;
+	overflow: hidden;
+}
+
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-price {
+	height: 30px;
+	line-height: 30px;
+	overflow: hidden;
+}
+
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-car-price font {
+	font-size: 16px;
+	font-weight: bolder;
+	color: #fd0000;
+	margin: auto 5px auto 2px;
+}
+
+.cb-recom-area .cb-recommend-box .cb-car-info .cb-btn-line {
+	height: 40px;
+	line-height: 40px;
+	text-align: right;
+	padding-right: 3px;
+	overflow: hidden;
+}
+
+/*--新闻--*/
+.cb-news-index {
+	width: 90%;
+	margin: 25px 5%;
+	overflow: hidden;
+}
+
+.cb-news-index .cb-hot-img {
+	height: 270px;
+	overflow: hidden;
+	padding-right: 15px;
+}
+
+.cb-news-index .cb-hot-news .cb-news-line {
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	padding-right: 15px;
+}
+
+.cb-news-index .cb-hot-news .cb-news-line .cb-news-title {
+	width: 80%;
+	font-size: 16px;
+	font-weight: bolder;
+	margin: 0;
+	float: left;
+}
+
+.cb-news-index .cb-hot-news .cb-news-line .cb-news-title span {
+	font-size: 14px;
+	margin-right: 5px;
+}
+
+.cb-news-index .cb-hot-news .cb-news-line .cb-news-date {
+	margin: 0;
+	float: right;
+}
+
+.cb-news-index .cb-hot-news .cb-news-info {
+	height: 30px;
+	line-height: 30px;
+	overflow: hidden;
+	padding-right: 15px;
+}
+
+.cb-news-index .cb-newsline-box {
+	height: 100px;
+	padding-left: 110px;
+	padding-right: 5px;
+	margin-bottom: 20px;
+	margin-right: 5px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0); /*opera或ie9*/
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0); /*firefox*/
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0); /*webkit*/
+	transition: all 0.75s;
+}
+
+.cb-news-index .cb-newsline-box:hover {
+	box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*opera或ie9*/
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*firefox*/
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*webkit*/
+}
+
+.cb-news-index .cb-newsline-box .cb-news-sort {
+	width: 100px;
+	text-align: center;
+	height: 90px;
+	line-height: 90px;
+	font-size: 52px;
+	overflow: hidden;
+	border-right: #555 dashed 1px;
+	margin-top: 5px;
+	left: 15px;
+	z-index: 10;
+	position: absolute;
+}
+
+.cb-news-index .cb-newsline-box .cb-news-line {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	margin-bottom: 5px;
+	padding-left: 5px;
+}
+
+.cb-news-index .cb-newsline-box .cb-news-line .cb-news-title {
+	width: 80%;
+	font-size: 16px;
+	font-weight: bolder;
+	margin: 0;
+	float: left;
+}
+
+.cb-news-index .cb-newsline-box .cb-news-line .cb-news-title span {
+	font-size: 14px;
+	margin-right: 5px;
+}
+
+.cb-news-index .cb-newsline-box .cb-news-line .cb-news-date {
+	margin: 0;
+	float: right;
+}
+
+.cb-news-index .cb-newsline-box .cb-news-info {
+	height: 60px;
+	line-height: 1.75;
+	overflow: hidden;
+	padding: 5px 0;
+	text-indent: 2em;
+	padding-left: 5px;
+}
+
+/*--综合--*/
+.cb-comprehensive-index {
+	width: 90%;
+	margin: 25px 5%;
+	overflow: hidden;
+}
+
+.cb-comprehensive-index .cb-comprehensive-us {
+	width: 60%;
+	padding-right: 15px;
+	margin: 0;
+	float: left;
+}
+
+.cb-comprehensive-index .cb-comprehensive-knowledge {
+	width: 40%;
+	padding-left: 15px;
+	margin: 0;
+	float: left;
+}
+
+.cb-comprehensive-index .cb-comprehensive-brand .cb-list {
+	width: 100%;
+	background-color: #efefef;
+	overflow: hidden;
+}
+
+.cb-comprehensive-index .cb-comprehensive-brand .cb-list .cb-child-box {
+	width: 20%;
+	padding: 5px;
+	margin: 0;
+	float: left;
+}
+
+.cb-comprehensive-index .cb-comprehensive-brand .cb-list .cb-child-box:hover
+	{
+	background-color: #d8d8d8;
+}
+
+.cb-comprehensive-index .cb-comprehensive-brand .cb-list .cb-child-box .cb-child-name
+	{
+	font-size: 12px;
+	text-align: center;
+	background-color: #FFF;
+}
+
+.cb-comprehensive-index .cb-comprehensive-us .cb-us-img {
+	width: 60%;
+	height: 252px;
+	margin: 0;
+	float: left;
+	overflow: hidden;
+}
+
+.cb-comprehensive-index .cb-comprehensive-us .cb-us-index {
+	width: 40%;
+	height: 252px;
+	font-size: 16px;
+	line-height: 1.98;
+	text-indent: 2em;
+	padding: 0 10px 0 15px;
+	overflow: hidden;
+	margin: 0;
+	float: left;
+}
+
+.cb-comprehensive-index .cb-comprehensive-knowledge .cb-knowledge-list {
+	padding: 0;
+	list-style: none;
+}
+
+.cb-comprehensive-index .cb-comprehensive-knowledge .cb-knowledge-list .cb-knowledge-question
+	{
+	font-weight: bolder;
+	overflow: hidden;
+}
+
+.cb-comprehensive-index .cb-comprehensive-knowledge .cb-knowledge-list .cb-knowledge-question span
+	{
+	font-size: 12px;
+	margin-right: 5px;
+}
+
+.cb-comprehensive-index .cb-comprehensive-knowledge .cb-knowledge-list .cb-knowledge-answer
+	{
+	text-indent: 2em;
+	height: 53px;
+	line-height: 1.75;
+	overflow: hidden;
+	padding-top: 5px;
+	margin-bottom: 15px;
+}
+
+.cb-modular {
+	width: 90%;
+	padding: 0;
+	margin: 0 auto;
+	overflow: hidden;
+}
+/*--------------------平行进口车 & 中规车--------------------*/
+/*分类*/
+.cb-nav-brand {
+	width: 100%;
+	margin: 20px 0;
+	padding: 0;
+}
+
+.cb-nav-brand li {
+	width: 6%;
+	padding: 2px;
+	background-color: #efefef;
+	margin: 2px 0;
+	overflow: hidden;
+}
+
+.cb-nav-brand>li+li {
+	margin-left: 0px;
+	margin-right: 2px;
+}
+
+.cb-nav-brand li:hover, .cb-nav-brand li.active {
+	background-color: #fd0000;
+	margin-right: 2px;
+}
+
+.cb-nav-brand li a {
+	text-align: center;
+	border-radius: 0;
+	padding: 0;
+}
+
+.cb-nav-brand li a img {
+	max-width: 100%;
+	height: auto;
+}
+
+.cb-nav-brand li a .cb-brand-name {
+	background-color: #fff;
+}
+
+.cb-nav-brand li.active a, .cb-nav-brand li.active a:hover,
+	.cb-nav-brand li.active a:focus {
+	background-color: transparent;
+}
+
+.cb-nav-brand li.active .cb-brand-name {
+	background-color: transparent;
+}
+
+/*车辆信息显示*/
+.cb-car-box {
+	padding: 5px;
+	transition: all 0.75s;
+	margin-bottom: 30px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /*opera或ie9*/
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /*firefox*/
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /*webkit*/
+}
+
+.cb-car-box:hover {
+	box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*opera或ie9*/
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*firefox*/
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*webkit*/
+}
+
+.cb-car-box .cb-img {
+	height: 168px;
+	overflow: hidden;
+	position: relative;
+}
+
+.cb-car-box .cb-img img {
+	transition: all 0.75s;
+}
+
+.cb-car-box:hover .cb-img img {
+	transform: scale(1.25);
+}
+
+.cb-car-box .cb-car-name {
+	font-size: 16px;
+	margin-bottom: 5px;
+	font-weight: bolder;
+	overflow: hidden;
+}
+
+.cb-car-box:hover .cb-car-name {
+	color: #fd0000;
+}
+
+.cb-car-box .cb-car-price {
+	line-height: 40px;
+	border-bottom: #efefef dashed 1px;
+}
+
+.cb-car-box .cb-car-price .cb-special-price {
+	font-size: 16px;
+	font-weight: bolder;
+	color: #fd0000;
+	margin: auto 5px auto 2px;
+}
+
+.cb-car-box .cb-car-price .cb-proposal-price {
+	color: #fd7512;
+	text-decoration: line-through;
+	margin-left: 10px;
+}
+
+.cb-car-box .cb-car-info {
+	height: 48px;
+	line-height: 1.75;
+	overflow: hidden;
+	margin-top: 5px;
+}
+
+.cb-car-box .cb-btn {
+	width: 80px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	letter-spacing: 2px;
+	color: #FFF;
+	padding: 0;
+	border-radius: 25px;
+	background-color: rgba(253, 0, 0, 0.75);
+	text-decoration: none;
+	top: 100%;
+	left: 50%;
+	margin-left: -40px;
+	z-index: 10;
+	position: absolute;
+	cursor: pointer;
+	transition: all 0.75s;
+}
+
+.cb-car-box:hover .cb-btn {
+	top: 50%;
+	margin-top: -15px;
+}
+
+.cb-car-box:hover .cb-btn:hover {
+	background-color: #fd0000;
+}
+
+/*分页*/
+.cb-pagination {
+	margin-top: 0;
+	float: right;
+}
+
+.cb-pagination>li>a, .cb-pagination>li>span {
+	color: #555;
+}
+
+.pagination>li>a:hover, .pagination>li>span:hover, .pagination>li>a:focus,
+	.pagination>li>span:focus {
+	color: #fd0000;
+}
+
+.cb-pagination>.active>a, .cb-pagination>.active>span, .cb-pagination>.active>a:hover,
+	.cb-pagination>.active>span:hover, .cb-pagination>.active>a:focus,
+	.cb-pagination>.active>span:focus {
+	background-color: #fd0000;
+	border-color: #fd0000;
+}
+
+/*--------------------新闻中心--------------------*/
+/*tabs页公共样式*/
+.cb-tabs {
+	border-bottom: none;
+	float: left;
+	padding: 0;
+	margin: 25px 0;
+}
+
+.cb-tabs>li>a {
+	/*font-size: 14px;*/
+	width: 100px;
+	height: 36px;
+	line-height: 36px;
+	border-radius: 0;
+	background: #efefef;
+	padding: 0;
+	margin: 0;
+	outline: none;
+	text-align: center;
+	border: none;
+}
+
+.cb-tabs>li>a:hover {
+	color: #fd0000;
+	border: none;
+}
+
+.cb-tabs>li.active>a, .cb-tabs>li.active>a:hover, .cb-tabs>li.active>a:focus
+	{
+	border-radius: 0%;
+	font-weight: bolder;
+	color: #FFF;
+	cursor: default;
+	background: #fd0000;
+	border: none;
+}
+
+.cb-news-box {
+	padding: 5px;
+	margin-bottom: 30px;
+	transition: all 0.6s;
+	border: #555 solid 1px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0); /*opera或ie9*/
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0); /*firefox*/
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0); /*webkit*/
+}
+
+.cb-news-box:hover {
+	box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*opera或ie9*/
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*firefox*/
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 1); /*webkit*/
+}
+
+.cb-news-box .cb-img-box {
+	height: 168px;
+	overflow: hidden;
+}
+
+.cb-news-box .cb-img-box img {
+	transition: all 0.6s;
+}
+
+.cb-news-box .cb-news-title {
+	width: 100%;
+	height: 36px;
+	line-height: 36px;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.cb-news-box .cb-news-date {
+	line-height: 20px;
+	color: #666;
+	font-size: 14px;
+	background-color: rgba(255, 255, 255, 0.75);
+	top: 10px;
+	right: 20px;
+	padding: 0 2px;
+	z-index: 8;
+	position: absolute;
+	transition: all 0.6s;
+}
+
+.cb-news-box .cb-news-date span {
+	font-size: 12px;
+	margin-right: 3px;
+}
+
+.cb-news-box:hover .cb-img-box img {
+	transform: scale(1.25);
+}
+
+.cb-news-box:hover .cb-news-date {
+	color: #fd0000;
+	background-color: #FFF;
+	top: 5px;
+}
+
+/*--------------------售后服务--------------------*/
+.cb-guarantee {
+	line-height: 2;
+	padding: 5px 0;
+	margin-bottom: 10px;
+}
+
+/*--------------------关于我们--------------------*/
+#aboutus {
+	background: url(../images/banner.jpg) no-repeat center center;
+}
+
+/*关于我们*/
+.cb-about-name {
+	font-size: 30px;
+	color: #FFF;
+	text-align: center;
+	padding: 45px 0;
+}
+
+#c-about .carousel-indicators {
+	width: 146px;
+	height: 210px;
+	padding: 5px;
+	margin: 0;
+	left: 20px;
+	top: 20px;
+	background: rgba(255, 255, 255, 0.35);
+	overflow: hidden;
+}
+
+#c-about .carousel-indicators div {
+	width: 136px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	font-size: 16px;
+	cursor: pointer;
+	background: rgba(255, 255, 255, 0.6);
+	transition: all 0.6s;
+}
+
+#c-about .carousel-indicators div:hover {
+	color: #fd0000;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+#c-about .carousel-indicators .active, #c-about .carousel-indicators .active:hover
+	{
+	width: 136px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background: url(../images/arrow-down.png) no-repeat left center
+		rgba(255, 255, 255, 0.8);
+	color: #fd0000;
+	margin: 0;
+}
+
+#c-about .carousel-indicators div span {
+	font-size: 16px;
+	margin-top: 22px;
+	display: none;
+}
+
+#c-about .carousel-indicators .active span {
+	display: block;
+	color: #fd0000;
+}
+
+#c-about .c-infoBox {
+	width: 65%;
+	height: 100%;
+	color: #FFF;
+	margin-right: 10%;
+	float: right;
+}
+
+#c-about .c-infoBox img {
+	width: 60%;
+}
+
+#c-about .c-infoBox .c-abUs {
+	font-size: 16px;
+	line-height: 1.95;
+	text-indent: 2em;
+}
+
+#c-about .c-infoBox .c-abUs p {
+	margin-top: 10px;
+}
+
+#c-about .c-infoBox .c-abUs .c-cpName, #c-about .c-infoBox .c-abUs .c-cpTeam
+	{
+	font-size: 18px;
+	color: #fd0000;
+	font-weight: bolder;
+	background-color: rgba(255, 255, 255, 0.75);
+	padding: 2px 5px;
+	border-radius: 2px;
+	margin-bottom: 20px;
+}
+
+#c-about .c-infoBox .c-abUs .c-cpIdea {
+	font-size: 20px;
+	color: #fd0000;
+	font-weight: bolder;
+	background-color: rgba(255, 255, 255, 0.75);
+	padding: 2px 5px;
+	border-radius: 2px;
+	margin-bottom: 20px;
+}
+
+#c-about .c-infoBox .c-abUs .c-cpIdeaInfo {
+	font-size: 18px;
+	color: #FFF;
+	font-weight: bolder;
+	margin-bottom: 20px;
+}
+
+.c-breadcrumb {
+	background: none;
+	padding: 123px 0 0 0;
+	margin: 0 0 35px 0;
+}
+
+.c-breadcrumb a {
+	color: #FFF;
+	outline: none;
+}
+
+.c-breadcrumb a:hover {
+	color: #fd0000;
+}
+
+.c-breadcrumb .active {
+	color: #FFF;
+}
+
+.c-texthidden {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: left;
+}
+
+/*--------------------联系我们--------------------*/
+#contactus {
+	background: url(../images/abUs.jpg) no-repeat center center;
+}
+
+#contactus .cb-contact-box {
+	width: 60%;
+	height: 200px;
+	top: 50%;
+	margin: -100px 20% auto 20%;
+	overflow: hidden;
+	position: absolute;
+}
+
+#contactus .cb-contact-box .cb-contact-word {
+	width: 60%;
+	margin: 0;
+	float: left;
+}
+
+#contactus .cb-contact-box .cb-contact-wechart {
+	width: 30%;
+	margin: 0;
+	float: right;
+}
+
+.cb-ul-info {
+	padding: 0;
+	color: #FFF;
+}
+
+.cb-ul-info li.cb-cp-name {
+	line-height: 40px;
+	font-size: 28px;
+	margin-bottom: 30px;
+}
+
+.cb-ul-info li.cb-driver {
+	height: 2px;
+	background: #FFF;
+	border-bottom: #888 solid 1px;
+	margin: 14px 0;
+}
+
+.cb-ul-info li.cb-cp-info {
+	width: 100%;
+	line-height: 40px;
+	font-size: 16px;
+}
+
+.cb-ul-info li.cb-cp-info span {
+	font-size: 14px;
+	margin-right: 8px;
+}
+
+.cb-wechart-box {
+	width: 138px;
+	margin: 0 auto;
+}
+
+.cb-wechart-box .cb-wechart-word {
+	line-height: 1.5;
+	font-size: 16px;
+	color: #fff;
+	font-weight: bolder;
+	text-align: center;
+	padding: 10px 0;
+}
+
+/*--------------------车辆阅读详情页--------------------*/
+.cb-breadcrumb {
+	background: none;
+	margin-bottom: 0;
+}
+/*内容里的图片设备自适应*/
+.cb-img-adapt img {
+	display: block !important;
+	max-width: 100% !important;
+	width: 100%;
+	height: auto;
+	max-height: auto !important;
+}
+
+#carCarousel .carousel-inner {
+	height: 360px;
+	overflow: hidden;
+}
+
+#carCarousel .carousel-inner .item img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+#carCarousel .carousel-indicators {
+	width: 100%;
+	background-color: #efefef;
+	margin: 0;
+	left: 0;
+	bottom: 0;
+	overflow: hidden;
+	position: static;
+}
+
+#carCarousel .carousel-indicators li {
+	width: 25%;
+	height: auto;
+	padding: 5px;
+	margin: 0;
+	float: left;
+}
+
+#carCarousel .carousel-indicators li img {
+	border: #efefef solid 2px;
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+#carCarousel .carousel-indicators .active img {
+	border: #fd0000 solid 2px;
+}
+
+.cb-car-introduce {
+	padding: 0;
+}
+
+.cb-car-introduce .cb-car-name {
+	line-height: 60px;
+	font-size: 24px;
+}
+
+.cb-car-introduce .cb-car-price {
+	line-height: 80px;
+	font-size: 16px;
+}
+
+.cb-car-introduce .cb-car-price .cb-special-price {
+	font-size: 24px;
+	font-weight: bolder;
+	color: #fd0000;
+	margin: auto 5px auto 2px;
+}
+
+.cb-car-introduce .cb-car-price .cb-proposal-price {
+	color: #fd7512;
+	text-decoration: line-through;
+	margin-left: 10px;
+}
+
+.cb-car-introduce .cb-car-other {
+	line-height: 40px;
+	font-size: 16px;
+}
+
+.cb-car-driver {
+	width: 100%;
+	height: 2px;
+	background-color: #efefef;
+	margin: 25px 0;
+}
+
+.cb-buy-flow, .cb-buy-attention {
+	padding: 0;
+	margin-bottom: 25px;
+}
+
+.cb-buy-flow li, .cb-buy-attention li {
+	font-size: 16px;
+	line-height: 1.75;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px 0;
+}
+
+.cb-buy-flow li span {
+	border-radius: 10px;
+	color: #fff;
+	background-color: #fd0000;
+	padding: 5px;
+	margin-right: 10px;
+}
+
+.cb-buy-attention span {
+	font-size: 14px;
+	margin-right: 10px;
+}
+
+.table thead {
+	background-color: #fd0000;
+	color: #FFF;
+	font-size: 16px;
+	font-weight: bolder;
+}
+
+.table-bordered th, .table-bordered td {
+	border: 1px solid #fd0000 !important;
+}
+
+/*新闻阅读详情页*/
+#cont {
+	padding-top: 25px;
+}
+
+.cb-newsread-box {
+	min-height: 600px;
+}
+
+.cb-newsread-box .cb-title {
+	font-size: 24px;
+	text-align: center;
+}
+
+.cb-newsread-box .cb-editTime {
+	text-align: center;
+	padding: 15px 0;
+	color: #888;
+}
+
+.cb-newsread-box .cb-editTime font {
+	margin: 0 15px;
+}
+
+.cb-newsread-box .cb-content {
+	line-height: 1.75;
+	word-break: break-all;
+	text-indent: 2em;
+	padding-top: 30px;
+	margin-bottom: 30px;
+}
+
+.cb-newsread-box .cb-content img {
+	padding: 20px 0;
+	margin: 0 auto;
+}
+
+.cb-newsread-box .cb-content a {
+	color: #1a9a1d;
+}
+
+.cb-newsread-box .cb-content a:hover {
+	color: #fd7512;
+}
+
+.cb-newsread-box .cb-context {
+	line-height: 2;
+}
+
+.ty_active,.ty_active a{
+	color:red;
+	background-color: rgb(216, 216, 216);
+}
+.carousel-inner,.carousel-inner .item{
+	width: 100%;
+}
+.cb-type-box img{
+	width: 100%;
+	height: 100px;
+}

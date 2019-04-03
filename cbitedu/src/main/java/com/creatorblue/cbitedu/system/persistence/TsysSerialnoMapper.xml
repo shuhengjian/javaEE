@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysSerialnoMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysSerialno">
+        <result column="serialno_id" jdbcType="VARCHAR" property="serialno_id"/>
+        <result column="serial_name" jdbcType="DECIMAL" property="serial_name"/>
+        <result column="secound_name" jdbcType="VARCHAR" property="secound_name"/>
+        <result column="formular_regx" jdbcType="VARCHAR" property="formular_regx"/>
+        <result column="create_type" jdbcType="VARCHAR" property="create_type"/>
+        <result column="serial_length" jdbcType="INTEGER" property="serial_length"/>
+        <result column="step" jdbcType="INTEGER" property="step"/>
+        <result column="init_value" jdbcType="VARCHAR" property="init_value"/>
+        <result column="current_value" jdbcType="VARCHAR" property="current_value"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="tab_name" jdbcType="VARCHAR" property="tab_name"/>
+	</resultMap>	
+	<!-- 用于select查询公用抽取的列 -->
+	<!-- <sql id="Base_Column_List">
+		serialno_id,serial_name,secound_name,formular_regx,
+		decode(create_type,'1','递增','2','每日生成','3','每月生成','4','每年生成','') create_type,
+		serial_length,step,init_value,current_value,remark,tab_name
+	</sql> -->
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Base_Column">
+		serialno_id,serial_name,secound_name,formular_regx,formular_regx formular_regx_old,create_type,serial_length,step,init_value,current_value,remark,tab_name
+	</sql>
+	<!-- 新增流水号 -->
+	<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysSerialno">
+	        INSERT INTO T_SYS_SERIALNO (
+	        	serialno_id,
+	        	serial_name,
+	        	secound_name,
+	        	formular_regx,
+	        	create_type,
+	        	serial_length,
+	        	step,
+	        	init_value,
+	        	current_value,
+	        	remark,
+	        	tab_name
+	        ) VALUES (        
+	        	#{serialno_id,jdbcType=VARCHAR},
+	        	#{serial_name,jdbcType=VARCHAR},
+	        	#{secound_name,jdbcType=VARCHAR},
+	        	#{formular_regx,jdbcType=VARCHAR},
+	        	#{create_type,jdbcType=VARCHAR},
+	        	#{serial_length,jdbcType=INTEGER},
+	        	#{step,jdbcType=INTEGER},
+	        	#{init_value,jdbcType=VARCHAR},
+	        	#{current_value,jdbcType=VARCHAR},
+	        	#{remark,jdbcType=VARCHAR},
+	        	#{tab_name,jdbcType=VARCHAR}
+	        )
+	</insert>   
+	<!-- 修改流水号 -->
+	<update id="update"  parameterType="com.creatorblue.cbitedu.system.domain.TsysSerialno">
+			update T_SYS_SERIALNO 
+				set serial_name=#{serial_name,jdbcType=VARCHAR},
+	        	secound_name=#{secound_name,jdbcType=VARCHAR},
+	        	formular_regx=#{formular_regx,jdbcType=VARCHAR},
+	        	create_type=#{create_type,jdbcType=VARCHAR},
+	        	serial_length=#{serial_length,jdbcType=INTEGER},
+	        	step=#{step,jdbcType=INTEGER},
+	        	init_value=#{init_value,jdbcType=VARCHAR},
+	        	current_value=#{current_value,jdbcType=VARCHAR},
+	        	remark=#{remark,jdbcType=VARCHAR},
+	        	tab_name=#{tab_name,jdbcType=VARCHAR}
+	        where 
+	        	serialno_id=#{serialno_id,jdbcType=VARCHAR}
+	</update>
+	<!-- 修改当前流水号 傎-->
+	<update id="updateSerialnoCurNo"  parameterType="com.creatorblue.cbitedu.system.domain.TsysSerialno">
+			update T_SYS_SERIALNO 
+				set current_value=#{current_value,jdbcType=VARCHAR}
+	        where 
+	        	secound_name=#{secound_name,jdbcType=VARCHAR}
+	</update>
+	<!-- 实际业务需要增加的SQL语句 -->
+  	<select id="selectPageTsysSerialnoList" resultType="com.creatorblue.cbitedu.system.domain.TsysSerialno" parameterType="map">
+	  		select 
+    			<include refid="Base_Column" />
+    		from T_SYS_SERIALNO 
+    		where 1=1 
+    		<if test="serial_name!=null and serial_name!=''">
+				AND serial_name like '%'||#{serial_name}||'%'
+			</if>
+    		<if test="secound_name!=null and secound_name!=''">
+				AND secound_name like '%'||#{secound_name}||'%'
+			</if>
+ 	</select>
+ 	<!-- 查询流水号 -->
+ 	<select id="selectTsysSerialno" resultType="com.creatorblue.cbitedu.system.domain.TsysSerialno" parameterType="map">
+	  		select 
+    			<include refid="Base_Column" />
+    		from T_SYS_SERIALNO 
+    		where 1=1 
+    		<if test="serialno_id!=null and serialno_id!=''">
+    			and serialno_id=#{serialno_id}
+    		</if>    		     		
+    		<if test="secound_name!=null and secound_name!=''">
+    			and secound_name=#{secound_name}
+    		</if>    		     		
+ 	</select>
+ 	
+ 	<!-- 删除流水号 -->
+ 	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM T_SYS_SERIALNO where serialno_id in 
+		<foreach item="serialno_id" index="index" collection="list" open="(" separator="," close=")">
+			#{serialno_id}
+		</foreach>
+	</delete>
+</mapper>
+

@@ -1,0 +1,51 @@
+@charset "utf-8";
+/* CSS Document */
+html,body {margin:0px;height:100%; background:url(../images/loginbg.jpg) repeat-x; }
+img {border:0}
+a{ text-decoration: none; color:#414141; }
+a:hover{text-decoration:none; color:#f30;}
+body{font-family:"微软雅黑";font-size: 12px;line-height: 25px; }
+select,input{font-size: 12px;font-family: "宋体"; padding:0; margin:0;}
+ul,li,dl,dt,dd,h1,h2,h3,h4,h5,p,form,em,span{ margin:0; padding:0; list-style:none}
+table{ border:0px; padding:0; margin:0; }
+em{ font-style:normal}
+
+
+
+/*-----登陆首页-----*/
+.main{ width:1002px; height:100%; margin:0 auto;}
+.top{ width:1002px; height:76px; text-align:left;}
+.top img{ float:left; overflow:hidden; margin-left:27px; display:inline;}
+.cent{ float:left; overflow:hidden; width:1002px; height:611px; margin-top:5px; background:url(../images/login_cent_bg.jpg) no-repeat;}
+.logintable{ float:right; overflow:hidden; width:373px; height:198px; margin-top:196px; margin-right:65px; display:inline;}
+.usename{ height:43px; line-height:43px; text-align:center; font-size:14px; color:#04213f; font-family:"microsoft yahei"}
+.logininput{ text-align:left; width:284px; height:29px; border:1px solid #a19516; line-height:29px; color:#404040;}
+.loginyanzhengma{text-align:left; width:57px; height:29px; border:1px solid #a19516; line-height:29px; color:#404040;}
+.imgcent img{ line-height:43px; vertical-align:middle}
+.loginbut{ height:68px; line-height:68px; text-align:center;}
+.loginfoot{ float:left; overflow:hidden; width:1002px; text-align:center; height:100%; color:#6b6a6a; font-size:12px; font-family:"microsoft yahei";  margin-top:165px; line-height:30px;}@charset "utf-8";
+/* CSS Document */
+html,body {margin:0px;height:100%; background:url(../images/loginbg.jpg) repeat-x; }
+img {border:0}
+a{ text-decoration: none; color:#414141; }
+a:hover{text-decoration:none; color:#f30;}
+body{font-family:"宋体";font-size: 12px;line-height: 25px; }
+select,input{font-size: 12px;font-family: "宋体"; padding:0; margin:0;}
+ul,li,dl,dt,dd,h1,h2,h3,h4,h5,p,form,em,span{ margin:0; padding:0; list-style:none}
+table{ border:0px; padding:0; margin:0; }
+em{ font-style:normal}
+
+
+
+/*-----登陆首页-----*/
+.main{ width:1002px; height:100%; margin:0 auto;}
+.top{ width:1002px; height:76px; text-align:left;}
+.top img{ float:left; overflow:hidden; margin-left:27px; display:inline;}
+.cent{ float:left; overflow:hidden; width:1002px; height:611px; margin-top:5px; background:url(../images/login_cent_bg.jpg) no-repeat;}
+.logintable{ float:right; overflow:hidden; width:373px; height:198px; margin-top:196px; margin-right:65px; display:inline;}
+.usename{ height:43px; line-height:43px; text-align:center; font-size:14px; color:#04213f; font-family:"microsoft yahei"}
+.logininput{ text-align:left; width:284px; height:29px; border:1px solid #a19516; line-height:29px; color:#404040;}
+.loginyanzhengma{text-align:left; width:57px; height:29px; border:1px solid #a19516; line-height:29px; color:#404040;}
+.imgcent img{ line-height:43px; vertical-align:middle}
+.loginbut{ height:68px; line-height:68px; text-align:center;}
+.loginfoot{ float:left; overflow:hidden; width:1002px; text-align:center; height:100%; color:#6b6a6a; font-size:12px; font-family:"microsoft yahei";  margin-top:165px; line-height:30px;}

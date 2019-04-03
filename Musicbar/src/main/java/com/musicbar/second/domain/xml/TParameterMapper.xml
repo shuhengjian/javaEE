@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TParameterMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TParameter">
+    <id column="para_id" jdbcType="VARCHAR" property="paraId" />
+    <result column="ISDEFAULT" jdbcType="VARCHAR" property="isdefault" />
+    <result column="para_name" jdbcType="VARCHAR" property="paraName" />
+    <result column="para_no" jdbcType="VARCHAR" property="paraNo" />
+    <result column="para_val" jdbcType="VARCHAR" property="paraVal" />
+    <result column="para_type" jdbcType="VARCHAR" property="paraType" />
+    <result column="para_order" jdbcType="INTEGER" property="paraOrder" />
+    <result column="para_num" jdbcType="VARCHAR" property="paraNum" />
+    <result column="para_state" jdbcType="VARCHAR" property="paraState" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    para_id, ISDEFAULT, para_name, para_no, para_val, para_type, para_order, para_num,para_state
+  </sql>
+  <!-- 新增 -->
+  <insert id="insertparameter" parameterType="com.musicbar.second.domain.TParameter">
+  	insert into t_parameter (para_id,ISDEFAULT,para_name,para_no,para_val,para_type,para_num,para_state)
+  	values (#{paraId},#{isdefault},#{paraName},#{paraNo},#{paraVal},#{paraType},#{paraNum},#{paraState})
+  </insert>
+  <!-- 修改 -->
+  <update id="updateparameter" parameterType="com.musicbar.second.domain.TParameter">
+  	update t_parameter
+  	<set>
+  		<if test="paraName!=null and paraName!=''">
+    		para_name = #{paraName,jdbcType=VARCHAR},
+    	</if>
+    	<if test="paraNo!=null and paraNo!=''">
+    		para_no = #{paraNo,jdbcType=VARCHAR},
+    	</if>
+    	<if test="paraVal!=null and paraVal!=''">
+    		para_val = #{paraVal,jdbcType=VARCHAR},
+    	</if>
+    	<if test="paraType!=null and paraType!=''">
+    		para_type = #{paraType,jdbcType=VARCHAR},
+    	</if>
+    	<if test="paraNum!=null and paraNum!=''">
+    		para_num = #{paraNum,jdbcType=VARCHAR},
+    	</if>
+    	<if test="isdefault!=null and isdefault!=''">
+    		ISDEFAULT = #{isdefault,jdbcType=VARCHAR},
+    	</if>
+    	<if test="paraState!=null and paraState!=''">
+    		para_state = #{paraState,jdbcType=VARCHAR},
+    	</if>
+  	</set>
+  	where para_id = #{paraId,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询所有参数 -->
+  <select id="slectAllTParameter" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TParameter">
+   	select 
+    <include refid="Base_Column_List" />
+    from t_parameter
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TParameter">
+   	select 
+    <include refid="Base_Column_List" />
+    from t_parameter
+    where para_order = 1
+  </select>
+  <!-- 条件查询 -->
+  <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TParameter">
+   	select 
+    <include refid="Base_Column_List" />
+    from t_parameter
+    <where>
+    	<if test="paraName != null and paraName.trim() != ''">
+    		and  para_name like concat('%',#{paraName},'%')
+    	</if>
+    	<if test="paraType != null and paraType.trim() != ''">
+    		and  para_type like concat('%',#{paraType},'%')
+    	</if>
+    	<if test="paraState != null and paraState.trim()!=''">
+    		and para_state = #{paraState,jdbcType=VARCHAR}
+    	</if>
+    	<if test="paraVal != null and paraVal.trim() != ''">
+    		and para_val = #{paraVal}
+    	</if>
+    	<if test="paraNo != null and paraNo.trim() != ''">
+    		and para_no = #{paraNo}
+    	</if>
+    	 and para_order = 1
+    </where>
+  </select>
+  <!-- 根据id查询 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_parameter
+    where para_id = #{paraId,jdbcType=VARCHAR}
+  </select>
+  <!-- 删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_parameter
+    where para_id = #{paraId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.musicbar.second.domain.TParameter">
+    insert into t_parameter (para_id, ISDEFAULT, para_name, 
+      para_no, para_val, para_type, 
+      para_order, para_num)
+    values (#{paraId,jdbcType=VARCHAR}, #{isdefault,jdbcType=VARCHAR}, #{paraName,jdbcType=VARCHAR}, 
+      #{paraNo,jdbcType=VARCHAR}, #{paraVal,jdbcType=VARCHAR}, #{paraType,jdbcType=VARCHAR}, 
+      #{paraOrder,jdbcType=INTEGER}, #{paraNum,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.musicbar.second.domain.TParameter">
+    insert into t_parameter
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="paraId != null">
+        para_id,
+      </if>
+      <if test="isdefault != null">
+        ISDEFAULT,
+      </if>
+      <if test="paraName != null">
+        para_name,
+      </if>
+      <if test="paraNo != null">
+        para_no,
+      </if>
+      <if test="paraVal != null">
+        para_val,
+      </if>
+      <if test="paraType != null">
+        para_type,
+      </if>
+      <if test="paraOrder != null">
+        para_order,
+      </if>
+      <if test="paraNum != null">
+        para_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="paraId != null">
+        #{paraId,jdbcType=VARCHAR},
+      </if>
+      <if test="isdefault != null">
+        #{isdefault,jdbcType=VARCHAR},
+      </if>
+      <if test="paraName != null">
+        #{paraName,jdbcType=VARCHAR},
+      </if>
+      <if test="paraNo != null">
+        #{paraNo,jdbcType=VARCHAR},
+      </if>
+      <if test="paraVal != null">
+        #{paraVal,jdbcType=VARCHAR},
+      </if>
+      <if test="paraType != null">
+        #{paraType,jdbcType=VARCHAR},
+      </if>
+      <if test="paraOrder != null">
+        #{paraOrder,jdbcType=INTEGER},
+      </if>
+      <if test="paraNum != null">
+        #{paraNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.musicbar.second.domain.TParameter">
+    update t_parameter
+    <set>
+      <if test="isdefault != null">
+        ISDEFAULT = #{isdefault,jdbcType=VARCHAR},
+      </if>
+      <if test="paraName != null">
+        para_name = #{paraName,jdbcType=VARCHAR},
+      </if>
+      <if test="paraNo != null">
+        para_no = #{paraNo,jdbcType=VARCHAR},
+      </if>
+      <if test="paraVal != null">
+        para_val = #{paraVal,jdbcType=VARCHAR},
+      </if>
+      <if test="paraType != null">
+        para_type = #{paraType,jdbcType=VARCHAR},
+      </if>
+      <if test="paraOrder != null">
+        para_order = #{paraOrder,jdbcType=INTEGER},
+      </if>
+      <if test="paraNum != null">
+        para_num = #{paraNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where para_id = #{paraId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.musicbar.second.domain.TParameter">
+    update t_parameter
+    set ISDEFAULT = #{isdefault,jdbcType=VARCHAR},
+      para_name = #{paraName,jdbcType=VARCHAR},
+      para_no = #{paraNo,jdbcType=VARCHAR},
+      para_val = #{paraVal,jdbcType=VARCHAR},
+      para_type = #{paraType,jdbcType=VARCHAR},
+      para_order = #{paraOrder,jdbcType=INTEGER},
+      para_num = #{paraNum,jdbcType=VARCHAR}
+    where para_id = #{paraId,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询商品状态 -->
+  <select id="selectState" resultMap="BaseResultMap">
+  	SELECT p.para_val,p.para_no FROM t_parameter p WHERE p.para_type='goods_state'
+  </select>
+   <!-- 查询分类状态 -->
+  <select id="selectTypeState" resultMap="BaseResultMap">
+  	SELECT p.para_val,p.para_no FROM t_parameter p WHERE p.para_type='role_state'
+  </select>
+  	<!-- 查询商品是否特价-->
+  <select id="selectSpecial" resultMap="BaseResultMap">
+		SELECT p.para_val,p.para_no FROM t_parameter p WHERE p.para_type='goods_special'
+  </select>
+  <!-- 查询商品单位 -->
+  	<select id="selectUnits" resultMap="BaseResultMap">
+		SELECT p.para_val,p.para_no FROM t_parameter p WHERE p.para_type='goods_units'
+  	</select>
+	<!-- 查询商品规格 -->
+  	<select id="selectStandard" resultMap="BaseResultMap">
+		SELECT p.para_val,p.para_no FROM t_parameter p WHERE p.para_type='goods_standard'
+  	</select>
+</mapper>

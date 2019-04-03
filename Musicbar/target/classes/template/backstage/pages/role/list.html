@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>角色管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css" th:href="@{'/backstage/static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css" th:href="@{'/backstage/static/css/weadmin.css'}">
+		<script src="../jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	    <style type="text/css">
+	    	#role_page a{
+	    		cursor: pointer;
+	    	}
+	    	.layui-table th{
+	    		line-height: 100%;
+	    		text-align: center;
+	    	}
+	    	.layui-table td:nth-child(2){
+	    		text-align: left;
+	    	}
+	    	.layui-table td:nth-child(3){
+	    		text-align: left;
+	    	}
+	    	.layui-table th:first-child{
+	    		width:5%;
+	    		min-width: 30px;
+	    	}
+	    	
+	    	.layui-table tr td:first-child,.layui-table tr td:last-child,.layui-table tr td:nth-child(4){
+				text-align: center;
+	    		line-height: 100%;
+			}
+			
+	    </style>
+	   
+	</head>
+
+	<body>
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="role_querylist">角色管理</a>
+
+      </span>
+			<a class="layui-btn layui-btn-sm" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="layui-icon" style="line-height:30px">&#x1002;</i></a>
+		</div>
+		<div class="weadmin-body">
+			<div class="layui-row">
+			<form class="layui-form layui-col-md12 we-search">
+				<div class="layui-input-inline">
+					<select id="roleState" lay-filter="rolestate" name="roleState" onchange="change_()">
+						<option value="" name="state">角色状态</option>
+						<th:block th:each="para : ${paralist}">
+							<option th:if="${para.paraNo}==1" value="1">[[${para.paraVal}]]</option>
+							<option th:if="${para.paraNo}==0" value="0">[[${para.paraVal}]]</option>
+						</th:block>
+					</select>
+				</div>
+				<div class="layui-inline">
+						<input type="text" id="roleName" placeholder="请输入角色名" autocomplete="off" class="layui-input">
+				</div>
+				<button class="layui-btn" type="button" id="queryRoleByName"><i class="layui-icon">&#xe615;</i></button>
+			</form>
+				
+			</div>
+			<div class="weadmin-block">
+				<button class="layui-btn" onclick="WeAdminShow('添加角色','role_edit',700,400)"><i class="layui-icon"></i>添加</button>
+				<th:block th:each="para : ${paralist}">
+					<button class="layui-btn enable" id="role_launch" th:if="${para.paraNo}==1" >[[${para.paraVal}]]</button>
+					<button class="layui-btn layui-btn-danger binable" id="role_stop" th:if="${para.paraNo}==0" >[[${para.paraVal}]]</button>
+				</th:block>
+				<button class="layui-btn layui-bg-blue" onclick="WeAdminShow('角色分配','parcel.html',700,400)"><i class="iconfont">&#xe6b8;</i>角色分配</button>
+				<span class="fr" style="line-height:40px">共有数据：<span id="num" th:text="${page.total}">88</span> 条</span>
+			
+			
+			</div>
+			<table class="layui-table"  >
+				<thead>
+					<tr >
+						<th>
+							<input type="checkbox" disabled="disabled" />
+						</th>
+						<th style="width: 20%;min-width: 150px;">角色名称</th>
+						<th style="width: 45%;min-width: 200px;">分配用户</th>
+						<th style="width: 15%;min-width: 100px;">角色状态</th>
+						<th style="width:15%;min-width: 100px;">操作</th>
+					</tr>
+				</thead>
+				<tbody id="role_tbody">
+					<tr th:each="role :${page.list}">
+						<td th:data-id="${role.roleId}">
+							<input type="checkbox" />
+						</td>
+   						<td class="role_name" th:text="${role.roleName}">店长</td>
+   						<td  class="layui-elip role_user" th:data-id="${role.roleId}">小明、小红、小骚</td>
+   						<th:block th:each="para : ${paralist}">
+   							<td class="rolestate" th:if="${para.paraNo}==${role.roleState}" th:text="${para.paraVal}">已启用</td>
+   						</th:block>
+   						<td class="td-manage" th:data-id="${role.roleId}">
+   						</td>
+		    		</tr>
+				</tbody>
+			</table>
+			<div  style="text-align:center;">
+				<div class="layui-box layui-laypage layui-laypage-molv" id="role_page" th:data-id="${page.pages}">
+					<span class="layui-laypage-count" >共 <em id="num">[[${page.total}]]</em>条</span>
+					<!-- 上一页 start -->
+					<a th:if="${page.pageNum}==1" class="layui-laypage-prev layui-disabled" data-page="0">上一页</a>
+					<a th:if="${page.pageNum}>1" class="layui-laypage-prev" th:onclick="@{'role_query('+${page.prePage}+')'}" data-page="0">上一页</a>
+					<!-- 上一页 end -->
+					<!-- 页码部分   start-->
+					<th:bolck th:each="i :${#numbers.sequence(page.navigateFirstPage, page.navigateLastPage)}">
+						<th:block th:if="${i}<6">
+							<a th:onclick="@{'role_query('+${i}+')'}"
+								th:text="${i}"  th:style="${page.pageNum == i}? 'background-color:#009587;color:white;' :'' "
+								th:data-id="${page.pageNum == i}? 1:0" >
+							</a>
+						</th:block>
+					</th:bolck >
+					<th:block th:if="${page.pages}==6">
+							<a th:onclick="@{'role_query('+${page.pages}+')'}"
+								th:text="${page.pages}">
+							</a>
+					</th:block>
+					<th:block th:if="${page.pages}>=7">
+							<span>...</span>
+							<a th:onclick="@{'role_query('+${page.pages}+')'}"
+								th:text="${page.pages}">
+							</a>
+					</th:block>
+					<!-- 页码部分   end-->
+					<!-- 下一页 start -->
+					<a th:if="${page.pageNum}==${page.total}" class="layui-laypage-next layui-disabled">下一页</a>
+					<a th:if="${page.pageNum}<${page.total}" th:onclick="@{'role_query('+${page.nextPage}+')'}" class="layui-laypage-next">下一页</a>
+					<!-- 下一页 end -->
+					<span class="layui-laypage-skip">到第
+						<input type="text" min="1" value="1" class="layui-input" id="page_num">页
+						<button type="button" class="layui-laypage-btn" id="role_page_btn">确定</button>
+					</span>
+				</div>
+			</div>
+			
+		</div>
+		<!--<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
+		<script src="../../lib/layui/layui.js" th:src="@{'/backstage/lib/layui/layui.js'}" charset="utf-8"></script>
+		<script src="../../static/js/eleDel.js" th:src="@{'/backstage/static/js/eleDel.js'}" type="text/javascript" charset="utf-8"></script>
+		 <script type="text/javascript">
+	    	$(function(){
+	    		//分页输入查询   -- 开始
+				$("#role_page_btn").click(function(){
+					//获得总页数
+					let page_num = $("#role_page").data("id");
+					if(parseInt($("#page_num").val())>parseInt(page_num)){
+						//输入的数字大于总页数提示
+						layer.alert("输入的数字不能大于总页数"+page_num);
+					}else{
+						role_query($("#page_num").val());
+					}
+				})
+				//分页输入查询   -- 结束
+	    		//复选框控制只能单选  -- 开始
+	    		let checked = $("input[type='checkbox']");
+	    		$(checked).click(function(){
+	    			let _val = 0;
+	    			if($(this).prop("checked")){
+	    				 _val = 1;
+	    			}
+	    			for(var i=0;i<checked.length;i++){
+	    				$(checked[i]).prop("checked",false);
+	    			}
+	    			if(_val == 1){
+	    				$(this).prop("checked",true);
+	    			}
+	    			
+	    		})
+	    		//复选框控制只能单选  -- 结束
+	    		//查询角色分配的用户  -- 开始
+	    		role_user();
+	    		function role_user(){
+	    			for(var i=0;i<$(".role_user").length;i++){
+	    				let role_user = $(".role_user")[i];
+	    				let roleId = $(role_user).data("id");
+	    				$.ajax({
+		    				url:"role_queryuserlist",
+		    				data:{roleId:roleId},
+		    				type:"post",
+		    				dataType:"json",
+		    				success:function(res){
+		    					$(role_user).html("");
+		    					for(var j=0;j<res.list.length;j++){
+		    						$(role_user[i]).append(list[j].userName);
+		    						if(j<res.list.length-1){
+		    							$(role_user[i]).append("、");
+		    						}
+		    					}
+		    					if($(role_user).html()==""){
+		    						$(role_user).html("角色暂无分配用户");
+		    					}
+		    				}
+		    			})
+	    			}
+	    			
+	    		}
+	    		//查询角色分配的用户  -- 结束
+	    		// 根据角色名模糊查询  -- 开始
+	    		let roleState ="";//角色状态
+	    		$("#queryRoleByName").click(function(){
+	    			role_query(1);//条件查询
+	    		});
+	    		// 根据角色名模糊查询  -- 结束
+	    		//根据角色状态进行查询 -- 开始
+	    		layui.use("form", function () {
+				    var form = layui.form;
+				    form.on('select(rolestate)', function(data){
+				        role_query(1);//条件查询
+				     });  
+				})
+	    		//根据角色状态进行查询 -- 结束
+	    		//条件查询  --  开始
+	    		window.role_query = function(pageNum){
+	    			role_query(pageNum)
+	    		}
+	    		function role_query(pageNum){
+	    			let roleState = $("select").val();//角色状态
+	    			let roleName = $("#roleName").val();//获得输入的值
+	    			roleName = roleName.replace(" ","");
+	    			$.ajax({
+	    				url:"role_query",
+	    				type:"post",
+	    				data:{roleName:roleName,pageNum:pageNum,roleState:roleState},
+	    				success:function(res){
+	    					let role_page = JSON.parse(res);
+	    					let list = role_page[0].list;
+	    					//表格 -- 开始
+	    					$("#role_tbody").html("");//清空
+	    					for(let i=0;i<list.length;i++){
+	    						let role_state;
+	    						for(let k=0;k<$("select option").length;k++){
+	    							if($("select option")[k].value==list[i].roleState){
+	    								role_state = $($("select option")[k]).html();
+	    							}
+	    						}
+	    						$("#role_tbody").append("\
+		    					<tr>\
+		    						<td data-id=\""+list[i].roleId+"\">\
+		    						<input type=\"checkbox\"/>\
+		    						</td>\
+		    						<td class=\"role_name\">"+list[i].roleName+"</td>\
+		    						<td class=\"layui-elip role_user\" data-id=\""+list[i].roleId+"\"></td>\
+		    						<td class=\"rolestate\">"+role_state+"</td>\
+		    						<td class=\"td-manage\" data-id=\""+list[i].roleId+"\">\
+		    							<a title=\"编辑\"  onclick=\"WeAdminEdit('修改角色权限','role_edit?roleId="+list[i].roleId+"', '"+list[i].roleId+"', 700, 400)\">\
+		    								<i class=\"layui-icon\">&#xe642;</i>\
+		    							</a>\
+		    							&nbsp; &nbsp;\
+		    							<a title=\"删除\" onclick=\"role_del(this)\" \>\
+		    								<i class=\"layui-icon\">&#xe640;</i>\
+		    							</a>\
+		    						</td>\
+		    					</tr>");
+	    					}
+	    					//表格 -- 结束
+	    					
+	    					//填入角色分配的用户  --  开始
+	    					role_user();
+	    					//填入角色分配的用户  --  结束
+	    					
+	    					//统计数据条数 -- 开始
+    		    			$("#num").html(role_page[0].total);
+    		    			//统计数据条数 -- 结束
+	    					//分页 -- 开始
+	    					$("#role_page").html("");//清空
+	    					let pages = role_page[0].pages;//总页数
+	    					let pageNum = role_page[0].pageNum;//当前页码
+	    					let prePage = role_page[0].prePage;//前一页
+	    					let nextPage = role_page[0].nextPage;//下一页
+	    					$("#role_page").prop("data-id",pages);
+	    					//总记录
+	    					$("#role_page").append('<span class="layui-laypage-count" >共 <em id="num">'+role_page[0].total+'</em>条</span>');
+	    					//上一页
+	    					if(role_page[0].hasPreviousPage){
+	    						$("#role_page").append('<a class="prev" class="layui-laypage-prev" onclick="role_query('+prePage+')">上一页</a>');
+	    					}else{
+	    						$("#role_page").append('<a class="layui-laypage-prev layui-disabled" data-page="0">上一页</a>');
+	    					}
+	    					//页码少于等于6页
+	    					if(pages<=6){
+	    						for(let i =0;i<pages; i++){
+									if(pageNum == (i+1)){
+										$("#role_page").append('<a onclick="role_query('+(i+1)+')" data-id="'+(i+1)+'" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+									}else{
+										$("#role_page").append('<a onclick="role_query('+(i+1)+')" data-id="'+(i+1)+'">'+(i+1)+'</a>');
+									}
+								}
+	    					}
+	    					//6页以上
+	    					if(pages>6){
+	    						//当前页码少于3
+	    						if(pageNum<=3){
+	    							for(let i =0;i<5; i++){
+										if(pageNum == (i+1)){
+											$("#role_page").append('<a onclick="role_query('+(i+1)+')" data-id="1" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+										}else{
+											$("#role_page").append('<a onclick="role_query('+(i+1)+')" data-id="0">'+(i+1)+'</a>');
+										}
+									}
+	    							$("#role_page").append('<span>...</span>');
+	    							$("#role_page").append('<a onclick="role_query('+pages+')" data-page="0">'+pages+'</a>');
+	    						}
+	    						//页码大于3少于总页数-3
+	    						if(pageNum>3&&pageNum<pages-3){
+	    							$("#role_page").append('<a onclick="role_query(1)" data-page="0">1</a>');
+	    							$("#role_page").append('<span>...</span>');
+	    							let page_size = 0;//分页显示个数
+	    							$("#role_page").append('<a onclick="role_query('+(pageNum-1)+')" data-id="0">'+(pageNum-1)+'</a>');
+	    							for(let i =pageNum;i<pages; i++){
+										if(page_size<2){
+											if(pageNum == i){
+												$("#role_page").append('<a onclick="role_query('+(i)+')" data-id="1" style="background-color:#009587;color:white;">'+(i)+'</a>');
+												page_size++;
+											}else{
+												$("#role_page").append('<a onclick="role_query('+(i)+')" data-id="0">'+(i)+'</a>');
+												page_size++;
+											}
+										}
+									}
+	    							$("#role_page").append('<span>...</span>');
+	    							$("#role_page").append('<a onclick="role_query('+pages+')" data-page="0">'+pages+'</a>');
+	    						}
+	    						//页码大于或者等于总页数-3
+	    						if(pageNum>=pages-3){
+	    							$("#role_page").append('<a onclick="role_query(1)" data-page="0">1</a>');
+	    							$("#role_page").append('<span>...</span>');
+	    							$("#role_page").append('<a onclick="role_query('+(pages-4)+')" data-page="0">'+(pages-4)+'</a>');
+	    							for(let i =pages-4;i<pages; i++){
+										if(pageNum == (i+1)){
+											$("#role_page").append('<a onclick="role_query('+(i+1)+')" data-id="1" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+										}else{
+											$("#role_page").append('<a onclick="role_query('+(i+1)+')" data-id="0">'+(i+1)+'</a>');
+										}
+									}
+	    						}
+	    					}
+	    					//下一页
+	    					if(role_page[0].hasNextPage){
+								$("#role_page").append('<a class="layui-laypage-next" onclick="role_query('+nextPage+')">下一页</a>');
+							}else{
+								$("#role_page").append('<a class="layui-laypage-next layui-disabled">下一页</a>');
+							}
+	    					//输入页码跳转
+	    					$("#role_page").append('<span class="layui-laypage-skip">到第\
+	    							<input type="text" min="1" value="'+pageNum+'" class="layui-input" id="page_num">页\
+	    							<button type="button" class="layui-laypage-btn" id="role_page_btn">确定</button>\
+	    						</span>');
+	    					//分页 -- 结束
+	    					//分页输入查询   -- 开始
+							$("#role_page_btn").click(function(){
+								//获得总页数
+								console.log(1)
+								let page_num = $("#role_page").data("id");
+								if(parseInt($("#page_num").val())>parseInt(page_num)){
+									//输入的数字大于总页数提示
+									layer.alert("输入的数字不能大于总页数"+page_num);
+								}else{
+									role_query($("#page_num").val());
+								}
+							})
+							//分页输入查询   -- 结束
+	    				}
+	    			})
+	    		}
+	    		//条件查询  --  结束
+	    		//操作填充 -- 开始
+	    		let td = $("tr").find(".td-manage");
+	    		for(let i=0; i<td.length; i++){
+	    			let role_id = $(td[i]).data("id");
+	    			$(td[i]).html("\
+	    					<a title=\"编辑\"  onclick=\"WeAdminEdit('修改角色权限','role_edit?roleId="+role_id+"','"+role_id+"', 700, 400)\">\
+								<i class=\"layui-icon\">&#xe642;</i>\
+							</a>&nbsp; &nbsp;\
+							<a title=\"删除\" onclick=\"role_del(this)\" >\
+								<i class=\"layui-icon\">&#xe640;</i>\
+							</a>\
+	    					");
+	    		}
+	    		//操作填充 -- 结束
+
+		    	//启用  --  开始
+		    	$("#role_launch").click(function(){
+		    		let role_state = 0;//选中角色的个数
+		    		let checkbox_ = null;
+		    		let checked = $("input[type='checkbox']");
+		    		for(var i=0;i<checked.length;i++){
+		    			if($(checked[i]).prop("checked")){
+		    				role_state++;
+		    				checkbox_ = checked[i];
+		    			}
+		    		}
+		    		if(role_state==0){
+		    			layer.alert("请选中一条记录");
+		    			return false;
+		    		}
+		    		let state_txt =$(checkbox_).parents("tr").children("td")[2].innerHTML;//获得状态
+		    		let role_id =$(checkbox_).parents("td").data("id"); 
+		    		
+		    		if(state_txt == $(this).html()){
+		    			layer.alert("操作无效，该角色已经启用！");
+		    			return false;
+		    		}
+		    		$.ajax({
+		    			url:"role_state",
+		    			data:{roleState:"1",roleId:role_id},
+		    			dataType:"json",
+		    			type:"post",
+		    			success:function(res){
+		    				layer.alert(res.msg, {
+		                        title: "提示",
+		                        btn: ['确定']
+		                    },function (index, item) {
+		                    	page_change();//保存分页选择
+		                    	layer.close(index);
+		                    });
+		    			}
+		    		})
+		    	})
+		    	//启用  --  结束
+		    	
+		    	//停用  --  开始
+		    	$("#role_stop").click(function(){
+		    		let role_state = 0;//选中角色的个数
+		    		let checkbox_ = null;
+		    		let checked = $("input[type='checkbox']");
+		    		for(var i=0;i<checked.length;i++){
+		    			if($(checked[i]).prop("checked")){
+		    				role_state++;
+		    				checkbox_ = checked[i];
+		    			}
+		    		}
+		    		if(role_state==0){
+		    			layer.alert("请选中一条记录");
+		    			return false;
+		    		}
+		    		let state_txt =$(checkbox_).parents("tr").children("td")[2].innerHTML;//获得状态
+		    		let role_id =$(checkbox_).parents("td").data("id"); //获得id
+		    		if(state_txt == $(this).html()){
+		    			layer.alert("操作无效，该角色已经停用！");
+		    			return false;
+		    		}
+		    		$.ajax({
+		    			url:"role_state",
+		    			data:{roleState:"0",roleId:role_id},
+		    			dataType:"json",
+		    			type:"post",
+		    			success:function(res){
+		    				layer.alert(res.msg, {
+		                        title: "提示",
+		                        btn: ['确定']
+		                    },function (index, item) {
+		                    	page_change();//保存分页选择
+		                    	layer.close(index);
+		                    });
+		    			}
+		    		})
+		    	})
+		    	//停用  --  结束
+	    	})
+	    	//删除 --开始
+	    	function role_del(tag){
+	    		let id = $(tag).parents("td").data("id");//获得id
+	    		let name = $(tag).parents("tr").find(".role_name").html();//获得角色名
+	    		layui.use('layer', function(){
+	    			layer.confirm('确认要删除角色\"'+name+'\"？', {
+	    			    btn: ['确定','取消'],
+	    			    time: 200000, //20s后自动关闭
+	    			    },function(index){
+	    				$.ajax({
+			    			url:"role_delete",
+			    			data:{roleId:id},
+			    			type:"post",
+			    			dataType:"json",
+			    			success:function(res){
+			    				layer.alert(res.msg, {
+			                        title: "提示",
+			                        btn: ['确定']
+			                    },function (index, item) {
+			                    	page_change();//保存分页选择
+			                        layer.close(index);
+			                    });
+			    			}
+			    		})
+	    			    layer.close(index);
+	    			});
+	    		})
+	    	}
+	    	//删除 -- 结束
+	    	//保存分页选择 -- 开始
+	    	function page_change(){
+	    		let page_len = $("#role_page a").length;
+                let num ;
+                for(var i=0;i<page_len;i++){
+                	if($($("#role_page a")[i]).data("id")=="1"){
+                		num = $($("#role_page a")[i]).html();
+                	}
+                	//获得总页数
+					let page_num = $("#role_page").data("id");
+                	if(num>page_num){
+                		num--;
+                	}
+                }
+                role_query(num);//保存分页选择
+	    	}
+	    	//保存分页选择 -- 结束
+	    </script>
+	</body>

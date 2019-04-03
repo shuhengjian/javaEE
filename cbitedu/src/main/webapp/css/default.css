@@ -1,0 +1,481 @@
+﻿@charset "UTF-8"
+*{font-size:12px; font-family:微软雅黑,Tahoma,Verdana,新宋体}
+body{background:#D2E0F2; }
+a{ color:Black; text-decoration:none;}
+a:hover{ color:Red; text-decoration:underline;}
+.textbox03 {border: #878787 1px solid;padding: 4px 3px;font:Verdana, Geneva, sans-serif,宋体;line-height: 14px; background-color: #fff;  height: auto; font-size: 14px;  font-weight: bold; width: 190px; }
+
+.txt01{font:Verdana, Geneva, sans-serif,宋体;padding:3px 2px 2px 2px; border-width:1px; border-color:#ddd;  color:#000;}
+.txt {border: #878787 1px solid;padding: 4px 3px;font:Verdana, Geneva, sans-serif,宋体;line-height: 14px; background-color: #fff;  height: auto; font-size: 14px;}
+.footer{text-align:center;color:#15428B; margin:0px; padding:0px;line-height:23px; font-weight:bold;}
+
+.head a{color:White;text-decoration:underline;}
+
+.navlist{list-style-type:none;margin:0px; padding:10px;}
+.navlist li{ padding:0px;}
+.navlist li a{line-height:24px;}
+.navlist li div{margin:2px 0px;padding-left:10px;padding-top:2px; border:1px dashed #ffffff;}
+.navlist li div.hover{border:1px dashed #99BBE8; background:#E0ECFF;cursor:pointer;}
+.navlist li div.hover a{color:#416AA3;}
+.navlist li div.selected{border:1px solid #99BBE8; background:#E0ECFF;cursor:default;}
+.navlist li div.selected a{color:#416AA3; font-weight:bold;}
+
+
+.third_ul{ list-style-type:none;margin:0px; padding:0px; display:none;}
+.third_ul li{ padding-left:20px;}
+
+.icon{ background:url(../images/tabicons.png) no-repeat;width:18px; line-height:18px; display:inline-block;}
+.icon-sys{ background-position:0px -200px;}
+.icon-set{ background-position:-380px -200px;}
+.icon-add{background-position: -20px 0px;}
+.icon-org {
+	background-position: -300px -80px;
+}
+
+.icon-report {
+	background-position: -220px -60px;
+}
+
+.icon-chart {
+	background-position: -240px -80px;
+}
+.icon-query {
+	background-position: -220px -200px;
+}
+
+.icon-email {
+	background-position: -140px -180px;
+}
+.icon-nav{background-position: -100px -20px; }
+.icon-users{background-position: -100px -480px;}
+.icon-role{background-position: -360px -200px;}
+.icon-set{background-position: -380px -200px;}
+.icon-log{background-position: -380px -80px;}
+
+.icon-delete{ background-position:-140px -120px;}
+.icon-edit{ background-position:-380px -320px;}
+.icon-magic{ background-position:0px -500px;}
+
+.icon-delete16 {
+	background: url('icon/delete.gif') no-repeat;
+	width: 18px;
+	line-height: 18px;
+	display: inline-block;
+}
+
+.icon-database {
+	background-position: -20px -140px;
+}
+
+.icon-kin {no-repeat;
+	background-position: -60px -80px;
+}
+
+.icon-account {no-repeat;
+	background-position: -60px -100px;
+}
+
+.icon-gather {no-repeat;
+	background-position: -100px -100px;
+}
+
+.icon-remit {no-repeat;
+	background-position: -60px -140px;
+}
+
+.icon-formular {no-repeat;
+	background-position: -200px -40px;
+}
+
+.icon-salarybz {no-repeat;
+	background-position: -260px -40px;
+}
+
+.icon-sys-tes {no-repeat;
+	background-position: -20px -80px;
+}
+
+.icon-report {no-repeat;
+	background-position: -220px -60px;
+}
+
+.icon-report-detail {no-repeat;
+	background-position: -100px -80px;
+}
+
+.icon-report-detail2 {no-repeat;
+	background-position: -120px -80px;
+}
+
+.icon-base-set {no-repeat;
+	background-position: -200px -40px;
+}
+
+.icon-security {no-repeat;
+	background-position: -380px -220px;
+}
+
+.icon-setting {no-repeat;
+	background-position: -220px -320px;
+}
+
+.icon-bill {no-repeat;
+	background-position: -240px -20px;
+}
+
+.icon-money {no-repeat;
+	background-position: -280px -260px;
+}
+
+.icon-money1 {no-repeat;
+	background-position: -300px -260px;
+}
+
+.icon-money2 {no-repeat;
+	background-position: -320px -260px;
+}
+
+.icon-money3 {no-repeat;
+	background-position: -340px -260px;
+}
+
+.icon-query {no-repeat;
+	background-position: -220px -200px;
+}
+
+.icon-email {no-repeat;
+	background-position: -140px -180px;
+}
+
+.icon-email1 {no-repeat;
+	background-position: -160px -180px;
+}
+
+.icon-email2 {no-repeat;
+	background-position: -180px -180px;
+}
+
+.icon-email3 {no-repeat;
+	background-position: -380px -180px;
+}
+
+.icon-news {no-repeat;
+	background-position: -40px -200px;
+}
+
+.icon-oa-check {no-repeat;
+	background-position: -80px -200px;
+}
+
+.icon-oa-man {no-repeat;
+	background-position: -360px -200px;
+}
+
+.icon-oa-kaoqing {no-repeat;
+	background-position: -0px -100px;
+}
+
+.icon-oa-gufeng {no-repeat;
+	background-position: -40px -100px;
+}
+
+.icon-boards {no-repeat;
+	background-position: -60px -200px;
+}
+
+.icon-work {no-repeat;
+	background-position: 0px -100px;
+}
+
+.icon-chart-hisgram {no-repeat;
+	background-position: -240px -80px;
+}
+
+.icon-chart-cake {no-repeat;
+	background-position: -260px -80px;
+}
+
+.icon-chart-line {no-repeat;
+	background-position: -320px -80px;
+}
+
+.icon-file {no-repeat;
+	background-position: -220px -40px;
+}
+
+.icon-works {no-repeat;
+	background-position: -380px -120px;
+}
+
+.icon-salaryitem {no-repeat;
+	background-position: -200px -40px;
+}
+
+.icon-salarystandard {no-repeat;
+	background-position: -260px -40px;
+}
+
+.icon-single {no-repeat;
+	background-position: 0px -140px;
+}
+
+.icon-tongxun {no-repeat;
+	background-position: -300px -420px;
+}
+
+.icon-hongqi {no-repeat;
+	background-position: -240px -200px;
+}
+
+.icon-redhat {no-repeat;
+	background-position: -100px -320px;
+}
+
+.icon-sys-oa {no-repeat;
+	background-position: -20px -100px;
+}
+
+.icon-oa-flow {no-repeat;
+	background-position: -360px -20px;
+}
+
+.icon-oa-salary {no-repeat;
+	background-position: -300px -340px;
+}
+
+.icon-tongxun_book {no-repeat;
+	background-position: -60px -60px;
+}
+
+.icon-tongxun_books {no-repeat;
+	background-position: -80px -60px;
+}
+
+.icon-users {no-repeat;
+	background-position: -100px -480px;
+}
+
+.icon-girl {no-repeat;
+	background-position: -180px -480px;
+}
+
+.icon-boy {no-repeat;
+	background-position: -160px -480px;
+}
+
+.icon-user1 {no-repeat;
+	background-position: -140px -480px;
+}
+
+.icon-user2 {no-repeat;
+	background-position: -160px -480px;
+}
+
+.icon-report-detail3 {no-repeat;
+	background-position: -120px -240px;
+}
+
+.icon-report-detail4 {no-repeat;
+	background-position: -120px -260px;
+}
+
+.icon-report-detail5 {no-repeat;
+	background-position: -120px -280px;
+}
+
+.icon-report-detail6 {no-repeat;
+	background-position: -120px -320px;
+}
+
+.icon-user3 {no-repeat;
+	background-position: -180px -480px;
+}
+
+.icon-folder {
+	background-position: -260px -500px;
+	no-repeat;
+}
+
+.icon-arrow{ background:url('../images/arrow.gif') no-repeat right;}
+
+/*tbw 把easyui的图标适配成ztree的样式图标,可自行添加更多*/
+
+
+.ztree li span.button.icon-account_ico_open,
+.ztree li span.button.icon-account_ico_close,
+.ztree li span.button.icon-account_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -60px -100px;}
+
+.ztree li span.button.icon-org_ico_open,
+.ztree li span.button.icon-org_ico_close,
+.ztree li span.button.icon-org_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -300px -80px;}
+
+.ztree li span.button.icon-email_ico_open,
+.ztree li span.button.icon-email_ico_close,
+.ztree li span.button.icon-email_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -140px -180px;}
+
+.ztree li span.button.icon-news_ico_open,
+.ztree li span.button.icon-news_ico_close,
+.ztree li span.button.icon-news_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -40px -200px;}
+
+.ztree li span.button.icon-file_ico_open,
+.ztree li span.button.icon-file_ico_close,
+.ztree li span.button.icon-file_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -220px -40px;}
+
+.ztree li span.button.icon-works_ico_open,
+.ztree li span.button.icon-works_ico_close,
+.ztree li span.button.icon-works_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -380px -120px;}
+
+.ztree li span.button.icon-sys-oa_ico_open,
+.ztree li span.button.icon-sys-oa_ico_close,
+.ztree li span.button.icon-sys-oa_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -20px -100px;}
+
+.ztree li span.button.icon-girl_ico_open,
+.ztree li span.button.icon-girl_ico_close,
+.ztree li span.button.icon-girl_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -180px -480px;}
+
+.ztree li span.button.icon-user1_ico_open,
+.ztree li span.button.icon-user1_ico_close,
+.ztree li span.button.icon-user1_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -140px -480px;}
+
+.ztree li span.button.icon-user2_ico_open,
+.ztree li span.button.icon-user2_ico_close,
+.ztree li span.button.icon-user2_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -160px -480px;}
+
+.ztree li span.button.icon-report-detail3_ico_open,
+.ztree li span.button.icon-report-detail3_ico_close,
+.ztree li span.button.icon-report-detail3_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -120px -240px;}
+
+.ztree li span.button.icon-report-detail4_ico_open,
+.ztree li span.button.icon-report-detail4_ico_close,
+.ztree li span.button.icon-report-detail4_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -120px -260px;}
+
+.ztree li span.button.icon-report-detail6_ico_open,
+.ztree li span.button.icon-report-detail6_ico_close,
+.ztree li span.button.icon-report-detail6_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -120px -320px;}
+
+.ztree li span.button.icon-report-detail5_ico_open,
+.ztree li span.button.icon-report-detail5_ico_close,
+.ztree li span.button.icon-report-detail5_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -120px -280px;}
+
+.ztree li span.button.icon-user3_ico_open,
+.ztree li span.button.icon-user3_ico_close,
+.ztree li span.button.icon-user3_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -180px -480px;}
+
+.ztree li span.button.icon-folder_ico_open,
+.ztree li span.button.icon-folder_ico_close,
+.ztree li span.button.icon-folder_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -260px -500px;}
+
+.ztree li span.button.icon-sys_ico_open,
+.ztree li span.button.icon-sys_ico_close,
+.ztree li span.button.icon-sys_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:0px -200px;}
+
+.ztree li span.button.icon-set_ico_open,
+.ztree li span.button.icon-set_ico_close,
+.ztree li span.button.icon-set_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:-380px -200px;}
+
+.ztree li span.button.icon-add_ico_open,
+.ztree li span.button.icon-add_ico_close,
+.ztree li span.button.icon-add_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:-20px 0px;}
+
+
+.ztree li span.button.icon-nav_ico_open,
+.ztree li span.button.icon-nav_ico_close,
+.ztree li span.button.icon-nav_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -100px -20px;}
+
+
+.ztree li span.button.icon-boy_ico_open,
+.ztree li span.button.icon-boy_ico_close,
+.ztree li span.button.icon-boy_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -160px -480px;}
+
+.ztree li span.button.icon-users_ico_open,
+.ztree li span.button.icon-users_ico_close,
+.ztree li span.button.icon-users_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -100px -480px;}
+
+.ztree li span.button.icon-role_ico_open,
+.ztree li span.button.icon-role_ico_close,
+.ztree li span.button.icon-role_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position: -360px -200px;}
+
+.ztree li span.button.icon-log_ico_open,
+.ztree li span.button.icon-log_ico_close,
+.ztree li span.button.icon-log_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:-380px -80px;}
+
+.ztree li span.button.icon-delete_ico_open,
+.ztree li span.button.icon-delete_ico_close,
+.ztree li span.button.icon-delete_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:-140px -120px;}
+
+.ztree li span.button.icon-edit_ico_open,
+.ztree li span.button.icon-edit_ico_close,
+.ztree li span.button.icon-edit_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:-380px -320px;}
+
+.ztree li span.button.icon-add_ico_open,
+.ztree li span.button.icon-add_ico_close,
+.ztree li span.button.icon-add_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:-20px 0px;}
+
+.ztree li span.button.icon-magic_ico_open,
+.ztree li span.button.icon-magic_ico_close,
+.ztree li span.button.icon-magic_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:0px -500px;}
+
+.ztree li span.button.icon-database_ico_open,
+.ztree li span.button.icon-database_ico_close,
+.ztree li span.button.icon-database_ico_docu
+{margin-right:2px; background: url(../images/tabicons.png) no-repeat scroll 0 0 transparent; width:18px; line-height:18px; display:inline-block;vertical-align:top; *vertical-align:middle;
+background-position:-20px -140px;}
+
+
+div.zTreeDemoBackground {width:250px;height:362px;text-align:left;}

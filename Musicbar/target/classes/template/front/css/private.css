@@ -1,0 +1,991 @@
+﻿@charset "utf-8";
+/*----These are the default style _ Begin----*/
+/* Remove margin padding */
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li,
+	pre, form, fieldset, legend, button, input, textarea, th, td {
+	margin: 0;
+	padding: 0;
+}
+
+/* Default Font */
+body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+	font-family: 'Microsoft YaHei', '黑体', '宋体', Tahoma, Helvetica, Arial,
+		"\5b8b\4f53", sans-serif;
+	color: #555555;
+}
+
+* {
+	　margin: 0;
+	padding: 0; 
+}
+
+html, body {
+	 /* height: 100%;  */
+}
+
+#wrapper {
+	min-height: 100%;
+}
+
+* html #wrapper {
+	height: 100%;
+}
+
+body {
+	overflow-x: auto !important;
+	overflow-y: scroll !important;
+	padding: 0px !important; /*模式窗口偏移*/
+}
+
+.modal {
+	overflow: auto !important;
+}
+
+a, a:active {
+	color: #555;
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover {
+	color: #fd7512;
+}
+
+a:link, a:visited {
+	text-decoration: none !important;
+}
+
+ul li {
+	list-style: none;
+}
+
+.maringB30 {
+	margin-bottom: 30px;
+}
+
+.topTool {
+	height: 52px;
+	background: url(../img/topTools.jpg) center 0;
+	border-bottom: #CCC solid 2px;
+}
+
+.topTool .returnBtn, .topTool .menuBtn {
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+	z-index: 5px;
+	position: absolute;
+}
+
+.topTool .returnBtn {
+	left: 0;
+}
+
+.topTool .returnBtn a img {
+	margin: 5px auto;
+}
+
+.topTool .menuBtn {
+	right: 0;
+}
+
+.topTool .menuBtn .dropdown button {
+	height: 50px;
+	width: 50px;
+	background: url(../img/menuBtn.png) no-repeat center center;
+}
+
+.topTool .menuBtn .dropdown ul li a span {
+	margin-right: 5px;
+}
+
+.topTool .currentPath {
+	width: 100%;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bolder;
+	height: 50px;
+	line-height: 50px;
+	color: #FFF;
+}
+
+.botTool {
+	height: 52px;
+	background: url(../img/botTools.jpg) center 0;
+	border-top: #CCC solid 2px;
+}
+
+.botTool ul.mainMenu li {
+	width: 25%;
+	text-align: center;
+	padding-top: 4px;
+	margin: 0;
+	float: left;
+}
+
+.botTool ul.mainMenu li>a {
+	color: #FFF;
+}
+
+.botTool ul.mainMenu li>a span {
+	font-size: 18px;
+}
+
+/*订单系统页面*/
+.orderPage {
+	width: 100%;
+}
+
+.l_left {
+	position: absolute;
+	top: 55px;
+	left: 0;
+	width: 25%;
+	bottom: 52px;
+	overflow-x: hidden;
+	background: #f2f2f2;	
+}
+.l_left ul.job_sub {
+	transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1);
+	transition-duration: 0ms;
+	transform: translate(0px, 0px) translateZ(0px);
+}
+
+.l_left ul.job_sub li {
+	line-height: 50px;
+	text-align: center;
+}
+
+.l_left ul.job_sub li a {
+	color: #321a92;
+	display: block;
+	font-size: 14px;
+	padding: 0 4px 0 4px;
+	text-align: center;
+	border: 1px solid #FFF;
+	border-right: 1px solid #f2f2f2;
+	border-top: none;
+	outline: none;
+}
+
+.l_left ul.job_sub li.off a {
+	color: #F00;
+	display: block;
+	text-align: center;
+	background: url(../img/arrow_left.png) no-repeat 0 center #FFF;
+	border: 1px solid #fff;
+	border-top: none;
+	border-left: #F00 solid 4px;
+}
+
+.l_left ul.job_sub li.off:first-child a {
+	border-top: none;
+}
+
+.l_left ul.job_sub li:last-child a {
+	border-bottom: 1px solid #FFF;
+}
+
+.l_right {
+	position: absolute;
+	top: 55px;
+	right: 0;
+	width: 75%;
+	bottom: 52px;
+	overflow-x: hidden; 
+}
+::-webkit-scrollbar
+{
+   width: 0px;  
+    height: 0px;  
+}
+.l_right .rightBox {
+	transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1);
+	transition-duration: 0ms;
+	transform: translate(0px, 0px) translateZ(0px);
+}
+
+.fr_ite {
+	width: 100%;
+	padding: 0 10px;
+}
+
+.fr_ite .typeName {
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+	font-weight: bolder;
+	background: #f2f2f2;
+	padding-left: 5px;
+}
+
+.fr_ite ul.productLine {
+	
+}
+
+.fr_ite ul.productLine li.productName {
+	width: 100%;
+	font-size: 14px;
+	color: #000;
+	font-weight: bolder;
+	margin: 15px 0 10px;
+	float: left;
+}
+
+.fr_ite ul.productLine li.productImg {
+	width: 35%;
+	height: 80px;
+	margin: 0;
+	float: left;
+}
+
+.fr_ite ul.productLine li.productImg img {
+	height: 80px;
+	border: #f2f2f2 solid 2px;
+	padding: 2px;
+	border-radius: 5px;
+}
+
+.fr_ite ul.productLine li.productInfo {
+	width: 65%;
+	margin: 0;
+	float: left;
+}
+
+.fr_ite ul.productLine li.productInfo .infoRow {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	margin: 0 0 10px 0;
+}
+
+.fr_ite ul.productLine li.productInfo .infoRow .productCapacity {
+	width: auto;
+	font-size: 12px;
+	margin: 0;
+	float: left;
+}
+
+.fr_ite ul.productLine li.productInfo .infoRow .productPrice {
+	width: auto;
+	font-size: 16px;
+	color: #000;
+	margin: 0;
+	float: right;
+}
+
+.fr_ite ul.productLine li.productInfo .infoRow .productFabulous {
+	width: auto;
+	font-size: 14px;
+	color: #F00;
+	cursor: pointer;
+	margin: 0;
+	float: left;
+}
+
+.fr_ite ul.productLine li.productInfo .infoRow .productFabulous span {
+	margin-right: 8px;
+}
+
+.fr_ite ul.productLine li.productInfo .infoRow .buyBtn {
+	width: 30px;
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 15px;
+	background: #F00;
+	color: #FFF;
+	cursor: pointer;
+	float: right;
+}
+
+.fr_ite ul.productLine li.driver {
+	width: 100%;
+	height: 2px;
+	background: #321a92;
+	border-bottom: #ccc solid 1px;
+	margin: 5px 0;
+	float: left;
+}
+
+/*数量begin*/
+.fr_ite ul.productLine li.productInfo .productNo {
+	width: 100%;
+	height: 34px;
+	text-align: right;
+	margin: 0;
+	float: left;
+}
+
+.fr_ite ul.productLine li.productInfo .productNo * {
+	box-sizing: border-box;
+}
+
+.fr_ite ul.productLine li.productInfo .productNo .input-number {
+	width: 50px;
+	padding: 0 12px;
+	vertical-align: top;
+	text-align: center;
+	outline: none;
+}
+
+.fr_ite ul.productLine li.productInfo .productNo .input-number, .fr_ite ul.productLine li.productInfo .productNo .input-number-decrement,
+	.fr_ite ul.productLine li.productInfo .productNo .input-number-increment
+	{
+	border: 1px solid #cccccc;
+	height: 34px;
+	user-select: none;
+}
+
+.fr_ite ul.productLine li.productInfo .productNo .input-number-decrement,
+	.fr_ite ul.productLine li.productInfo .productNo .input-number-increment
+	{
+	display: inline-block;
+	width: 34px;
+	line-height: 32px;
+	background: #f1f1f1;
+	color: #444444;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.fr_ite ul.productLine li.productInfo .productNo .input-number-decrement:active,
+	.fr_ite ul.productLine li.productInfo .productNo .input-number-increment:active
+	{
+	background: #dddddd;
+}
+
+.fr_ite ul.productLine li.productInfo .productNo .input-number-decrement
+	{
+	border-right: none;
+	border-radius: 0px 0 0 0px;
+}
+
+.fr_ite ul.productLine li.productInfo .productNo .input-number-increment
+	{
+	border-left: none;
+	border-radius: 0 0px 0px 0;
+}
+/*数量end*/
+
+/*欢迎界面*/
+.loginPg-bg {
+	background: url(../img/welBg.jpg) no-repeat center top;
+	background-size: 100%;
+}
+
+.loginPg-bg a.btn {
+	width: 120px;
+	text-align: center;
+	color: #FFF;
+	background: url(../img/click.png) no-repeat 5px center
+		rgba(255, 0, 0, 0.55);
+	border-radius: 5px;
+	left: 50%;
+	top: 60%;
+	position: absolute;
+	margin-left: -60px;
+	padding: 12px 10px 12px 50px;
+}
+/*活动主题界面*/
+.activity-bg {
+	background: url(../img/activity.jpg) no-repeat center top;
+	background-size: 100%;
+	background-attachment: fixed;
+}
+
+.activityList, .activityRead, .paymentList, .confirmOrder, .confirm,
+	.orderpay {
+	padding: 72px 15px 52px;
+	overflow: hidden;
+}
+
+.activityModel {
+	width: 100%;
+	background: rgba(242, 242, 242, 0.35);
+	box-shadow: 0 0 10px rgba(254, 251, 2, 1);
+	-webkit-box-shadow: 0 0 10px rgba(254, 251, 2, 1);
+	-moz-box-shadow: 0 0 10px rgba(254, 251, 2, 1);
+	border-radius: 8px;
+	padding: 15px;
+}
+
+.activityModel .activityName {
+	height: 40px;
+	line-height: 40px;
+	font-size: 14px;
+	font-weight: bolder;
+	color: #FFF;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-right: 80px;
+}
+
+.activityModel .activityName a {
+	right: 30px;
+	position: absolute;
+}
+
+.activityModel .activityName a.seeBtn {
+	width: auto;
+	height: 26px;
+	line-height: 26px;
+	color: #FFF;
+	background: url(../img/click.png) no-repeat 3px center
+		rgba(255, 255, 255, 0.4);
+	background-size: 24px;
+	border-radius: 4px;
+	padding-left: 26px;
+	padding-right: 8px;
+	margin: 7px 0;
+}
+
+.activityModel .driver {
+	height: 2px;
+	background: #896d79;
+	border-bottom: #f8b2cf solid 1px;
+}
+
+.activityModel .activityInfo {
+	padding-top: 15px;
+	color: #000;
+}
+/*活动主题界面*/
+.activityRead .activityName {
+	font-size: 16px;
+	font-weight: bolder;
+	color: #FFF;
+	padding: 10px 0;
+}
+
+.activityRead .activityTime {
+	color: #FFF;
+	padding: 5px 0;
+}
+
+.activityRead .ReadInfo {
+	color: #f2f2f2;
+	line-height: 1.75;
+	padding: 10px 0;
+}
+
+.activityRead a.backBtn {
+	color: #FFF;
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 4px;
+	box-shadow: 0 0 10px rgba(254, 251, 2, 1);
+	-webkit-box-shadow: 0 0 10px rgba(254, 251, 2, 1);
+	-moz-box-shadow: 0 0 10px rgba(254, 251, 2, 1);
+	padding: 3px 8px;
+	margin-top: 10px;
+	float: right;
+}
+
+.activityRead a.backBtn span {
+	-moz-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	transform: scaleX(-1); /*IE*/
+	filter: FlipH;
+	margin-right: 8px;
+}
+
+/*结算页面*/
+.paymentList ul.productLine {
+	
+}
+
+.paymentList ul.productLine li.productName {
+	width: 100%;
+	font-size: 14px;
+	color: #000;
+	font-weight: bolder;
+	margin: 0 0 8px;
+	float: left;
+}
+
+.paymentList ul.productLine li.productImg {
+	width: 35%;
+	height: 100px;
+	margin: 0;
+	float: left;
+}
+
+.paymentList ul.productLine li.productImg img {
+	height: 100px;
+	border: #f2f2f2 solid 2px;
+	padding: 2px;
+	border-radius: 5px;
+}
+
+.paymentList ul.productLine li.productInfo {
+	width: 65%;
+	margin: 0;
+	float: left;
+}
+
+.paymentList ul.productLine li.productInfo .productName {
+	width: 100%;
+	font-size: 14px;
+	color: #000;
+	font-weight: bolder;
+	margin: 0 0 8px;
+	float: left;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	margin: 0 0 5px 0;
+	float: left;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow a.delProduct {
+	width: auto;
+	font-size: 14px;
+	margin: 0;
+	float: left;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow a.delProduct span {
+	width: 30px;
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 50%;
+	background: #F00;
+	color: #FFF;
+	margin-left: 5px;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .productCapacity {
+	width: auto;
+	font-size: 12px;
+	margin: 0;
+	float: left;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .productPrice {
+	width: auto;
+	color: #F00;
+	font-size: 16px;
+	font-weight: bolder;
+	margin: 0;
+	float: right;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .productUnit {
+	width: auto;
+	font-size: 14px;
+	margin: 0;
+	float: left;
+}
+/*数量选择*/
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo {
+	width: auto;
+	margin: 0;
+	float: right;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo * {
+	box-sizing: border-box;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number
+	{
+	width: 50px;
+	padding: 0 12px;
+	vertical-align: top;
+	text-align: center;
+	outline: none;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number,
+	.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-decrement,
+	.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-increment
+	{
+	border: 1px solid #cccccc;
+	height: 30px;
+	user-select: none;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-decrement,
+	.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-increment
+	{
+	display: inline-block;
+	width: 30px;
+	line-height: 30px;
+	background: #f2f2f2;
+	color: #555;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-decrement:active,
+	.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-increment:active
+	{
+	background: #dddddd;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-decrement
+	{
+	border-right: none;
+	border-radius: 0px 0 0 0px;
+}
+
+.paymentList ul.productLine li.productInfo .infoRow .selcetNo .input-number-increment
+	{
+	border-left: none;
+	border-radius: 0 0px 0px 0;
+}
+/*数量选择*/
+.paymentList ul.productLine li.driver {
+	width: 100%;
+	height: 2px;
+	background: #321a92;
+	border-bottom: #ccc solid 1px;
+	margin: 5px 0;
+	float: left;
+}
+
+.goPayTool {
+	height: 52px;
+	background: #F2F2F2;
+	border-top: #CCC solid 2px;
+}
+
+.goPayTool .totalPay {
+	width: auto;
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+	font-weight: bolder;
+	margin: 0;
+	float: left;
+	padding-left: 15px;
+}
+
+.goPayTool .goPay {
+	width: 120px;
+	text-align: center;
+	height: 50px;
+	line-height: 50px;
+	color: #FFF;
+	font-size: 16px;
+	background: #F00;
+	margin: 0;
+	float: right;
+}
+
+/*结算页面*/
+.confirmOrder .orderPrompt {
+	margin-bottom: 15px;
+	color: #F00;
+	border-bottom: #896d79 solid 1px;
+}
+
+.confirmOrder .orderPrompt span {
+	margin-right: 5px;
+}
+
+.confirmOrder .infoBox {
+	height: 100px;
+	background: #f2f2f2;
+	box-shadow: 2px 2px 6px rgba(184, 184, 184, 1);
+	-webkit-box-shadow: 2px 2px 6px rgba(184, 184, 184, 1);
+	-moz-box-shadow: 2px 2px 6px rgba(184, 184, 184, 1);
+	border-radius: 5px;
+	padding: 2px 0;
+	margin-bottom: 15px;
+}
+
+.confirmOrder .infoBox .custNo {
+	width: 98%;
+	height: 30px;
+	line-height: 30px;
+	background: #fff;
+	padding-left: 5px;
+	margin: 1px 1%;
+	float: left;
+}
+
+.confirmOrder .infoBox .custNo input {
+	width: 160px;
+	height: 26px;
+	line-height: 26px;
+	border: 0;
+	margin-left: 5px;
+}
+
+.confirmOrder .infoBox .infoCol {
+	width: 48%;
+	height: 30px;
+	line-height: 30px;
+	background: #fff;
+	padding-left: 5px;
+	margin: 1px 1%;
+	float: left;
+}
+
+.confirmOrder .infoBox .infoCol input {
+	width: 80px;
+	height: 26px;
+	line-height: 26px;
+	border: 0;
+	margin-left: 5px;
+}
+
+.confirmOrder .orderList {
+	color: #896d79;
+	font-weight: bolder;
+	margin-bottom: 10px;
+}
+
+.confirmOrder .orderList span {
+	margin-right: 5px;
+}
+
+/*订单支付页面*/
+.confirm .orderPrompt {
+	margin-bottom: 5px;
+	color: #F00;
+	border-bottom: #896d79 solid 1px;
+}
+
+.confirm .orderPrompt span {
+	margin-right: 5px;
+}
+
+.confirm .orderBox {
+	height: auto;
+}
+
+.confirm .orderBox .orderInfo {
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.confirm .orderBox .orderInfo .attribute {
+	width: 25%;
+	height: 30px;
+	line-height: 30px;
+	text-align: justify;
+	text-align-last: justify;
+	margin: 0;
+	float: left;
+}
+
+.confirm .orderBox .orderInfo .attributeValue {
+	width: 75%;
+	height: 30px;
+	line-height: 30px;
+	font-weight: bolder;
+	margin: 0;
+	float: left;
+}
+
+.confirm .orderBox .orderInfo .zfimg {
+	width: auto;
+	height: 30px;
+	margin: 0;
+	float: left;
+}
+
+.confirm .orderBox .orderInfo .zfimg img {
+	height: 30px;
+}
+
+.confirm .orderBox .orderInfo label {
+	width: 100%;
+	margin: 5px 0;
+}
+
+.custom-radio {
+	display: none
+}
+
+.custom-radioInput {
+	width: 24px;
+	height: 24px;
+	line-height: 1;
+	background: url(../img/radio-empty.png) no-repeat center center #FFF;
+	border-radius: 100%;
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: 3px;
+	margin-right: 15px;
+	float: left;
+}
+
+.custom-radio:checked+.custom-radioInput:after {
+	width: 24px;
+	height: 24px;
+	line-height: 1;
+	background: url(../img/radio-changed.png) no-repeat center center #FFF;
+	border-radius: 100%;
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	float: left;
+}
+
+.confirm .payResult {
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	font-size: 16px;
+	font-weight: bolder;
+	border-bottom: #896d79 solid 1px;
+	margin-bottom: 15px;
+}
+
+.confirm .payResult span {
+	width: 24px;
+	text-align: center;
+	height: 24px;
+	line-height: 24px;
+	border-radius: 50%;
+	color: #FFF;
+	background: #F00;
+	margin-right: 5px;
+}
+
+.confirm .bigBtn {
+	width: 100%;
+	text-align: center;
+	height: 50px;
+	line-height: 50px;
+	color: #FFF;
+	font-size: 16px;
+	background: #F00;
+	border-radius: 5px;
+}
+
+.p-nav-tabs {
+	background: #FFF;
+	border: none;
+	margin: 0;
+}
+
+.p-nav-tabs li {
+	width: 33.33%;
+	text-align: center;
+}
+
+.p-nav-tabs>li>a {
+	font-size: 16px;
+	border: none;
+	border-radius: 0;
+	border-top: #F2F2F2 solid 4px;
+	border-bottom: #CCC solid 4px;
+	background: #F2F2F2;
+	padding: 5px 0;
+	margin: 0 1px;
+}
+
+.p-nav-tabs>li.active>a, .p-nav-tabs>li.active>a:hover, .p-nav-tabs>li.active>a:focus
+	{
+	background: url(../img/arrow-w.png) no-repeat center bottom #none;
+	color: #F00;
+	border: none;
+	border-top: #F00 solid 4px;
+	border-bottom: #FFF solid 4px;
+}
+
+.orderpay ul.simpleInfo li {
+	width: 100%;
+	padding-top: 10px;
+}
+
+.orderpay ul.simpleInfo li span {
+	font-size: 10px;
+	margin-right: 5px;
+}
+
+.orderpay ul.simpleInfo li font {
+	color: #F00;
+	margin-left: 5px;
+}
+
+.orderpay ul.simpleInfo li.totalPay {
+	text-align: right;
+	font-weight: bolder;
+}
+
+.orderpay ul.simpleInfo li.totalPay font {
+	margin: 0;
+	float: left;
+	color: #555;
+}
+
+.orderpay .panel-default {
+	border: none;
+}
+
+.orderpay .panel-default .panel-heading {
+	height: auto;
+	background: none;
+	border: none;
+	padding: 0;
+}
+
+.orderpay .panel-default .panel-heading .orderNo, .orderpay .panel-default .panel-heading .orderTime,
+	.orderpay .panel-default .panel-heading .orderState {
+	height: 30px;
+	line-height: 30px;
+}
+
+.orderpay .panel-default .panel-heading .productNo {
+	height: 40px;
+	line-height: 40px;
+}
+
+.orderpay .panel-default .panel-heading .orderNo a {
+	height: 24px;
+	line-height: 24px;
+	color: #FFF;
+	background: #F00;
+	border-radius: 4px;
+	margin: 3px 0;
+	padding: 0 8px;
+	float: right;
+}
+
+.orderpay .panel-default .panel-heading .productNo a {
+	margin: 0;
+	float: right;
+}
+
+.orderpay .panel-default .panel-heading .productNo span {
+	margin-right: 5px;
+}
+
+.orderpay .panel-default .panel-heading .orderState font {
+	margin: 0;
+	float: right;
+}
+
+.orderpay .panel-default .panel-body {
+	background: #FFF;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.margin_B20 {
+	margin-bottom: 20px;
+}
+
+.orderSearch input {
+	border: #F00 solid 1px;
+}
+
+.orderSearch button {
+	border: #F00 solid 1px;
+	background: #F00;
+	color: #fff;
+}

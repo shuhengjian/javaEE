@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TtyPriceMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.ty.domain.TtyPrice">
+		<id column="price_id" property="priceId" jdbcType="VARCHAR" />
+		<result column="price_max" property="priceMax" jdbcType="DECIMAL" />
+		<result column="price_min" property="priceMin" jdbcType="DECIMAL" />
+		<result column="price_state" property="priceState" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		price_id, price_max, price_min,price_state
+	</sql>
+
+	<select id="select" resultMap="BaseResultMap"
+		parameterType="com.creatorblue.cbitedu.ty.domain.TtyPrice">
+		select
+		<include refid="Base_Column_List" />
+		from t_ty_price
+		where price_state=1
+		<if test="priceId!=null">
+			and price_id = #{priceId,jdbcType=VARCHAR}
+		</if>
+		ORDER BY price_min
+	</select>
+	<!-- 查询所有产品一口价，用于价格区间下是否有产品的判断 -->
+	<select id="selectAllProductFlatlyPrice" resultType="map">
+	 	select product_flatly_price from t_ty_product
+	</select>
+	
+	<select id="selectMaxAndMin" parameterType="string" resultMap="BaseResultMap">
+		select price_max,price_min from t_ty_price 
+		where price_id = #{priceId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 条件查询，查询所有 -->
+	<select id="selectPageTtyPriceByMap" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" /> 
+        from t_ty_price
+        <where>
+			<if test="priceMax != null and '' != priceMax">
+				AND price_max &lt;= #{priceMax}
+			</if>
+			<if test="priceMin != null and '' != priceMin">
+				AND price_min &gt;= #{priceMin}
+			</if>
+			<if test="priceState != null and '' != priceState">
+		       	  and price_state = #{priceState}
+		    </if>
+		</where>
+		ORDER BY price_min
+	</select>
+	<!-- 根据类查询价格区间最大值是否存在 -->
+	<select id="checkTheMaxWithParentId" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyPrice">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM t_ty_price
+			 <where>
+		       <if test="priceMax != null">
+		       	  and price_max = #{priceMax} 
+		       	  and price_id !=#{priceId}
+		        </if>
+		         <if test="priceId != null">
+		       	  and price_id !=#{priceId}
+		        </if>
+	        </where>
+	</select>
+	<!-- 根据类查询价格区间最小值是否存在 -->
+	<select id="checkTheMinWithParentId" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyPrice">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM t_ty_price
+			 <where>
+		        <if test="priceMin != null and '' != priceMin">
+					and price_min = #{priceMin}
+				</if>
+				<if test="priceId != null">
+		       	  and price_id !=#{priceId}
+		        </if>
+	        </where>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="Base_Column_List" /> 
+        from t_ty_price b 
+        where price_id = #{value,jdbcType=VARCHAR}
+    </select>
+    <!-- 查询所有最小值 ，最大值-->
+    <select id="selectAllMin" resultType="map">
+        select price_min from t_ty_price ORDER BY price_min
+    </select>
+    <!-- 查询所有 -->
+    <select id="selectAllMax" resultType="map">
+        select price_max from t_ty_price ORDER BY price_max
+    </select>
+    
+     <delete id="deleteByPrimaryKey" parameterType="string" >
+        delete  from t_ty_price
+        where price_id = #{priceId,jdbcType=VARCHAR}
+    </delete>
+    
+    <insert id="insert" parameterType="com.creatorblue.cbitedu.ty.domain.TtyPrice" >
+     	insert into t_ty_price (price_id, price_max,price_min,price_state)
+        values (#{priceId,jdbcType=VARCHAR}, #{priceMax,jdbcType=VARCHAR},#{priceMin,jdbcType=VARCHAR},#{priceState,jdbcType=VARCHAR})
+    </insert>
+    
+    <insert id="insertSelective" parameterType="com.creatorblue.cbitedu.ty.domain.TtyPrice" >
+        insert into t_ty_price
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="priceId != null" >
+                price_id,
+            </if>
+            <if test="priceMax != null" >
+                price_max,
+            </if>
+            <if test="priceMin != null" >
+                price_min,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="priceId != null and priceId != ''" >
+                #{priceId,jdbcType=VARCHAR},
+            </if>
+            <if test="priceMax != null and priceMax != ''" >
+                #{priceMax,jdbcType=VARCHAR},
+            </if>
+            <if test="priceMin != null and priceMin != ''" >
+                #{priceMin,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updatePriceStateByPrimaryKey" parameterType="com.creatorblue.cbitedu.ty.domain.TtyPrice" >
+        update t_ty_price
+        <set >
+            <if test="priceState != null and priceState != ''" >
+                price_state = #{priceState,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where price_id = #{priceId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="update" parameterType="com.creatorblue.cbitedu.ty.domain.TtyPrice" >
+        update t_ty_price
+        <set >
+                price_max = #{priceMax,jdbcType=VARCHAR},
+                price_min = #{priceMin,jdbcType=VARCHAR},
+                price_state = #{priceState,jdbcType=VARCHAR},
+        </set>
+        where price_id = #{priceId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

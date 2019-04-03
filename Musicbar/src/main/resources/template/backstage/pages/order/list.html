@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>订单管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css" th:href="@{'/backstage/static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css" th:href="@{'/backstage/static/css/weadmin.css'}">
+		<script src="../../lib/layui/layui.js" charset="utf-8" th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+		<script src="../../static/js/admin.js" charset="utf-8" th:src="@{'/backstage/static/js/admin.js'}"></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	    <style type="text/css">
+	    	#order_page a{
+	    		cursor: pointer;
+	    	}
+	    </style>
+	</head>
+
+	<body>
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="orders_querylist">订单管理</a>
+        <a><cite>订单列表</cite></a>
+      </span>
+			<a class="layui-btn layui-btn-sm" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="layui-icon" style="line-height:30px">ဂ</i></a>
+		</div>
+		<div class="weadmin-body">
+			<div class="layui-row">
+				<form class="layui-form layui-col-md12 we-search">
+					<div class="layui-input-inline">
+						<select name="ordersWay" id="ordersWay" lay-filter="ordersway" value="">
+							<option value="" name="ordersWay">下单方式</option>
+							<th:block th:each="para : ${waylist}">
+								<option th:if="${para.paraNo}==1" value="1">[[${para.paraVal}]]</option>
+								<option th:if="${para.paraNo}==2" value="2">[[${para.paraVal}]]</option>
+							</th:block>
+						</select>
+					</div>
+					<div class="layui-input-inline">
+						<select name="ordersState" id="ordersState" lay-filter="ordersstate" value="">
+							<option value="" name="ordersState">订单状态</option>
+							<th:block th:each="para : ${statelist}">
+								<option th:if="${para.paraNo}==0" value="0">[[${para.paraVal}]]</option>
+								<option th:if="${para.paraNo}==1" value="1">[[${para.paraVal}]]</option>
+								<option th:if="${para.paraNo}==2" value="2">[[${para.paraVal}]]</option>
+							</th:block>
+						</select>
+					</div>
+					<div class="layui-input-inline">
+						<select name="paymentMode" id="paymentMode" lay-filter="paymentmode" value="">
+							<option value="" name="paymentMode">支付方式</option>
+							<th:block th:each="para : ${modelist}">
+								<option th:if="${para.paraNo}==0" value="0">[[${para.paraVal}]]</option>
+								<option th:if="${para.paraNo}==1" value="1">[[${para.paraVal}]]</option>
+								<option th:if="${para.paraNo}==2" value="2">[[${para.paraVal}]]</option>
+							</th:block>
+						</select>
+					</div>
+					<div class="layui-inline">
+						<input type="text" id="ordersCode" name="ordersCode" placeholder="请输入订单号" autocomplete="off" class="layui-input">
+					</div>
+					<button class="layui-btn" type="button" lay-filter="sreach" id="query"><i class="layui-icon">&#xe615;</i></button>
+				</form>
+			</div>
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>订单号</th>
+						<th>台号</th>
+						<th>总金额</th>
+						<th>订单状态</th>
+						<th>支付方式</th>
+						<th>下单方式</th>
+						<th>下单时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="orders_tbody">
+				<th:block th:each="orders : ${page.list}">
+					<tr data-id="${orders.ordersId}">
+						<td th:text="${orders.ordersCode}!=''?${orders.ordersCode}:''">2017009171822298053</td>
+						<td th:text="${orders.tableNum}!=''?${orders.tableNum}:''">4</td>
+						<td th:text="${orders.ordersMoney}!=''?${orders.ordersMoney}">7829.10</td>
+						<th:block th:each="para : ${statelist}">
+   							<td class="ordersstate" th:if="${para.paraNo}==${orders.ordersState}" th:text="${para.paraVal}">已启用</td>
+   						</th:block>
+   						<th:block th:each="para : ${modelist}">
+   							<td class="paymentmode" th:if="${para.paraNo}==${orders.paymentMode}" th:text="${para.paraVal}">已启用</td>
+   						</th:block>
+   						<th:block th:each="para : ${waylist}">
+   							<td class="ordersway" th:if="${para.paraNo}==${orders.ordersWay}" th:text="${para.paraVal}">已启用</td>
+   						</th:block>
+						<td th:text="${#dates.format(orders.createTime,'yyyy-MM-dd HH:mm')}!=''?${#dates.format(orders.paymentTime,'yyyy-MM-dd HH:mm')}">2019-1-1 20:30</td>
+						<td class="td-manage" th:data-id="${orders.ordersId}">
+							<button onclick="WeAdminShow('订单详细','detail.html',800,500)" class="layui-btn layui-btn-danger">
+								详细
+							</button>
+						</td>
+					</tr>
+				</th:block>
+				</tbody>
+			</table>
+			<div style="text-align:center;">
+				<div class="layui-box layui-laypage layuipage-molv" id="order_page" th:data-id="${page.pages}">
+					<span class="layui-laypage-count">共<em id="num">[[${page.total}]]</em>条</span>
+					<!-- 上一页start -->
+					<a th:if="${page.pageNum}==1" class="layui-laypage-prev layui-disabled" data-page="0">上一页</a>
+					<a th:if="${page.pageNum}>1" class="layui-laypage-prev" th:onclick="@{'order_query('+${page.prePage}+')'}" data-page="0">上一页</a>
+					<!-- 上一页 end -->
+					<!-- 页码部分   start-->
+					<th:bolck th:each="i :${#numbers.sequence(page.navigateFirstPage, page.navigateLastPage)}">
+						<th:block th:if="${i}<6">
+							<a th:onclick="@{'order_query('+${i}+')'}"
+								th:text="${i}"  th:style="${page.pageNum == i}? 'background-color:#009587;color:white;' :'' "
+								th:data-id="${page.pageNum == i}? 1:0" >
+							</a>
+						</th:block>
+					</th:bolck >
+					<th:block th:if="${page.pages}==6">
+							<a th:onclick="@{'order_query('+${page.pages}+')'}"
+								th:text="${page.pages}">
+							</a>
+					</th:block>
+					<th:block th:if="${page.pages}>=7">
+							<span>...</span>
+							<a th:onclick="@{'order_query('+${page.pages}+')'}"
+								th:text="${page.pages}">
+							</a>
+					</th:block>
+					<!-- 页码部分   end-->
+					<!-- 下一页 start -->
+					<a th:if="${page.pageNum}==${page.total}" class="layui-laypage-next layui-disabled">下一页</a>
+					<a th:if="${page.pageNum}<${page.total}" th:onclick="@{'order_query('+${page.nextPage}+')'}" class="layui-laypage-next">下一页</a>
+					<!-- 下一页 end -->
+					<span class="layui-laypage-skip">到第
+						<input type="text" min="1" value="1" class="layui-input" id="page_num">页
+						<button type="button" class="layui-laypage-btn" id="order_page_btn">确定</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="../../static/js/eleDel.js" type="text/javascript" charset="utf-8" th:src="@{'/backstage/static/js/eleDel.js'}"></script>
+		<script type="text/javascript">
+			//分页输入查询   -- 开始
+			$("#order_page_btn").click(function(){
+				//获得总页数
+				let page_num = $("#order_page").data("id");
+				if(parseInt($("#page_num").val())>parseInt(page_num)){
+					//输入的数字大于总页数提示
+					layer.alert("输入的数字不能大于总页数"+page_num);
+				}else{
+					order_query($("#page_num").val());
+				}
+			})
+		//分页输入查询   -- 结束
+		
+		//操作，开始
+			let td = $("tr").find(".td-manage");
+			for(let i=0; i<td.length; i++){
+				let orders_id = $(td[i]).data("id");
+				$(td[i]).html("<button onclick=\"WeAdminShow('订单详细','order_detail?ordersId="+orders_id+"','"+orders_id+"',800,500)\" class='layui-btn layui-btn-danger'>详细\
+						</button>");
+			}
+			//操作，结束
+		
+			// 模糊查询  -- 开始
+    		let ordersState ="";//参数状态
+    		$("#query").click(function(){
+    			order_query(1);//条件查询
+    		});
+			
+<<<<<<< HEAD
+    		//根据角色状态进行查询 -- 开始
+    		layui.use("form", function () {
+			    var form = layui.form;
+			    form.on('select(ordersstate)', function(data){
+=======
+    		//根据状态进行查询 -- 开始
+    		layui.use("form", function () {
+			    var form = layui.form;
+			    form.on('select(ordersstate)', function(data){
+			        order_query(1);//条件查询
+			     });  
+			})
+			layui.use("form", function () {
+			    var form = layui.form;
+			    form.on('select(ordersway)', function(data){
+			        order_query(1);//条件查询
+			     });  
+			})
+			layui.use("form", function () {
+			    var form = layui.form;
+			    form.on('select(paymentmode)', function(data){
+>>>>>>> refs/remotes/origin/master
+			        order_query(1);//条件查询
+			     });  
+			})
+			
+			function checkTime(i){
+			    if (i<10){
+			        i="0" + i
+			    }
+			    return i;
+			 }
+			
+			/* 模糊查询 */
+    		function order_query(pageNum){
+    			let ordersState = $("select").val();
+    			let ordersWay = $("select").val();
+    			let paymentMode = $("select").val();
+    			let ordersCode = $("#ordersCode").val();//获得输入的值
+    			ordersCode = ordersCode.replace(" ","");
+				$.ajax({
+					url:"orders_query",
+					type:"post",
+					data:{ordersState:ordersState,ordersWay:ordersWay,
+						paymentMode:paymentMode,ordersCode:ordersCode,pageNum:pageNum},
+					success:function(res){
+						let order_page = JSON.parse(res);
+    					let list = order_page[0].list;
+    					$("#orders_tbody").html("");//清空表格
+    					for(let i=0;i<list.length;i++){
+    						let date  = new Date(list[i].createTime.time);
+							date_value=date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + checkTime(date.getHours()) + ':' + checkTime(date.getMinutes()) + ':' + checkTime(date.getSeconds());
+<<<<<<< HEAD
+    						let orders_state = "待支付";
+    						let payment_mode = "支付宝";
+    						let orders_way = "手机下单";
+    						/* for(let k=0;k<$("select option").length;k++){
+    							if($("select option")[k].value==list[i].ordersState){
+    								orders_state = $($("select option")[k]).html();
+    							}
+    						} */
+    						if(list[i].ordersState == "1"){
+    							orders_state = "待收货";
+    						}
+    						if(list[i].ordersState == "2"){
+    							orders_state = "完成";
+    						}
+   							if(list[i].paymentMode=="0"){
+   								payment_mode = "微信";
+   							}
+   							if(list[i].paymentMode=="2"){
+   								payment_mode = "现金支付";
+   							}
+   							if(list[i].ordersWay == "2"){
+   								orders_way = "前台下单";
+   							}
+=======
+    						let orders_state;
+    						let payment_mode;
+    						let orders_way;
+    						console.log($("#ordersState option"))
+    						console.log($("#ordersWay option"))
+    						console.log($("#paymentMode option"))
+    						for(let k=0;k<$("#ordersState option").length;k++){
+    							if($("#ordersState option")[k].value==list[i].ordersState){
+    								orders_state = $($("#ordersState option")[k]).html();
+    							}
+    						}
+    						for(let k=0;k<$("#ordersWay option").length;k++){
+    							if($("#ordersWay option")[k].value==list[i].ordersWay){
+    								orders_way = $($("#ordersWay option")[k]).html();
+    							}
+    						}
+    						for(let k=0;k<$("#paymentMode option").length;k++){
+    							if($("#paymentMode option")[k].value==list[i].paymentMode){
+    								payment_mode = $($("#paymentMode option")[k]).html();
+    							}
+    						}
+>>>>>>> refs/remotes/origin/master
+    						$("#orders_tbody").append("<tr data-id="+list[i].ordersId+">\
+    								<td>"+list[i].ordersCode+"</td>\
+    	    						<td>"+list[i].tableNum+"</td>\
+    	    						<td>"+list[i].ordersMoney+"</td>\
+    	    						<td class=\"ordersstate\">"+orders_state+"</td>\
+    	    						<td class=\"paymentmode\">"+payment_mode+"</td>\
+    	    						<td class=\"ordersway\">"+orders_way+"</td>\
+    	    						<td>"+date_value+"</td>\
+    	    						<td class='td-manage' th:data-id="+list[i].ordersId+">\
+    							<button onclick=\"WeAdminShow('订单详细','orders_detail?=ordersId="+list[i].ordersId+"','"+list[i].ordersId+"',800,500)\" class='layui-btn layui-btn-danger'>\
+    								详细\
+    							</button>\
+    						</td>\
+    					</tr>");
+    					}
+   					//统计数据条数 -- 开始
+    				$("#num").html(order_page[0].total);
+	    			//统计数据条数 -- 结束
+   					//分页 -- 开始
+   					$("#order_page").html("");
+   					let pages = order_page[0].pages;//总页数
+					let pageNum = order_page[0].pageNum;//当前页码
+					let prePage = order_page[0].prePage;//前一页
+					let nextPage = order_page[0].nextPage;//下一页
+					$("#order_page").prop("data-id",pages);
+					//总记录
+					$("#order_page").append('<span class="layui-laypage-count" >共 <em id="num">'+order_page[0].total+'</em>条</span>');
+					//上一页
+					if(order_page[0].hasPreviousPage){
+						$("#order_page").append('<a class="prev" class="layui-laypage-prev" onclick="order_query('+prePage+')">上一页</a>');
+					}else{
+						$("#order_page").append('<a class="layui-laypage-prev layui-disabled" data-page="0">上一页</a>');
+					}
+					//页码少于等于6页
+					if(pages<=6){
+						for(let i =0;i<pages; i++){
+							if(pageNum == (i+1)){
+								$("#order_page").append('<a onclick="order_query('+(i+1)+')" data-id="'+(i+1)+'" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+							}else{
+								$("#order_page").append('<a onclick="order_query('+(i+1)+')" data-id="'+(i+1)+'">'+(i+1)+'</a>');
+							}
+						}
+					}
+					//6页以上
+					if(pages>6){
+						//当前页码少于3
+						if(pageNum<=3){
+							for(let i =0;i<5; i++){
+								if(pageNum == (i+1)){
+									$("#order_page").append('<a onclick="order_query('+(i+1)+')" data-id="1" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+								}else{
+									$("#order_page").append('<a onclick="order_query('+(i+1)+')" data-id="0">'+(i+1)+'</a>');
+								}
+							}
+							$("#order_page").append('<span>...</span>');
+							$("#order_page").append('<a onclick="order_query('+pages+')" data-page="0">'+pages+'</a>');
+						}
+						//页码大于3少于总页数-3
+						if(pageNum>3&&pageNum<pages-3){
+							$("#order_page").append('<a onclick="order_query(1)" data-page="0">1</a>');
+							$("#order_page").append('<span>...</span>');
+							let page_size = 0;//分页显示个数
+							$("#order_page").append('<a onclick="order_query('+(pageNum-1)+')" data-id="0">'+(pageNum-1)+'</a>');
+							for(let i =pageNum;i<pages; i++){
+								if(page_size<2){
+									if(pageNum == i){
+										$("#order_page").append('<a onclick="order_query('+(i)+')" data-id="1" style="background-color:#009587;color:white;">'+(i)+'</a>');
+										page_size++;
+									}else{
+										$("#order_page").append('<a onclick="order_query('+(i)+')" data-id="0">'+(i)+'</a>');
+										page_size++;
+									}
+								}
+							}
+							$("#order_page").append('<span>...</span>');
+							$("#order_page").append('<a onclick="order_query('+pages+')" data-page="0">'+pages+'</a>');
+						}
+						//页码大于或者等于总页数-3
+						if(pageNum>=pages-3){
+							$("#order_page").append('<a onclick="order_query(1)" data-page="0">1</a>');
+							$("#order_page").append('<span>...</span>');
+							$("#order_page").append('<a onclick="order_query('+(pages-4)+')" data-page="0">'+(pages-4)+'</a>');
+							for(let i =pages-4;i<pages; i++){
+								if(pageNum == (i+1)){
+									$("#order_page").append('<a onclick="order_query('+(i+1)+')" data-id="1" style="background-color:#009587;color:white;">'+(i+1)+'</a>');
+								}else{
+									$("#order_page").append('<a onclick="order_query('+(i+1)+')" data-id="0">'+(i+1)+'</a>');
+								}
+							}
+						}
+					}
+					//下一页
+					if(order_page[0].hasNextPage){
+						$("#order_page").append('<a class="layui-laypage-next" onclick="order_query('+nextPage+')">下一页</a>');
+					}else{
+						$("#order_page").append('<a class="layui-laypage-next layui-disabled">下一页</a>');
+					}
+					//输入页码跳转
+					$("#order_page").append('<span class="layui-laypage-skip">到第\
+							<input type="text" min="1" value="'+pageNum+'" class="layui-input" id="page_num">页\
+							<button type="button" class="layui-laypage-btn" id="para_page_btn">确定</button>\
+						</span>');
+					//分页 -- 结束
+					//分页输入查询   -- 开始
+					$("#order_page_btn").click(function(){
+						//获得总页数
+						let page_num = $("#order_page").data("id");
+						if(parseInt($("#page_num").val())>parseInt(page_num)){
+							//输入的数字大于总页数提示
+							layer.alert("输入的数字不能大于总页数"+page_num);
+						}else{
+							order_query($("#page_num").val());
+						}
+					})
+					//分页输入查询   -- 结束
+				}
+			})
+    	}
+			
+		</script>
+	</body>
+
+</html>

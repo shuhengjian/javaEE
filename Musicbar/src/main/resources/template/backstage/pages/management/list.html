@@ -1,0 +1,87 @@
+<!DOCTYPE html> 
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>经营数据</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" th:href=@{static/css/font.css}>
+		<link rel="stylesheet" th:href=@{static/css/weadmin.css}>
+		<script type="text/javascript" th:src=@{pages/jquery.min.js} ></script>
+		<script type="text/javascript" th:src=@{pages/management/dateformat.js} ></script>
+		<script type="text/javascript" th:src=@{pages/management/echarts.js} ></script>
+		<script type="text/javascript" th:src=@{pages/management/highcharts.js} ></script>
+		<script type="text/javascript" th:src=@{pages/management/myechar.js} ></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	</head>
+<style type="text/css">
+	
+</style>
+	<body>
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">经营数据</a>
+      </span>
+			<a class="layui-btn layui-btn-sm" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="layui-icon" style="line-height:30px">&#x1002;</i></a>
+		</div>
+		<div class="weadmin-body">
+			<div class="layui-row" style="display: flex;">
+				<form id="formerYears" class="layui-form layui-col-md12 we-search" >
+					<div class="layui-input-inline layui-col-md2">
+						<select lay-filter="formerYears" name="cateid" >
+							<option >数据统计</option>
+							<option >往年对比</option>
+							<option >往年月对比</option>
+						</select>
+						<div class="layui-unselect layui-form-select">
+							<div class="layui-select-title">
+								<input type="text" placeholder="2019年3月" value="2019年3月" readonly="" class="layui-input layui-unselect"><i class="layui-edge">
+								</i>
+							</div>
+							<dl class="layui-anim layui-anim-upbit" style="">
+								<dd lay-value="数据统计" class="layui-this">数据统计</dd>
+								<dd lay-value="往年对比" class="">往年对比</dd>
+								<dd lay-value="往年月对比" class="">往年月对比</dd>
+							</dl>
+						</div>
+					</div>
+				</form>
+
+			</div>
+			<div id="ma" class="weadmin-block" style="position: relative;">
+				<div id="num" class="layui-row" style="position: absolute;top: 5px;right: 5px;z-index: 100000;display: none" >
+				<form  class="layui-form layui-col-md12 we-search">
+					<div class="layui-input-inline">
+						<select lay-filter="typeName" name="cateid" >
+						</select>
+						<div class="layui-unselect layui-form-select">
+							<div class="layui-select-title">
+								<input type="text" placeholder="2019年" value="2019年" readonly="" class="layui-input layui-unselect"><i class="layui-edge">
+								</i>
+							</div>
+							<dl class="layui-anim layui-anim-upbit" style="">
+								
+							</dl>
+						</div>
+					</div>
+				</form>
+			</div>
+				 <div id="comprehensive" style="width:100%;height:400px;"></div>
+			</div>
+		</div>
+		<!--<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
+		<script th:src="@{lib/layui/layui.js}" charset="utf-8"></script>
+		<script th:src="@{static/js/eleDel.js}" type="text/javascript" charset="utf-8"></script>
+	</body>
+	<script>
+
+  </script>
+</html>

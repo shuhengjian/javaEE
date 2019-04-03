@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>添加角色</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css" th:href="@{'/backstage/static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css" th:href="@{'/backstage/static/css/weadmin.css'}">
+		<script src="../jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	    <style type="text/css">
+	    	#role_edit_top{
+	    		width: 100%;
+	    		height: 30px;
+	    		line-height: 30px;
+	    		margin-bottom: 20px;
+	    	}
+	    	#role_edit_top input{
+	    		width: 200px;
+	    		height: 30px;
+	    	}
+	    </style>
+	</head>
+
+	<body>
+		<div id="hidden_box">
+			<input type="hidden" th:each="list:${list}" th:value="${list.menuId}"/>
+			<input type="hidden" th:each="list:${list}" th:value="${list.operationId}"/>
+		</div>
+			<input type="hidden" id="msg"  th:value="${msg}"/>
+		<div class="weadmin-body">
+				<!-- 隐藏 -->
+				<input type="hidden" id="dataId" name="roleId" >
+				<input type="hidden" id="role_name" th:each="role : ${role}" th:value="${role.roleName}">
+				<form class="layui-form" style="display: flex;justify-content: space-around;">
+				<div class="layui-form-item">
+					<label for="L_username" class="layui-form-label">
+		                <span class="we-red"></span>角色名称
+		            </label>
+					<div class="layui-input-inline">
+						<input  type="text" id="roleName" maxlength="12" placeholder="请输入角色名称" name="roleName" lay-verify="required|nikename" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+	                <label for="username" class="layui-form-label">
+	                  <span class="we-red"></span>角色状态
+	                </label>
+	                <div class="layui-input-inline">
+	                  <select name="roleState" lay-filter="rolestate">
+	                    <th:block th:each="para : ${paralist}">
+							<option th:if="${para.paraNo}==1" value="1">[[${para.paraVal}]]</option>
+							<option th:if="${para.paraNo}==0" value="0">[[${para.paraVal}]]</option>
+						</th:block>
+	                  </select>
+	                </div>
+	            </div>
+	            </form>
+	           <div style="margin-left: 38px;">
+			           权限设置 &nbsp;&nbsp;<input type="checkbox" id="selectAll" title="全选">全选
+			           
+					<table class="layui-table" th:each="menu :${menulist}">
+						<thead th:data-id="${menu.menuId}">
+							<tr>
+								<th colspan="4" th:data-id="${menu.menuId}">
+									<input type="checkbox"  name="select" th:onclick="checklist(this)"/>
+									<span th:text="${menu.menuName}">活动管理</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody th:data-id="${menu.menuId}">
+							<tr th:data-id="${menu.menuId}">
+								<td >
+									<input type="checkbox" name="select"/>
+									添加
+								</td>
+								<td>
+									<input type="checkbox" name="select"/>
+									修改
+								</td>
+								<td>
+									<input type="checkbox" name="select"/>
+									删除
+								</td>
+								<td>
+									<input type="checkbox" name="select"/>
+									查询
+								</td>
+							</tr>
+							
+						</tbody>
+					</table>
+					
+	           </div>
+				
+				<div class="layui-form-item " >
+					<label for="L_repass" class="layui-form-label"></label>
+					<button class="layui-btn" lay-filter="add"  id="save">确定</button>
+				</div>
+		</div>
+<script src="../../lib/layui/layui.js" th:src="@{'/backstage/lib/layui/layui.js'}" charset="utf-8"></script>
+		
+<script src="../../static/js/eleDel.js" th:src="@{'/backstage/static/js/eleDel.js'}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$(function(){
+		if($("#msg").val()!=""){
+			layui.use('layer',function () {
+				layer.confirm($("#msg").val(), {
+				    btn: ['确定','取消'],
+				    time: 200000, //200s后自动关闭
+				},function(index){
+					layer.alert("请谨慎修改");
+				},function(){
+					x_admin_close();//关闭窗口
+				});
+			})
+		}
+		//加载所有权限 --开始
+		let tbody = $("tbody");
+		for(let i=0;i<tbody.length;i++){
+			//获得操作id
+			let menuId = $(tbody[i]).data("id");
+			$.ajax({
+				url:"query_operation",
+				data:{"menuId":menuId},
+				type:"post",
+				dataType:"json",
+				success:function(res){
+					//获得菜单操作个数
+					let size = res.operation.length;
+					$(tbody[i]).children("tr").html("");//清空表格
+					for(let j=0;j<size;j++){
+						$($("th")[i]).attr("colSpan",size);
+						$(tbody[i]).children("tr").append('\
+								<td  data-id=\"'+res.operation[j].operationId+'\">\
+								<input type=\"checkbox\" name=\"select\"/>'+res.operation[j].operationName+'\
+								</td>\
+						');
+					}
+					//所有反选 --开始
+					let checkbox = $("input[name='select']");
+					$(checkbox).click(function(){
+						var x = 0;//选中的个数
+						
+						for(var i=0;i<checkbox.length;i++){
+							if($($(checkbox)[i]).prop("checked")){
+								x++;
+							}
+						}
+						
+						if(x==checkbox.length){
+							$("#selectAll").prop("checked",true);
+						}else{
+							$("#selectAll").prop("checked",false);
+						}
+					})
+					//所有反选 --结束
+					
+					//操作 选择  反选菜单 -- 开始
+					$("td input").click(function(){
+						for(var s=0;s<$("td input").length;s++){
+							if($($("td input")[s]).prop("checked")){
+								$(this).parents("table").find("th input").prop("checked",true);
+							}else{
+								let k = 0;
+								for(var j=0;j<$(this).parents("tr").find("input").length;j++){
+									if($($(this).parents("tr").find("input")[j]).prop("checked")){
+										k++;
+									}
+								}
+								if(k==0){
+									$(this).parents("table").find("th input").prop("checked",false);
+								}
+							}
+						}
+					})
+					//操作 选择  反选菜单 -- 结束
+					
+					/*角色修改数据填充 --开始*/
+					let role_name =$("#role_name").val();
+					if(role_name!=""){
+						$("#roleName").val(role_name);
+					}
+					let Ids = $("#hidden_box").children();//获取角色的权限
+					
+					let len = checkbox.length;//获得长度
+					let j = 0;//选中的个数
+					for(let i =0; i<len; i++){
+						let menuid = $(checkbox[i]).parents("th").data("id");//获取菜单id
+						let operationid = $(checkbox[i]).parents("td").data("id");//获取操作id
+						for(let j =0; j<Ids.length; j++){
+							if($(Ids[j]).val()==menuid){
+								$(checkbox[i]).prop("checked",true);
+							}
+							if($(Ids[j]).val()==operationid){
+								$(checkbox[i]).prop("checked",true);
+							}
+						}
+						if($(checkbox[i]).prop("checked")){
+							j++;
+						}
+					}
+					if(j==len){
+						$("#selectAll").prop("checked",true);
+					}
+					/*角色修改数据填充 --结束*/
+				}
+			})
+		}
+		//加载所有权限 --结束
+		
+		//保存 --开始
+		let initialval = 1;
+		$("#save").click(function(){
+			console.log(1);
+			if(initialval == 2){
+				layer.alert("正在提交请勿多次点击");
+				return false;
+			}
+			
+			let checkbox = $("input[name='select']");
+			let len = checkbox.length;
+			let menuIds = new Array();
+			let operationIds = new Array();
+			for(let i =0; i<len; i++){
+				if(checkbox[i].checked){
+					let menuid = $(checkbox[i]).parents("th").data("id");
+					let operationid = $(checkbox[i]).parents("td").data("id");
+					if(operationid!=undefined){
+						operationIds.push(operationid);
+					}
+					if(menuid!=undefined){
+						menuIds.push(menuid);
+					}
+				}
+			}
+			 /* console.log(operationIds);
+			console.log(menuIds);
+			 */
+			let roleName = $("#roleName").val();
+			 roleName = roleName.replace(/\s/g,"");
+			//角色名不为空验证
+			if(roleName==""){
+				layer.alert("角色名不能为空");
+				return false;
+			}
+			//角色长度验证
+			if(roleName.length<2){
+				layer.alert("角色名称最少是两个字符");
+				return false;
+			}
+			if(roleName.length>12){
+				layer.alert("角色名称最多十二个字符");
+				return false;
+			}
+			//获得角色状态
+			let roleState = $("select").val();
+			layui.use("form", function () {
+				    var form = layui.form;
+				    form.on('select(rolestate)', function(data){
+				    	roleState =data.value;
+				     });  
+			})
+			
+			//权限分配验证
+			if(menuIds.length==0&&operationIds.length==0){
+				layer.confirm('是否不分配权限？', {
+				    btn: ['确定','取消'],
+				    time: 200000, //200s后自动关闭
+				    },function(index){
+					initialval = 2;
+					let roleId = $("#dataId").val();//获得id
+					$.ajax({
+						url:"role_save",
+						data:{"roleId":roleId,
+							"roleName":roleName,
+							"roleState":roleState,
+								"menuIds":menuIds,
+								"operationIds":operationIds},
+						type:"post",
+						dataType:"json",
+						traditional: true,//数组上传
+						success:function(res){
+							initialval=1;
+							if(res.flag){
+								layer.alert(res.msg, {
+			                        title: "提示",
+			                        btn: ['确定']
+			                    },function (index, item) {
+			                    	parent.location.href="role_querylist";//刷新页面
+									x_admin_close();//关闭窗口
+			                    });
+							}else{
+								layer.alert(res.msg);//失败提示
+							}
+						}
+					})
+					},function(){
+					   layer.alert("请为角色分配权限");//失败提示
+					});
+				}else{
+					initialval = 2;
+					let roleId = $("#dataId").val();//获得id
+					$.ajax({
+						url:"role_save",
+						data:{"roleId":roleId,
+							"roleName":roleName,
+							"roleState":roleState,
+								"menuIds":menuIds,
+								"operationIds":operationIds},
+						type:"post",
+						dataType:"json",
+						traditional: true,//数组上传
+						success:function(res){
+							initialval=1;
+							if(res.flag){
+								layer.alert(res.msg, {
+			                        title: "提示",
+			                        btn: ['确定']
+			                    },function (index, item) {
+			                    	parent.location.href="role_querylist";//刷新页面
+									x_admin_close();//关闭窗口
+			                    });
+							}else{
+								layer.alert(res.msg);//失败提示
+							}
+						}
+					})
+				}
+		})
+		//保存 --结束
+		
+		//所有操作全选 -- 开始
+		$("#selectAll").click(function(){
+			let checkbox = $("input[type='checkbox']");
+			if(this.checked){
+				for(let i=0;i<checkbox.length;i++){
+					$(checkbox[i]).prop("checked",true);
+				}
+			}else{
+				for(let i=0;i<checkbox.length;i++){
+					$(checkbox[i]).prop("checked",false);
+				}
+			}
+		})
+		//所有操作全选 -- 结束
+		
+		/* //所有反选 --开始
+		let checkbox = $("input[name='select']");
+		$("input[name='select']").click(function(){
+			var x = 0;//选中的个数
+			console.log(checkbox.length);
+			for(var i=0;i<checkbox.length;i++){
+				if($($("input[name='select']")[i]).prop("checked")){
+					x++;
+				}
+			}
+			console.log(x);
+			if(x==checkbox.length){
+				$("#selectAll").prop("checked",true);
+			}else{
+				$("#selectAll").prop("checked",false);
+			}
+		})
+		//所有反选 --结束 */
+	})
+	//单个菜单下面的操作全选  --开始
+	function checklist(tag){
+		let check = $(tag).parents("table").find("input");
+		if(tag.checked){
+			for(let i=0;i<check.length;i++){
+				$(check[i]).prop("checked",true);
+			} 
+		 }else{
+			for(let i=0;i<check.length;i++){
+				$(check[i]).prop("checked",false);
+			} 
+		}
+	}
+
+	//单个菜单下面的操作全选  --结束
+	
+	//关闭窗口 --开始
+	function x_admin_close() {
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+	}
+	//关闭窗口 --结束
+</script>
+	</body>
+
+</html>

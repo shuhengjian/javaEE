@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>老树林音乐酒馆后台管理系统登录</title>
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./static/css/font.css">
+	<link rel="stylesheet" href="./static/css/weadmin.css">
+    <script src="./lib/layui/layui.js" charset="utf-8" th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+    <script src="./static/js/eleDel.js" type="text/javascript" charset="utf-8" th:src="@{'/backstage/static/js/eleDel.js'}"></script>
+    <script src="./pages/jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body class="login-bg">
+    
+    <div class="login">
+        <div class="message">老树林音乐酒馆后台管理登录</div>
+        <div id="darkbannerwrap"></div>
+        
+        <form method="post" class="layui-form" >
+            <input name="usermobile" placeholder="手机号" type="text" lay-verify="required" class="layui-input" id="mobile" maxlength="11">
+            <hr class="hr15">
+            <input name="password" lay-verify="required" placeholder="密码" type="password" class="layui-input" id="pwd" maxlength="16">
+            <hr class="hr15">
+            <!-- <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="button" id="login"> -->
+            <input class="loginin" value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
+            <hr class="hr20" >
+        </form>
+    </div>
+
+    <script type="text/javascript">
+    
+    layui.extend({
+		admin: '{/}./static/js/admin'
+	});
+    layui.use(['form','admin'], function(){
+      var form = layui.form
+      	,admin = layui.admin;
+      // layer.msg('玩命卖萌中', function(){
+      //   //关闭后的操作
+      //   });
+      //监听提交
+      form.on('submit(login)', function(data){
+        // alert(888)
+        layer.msg(JSON.stringify(data.field),function(){
+          location.href='./index.html'
+        });
+        return false;
+      });
+    });
+    
+	    /* $(function(){
+	        $("#login").bind("click",function(){
+	            let userMobile = $("#mobile").val();
+	            let userPwd = $("#pwd").val();
+	            let mobilePattern =/^((0\d{2,3}-\d{7,8})|(1[35847]\d{9}))$/; //验证手机号
+	            //手机号
+	            if(userMobile.length == 0) {
+	                layer.msg( "手机号不能为空！");
+	                return false;
+	            } else if(!mobilePattern.test(userMobile)) {
+	                layer.msg( "手机号格式不正确！");
+	                return false
+	            }
+	            //密码
+	            if(userPwd.length == 0) {
+	                layer.msg( "密码不能为空！");
+	                return false
+	            }
+	            
+	            let data = "userMobile="+userMobile+"&userPassword="+userPwd;
+	            console.log(data);
+	            $.post("../backstage/login",data,function(res){
+	                res = $.parseJSON(res);
+	                if(res.msg != null){
+	                    layer.alert(res.msg);
+	                    $("#pwd").val('');
+	                    return false;
+	                }
+	                layer.msg('登录成功!');
+	                location.href='../backstage/loginJudge';
+	            });
+	        });
+	    }) */
+    </script>  
+    <!-- 底部结束 -->
+</body>
+</html>

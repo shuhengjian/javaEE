@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysRoleprivilegeMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysRoleprivilege">
+        <result column="PRIVILEGE_ID" jdbcType="VARCHAR" property="privilegeId"/>
+        <result column="ROLE_ID" jdbcType="VARCHAR" property="roleId"/>
+        <result column="OPERATE_ID" jdbcType="VARCHAR" property="operateId"/>
+        <result column="MODULE_ID" jdbcType="VARCHAR" property="moduleId"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		PRIVILEGE_ID,ROLE_ID,OPERATE_ID,MODULE_ID
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysRoleprivilege">
+        INSERT INTO T_SYS_ROLEPRIVILEGE (
+        	PRIVILEGE_ID ,
+        	ROLE_ID ,
+        	OPERATE_ID ,
+        	MODULE_ID 
+        ) VALUES (
+        
+        	#{privilegeId,jdbcType=VARCHAR} ,
+        
+        	#{roleId,jdbcType=VARCHAR} ,
+        
+        	#{operateId,jdbcType=VARCHAR} ,
+        
+        	#{moduleId,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysRoleprivilege">
+        UPDATE T_SYS_ROLEPRIVILEGE SET
+	        ROLE_ID = #{roleId,jdbcType=VARCHAR} ,
+	        OPERATE_ID = #{operateId,jdbcType=VARCHAR} ,
+	        MODULE_ID = #{moduleId,jdbcType=VARCHAR} 
+        WHERE 
+	        PRIVILEGE_ID = #{privilegeId,jdbcType=VARCHAR} 
+	</update>
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_ROLEPRIVILEGE WHERE
+	        PRIVILEGE_ID = #{privilegeId,jdbcType=VARCHAR} 
+ </delete>
+ <delete id="deleteSelective" parameterType="com.creatorblue.cbitedu.system.domain.TsysRoleprivilege">
+        DELETE FROM T_SYS_ROLEPRIVILEGE
+		<where>
+			<if test="roleId!=null and roleId!=''">
+				AND ROLE_ID=#{roleId}
+			</if>
+			<if test="moduleId!=null and moduleId!=''">
+				AND MODULE_ID=#{moduleId}
+			</if>
+		</where>
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_ROLEPRIVILEGE WHERE
+	        PRIVILEGE_ID = #{privilegeId,jdbcType=VARCHAR} 
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTsysRoleprivilegeByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_ROLEPRIVILEGE
+ </select>
+    
+<select id="selectPageTsysRoleprivilege" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.system.domain.TsysRoleprivilege" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_ROLEPRIVILEGE
+	    <where>
+			<if test="roleId!=null and roleId!=''">
+				AND ROLE_ID=#{roleId}
+			</if>
+			<if test="moduleId!=null and moduleId!=''">
+				AND MODULE_ID=#{moduleId}
+			</if>
+		</where>
+ </select>
+</mapper>
+

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysParameterMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysParameter">
+        <result column="PARAID" jdbcType="VARCHAR" property="paraid"/>
+        <result column="ISDEFAULT" jdbcType="VARCHAR" property="isdefault"/>
+        <result column="PARANAME" jdbcType="VARCHAR" property="paraname"/>
+        <result column="PARANO" jdbcType="VARCHAR" property="parano"/>
+        <result column="PARA_CLASS" jdbcType="VARCHAR" property="paraClass"/>
+        <result column="PARA_KEY" jdbcType="VARCHAR" property="paraKey"/>
+        <result column="PARA_TYPE" jdbcType="VARCHAR" property="paraType"/>
+        <result column="PARA_ORDER" jdbcType="DECIMAL" property="paraorder"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="PARENTPARAID" jdbcType="VARCHAR" property="parentparaid"/>
+        <result column="DISPLAYSORT" jdbcType="VARCHAR" property="displaysort"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		PARAID,ISDEFAULT,PARANAME,PARANO,PARA_CLASS,PARA_KEY,PARA_TYPE,PARA_ORDER,REMARK,PARENTPARAID,DISPLAYSORT
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysParameter">
+        INSERT INTO T_SYS_PARAMETER (
+        	PARAID ,
+        	ISDEFAULT ,
+        	PARANAME ,
+        	PARANO ,
+        	PARA_CLASS ,
+        	PARA_KEY ,
+        	PARA_TYPE ,
+        	PARA_ORDER ,
+        	REMARK ,
+        	PARENTPARAID ,
+        	DISPLAYSORT 
+        ) VALUES (
+        
+        	#{paraid,jdbcType=VARCHAR} ,
+        
+        	#{isdefault,jdbcType=VARCHAR} ,
+        
+        	#{paraname,jdbcType=VARCHAR} ,
+        
+        	#{parano,jdbcType=VARCHAR} ,
+        
+        	#{paraClass,jdbcType=VARCHAR} ,
+        
+        	#{paraKey,jdbcType=VARCHAR} ,
+        
+        	#{paraType,jdbcType=VARCHAR} ,
+        
+        	#{paraorder,jdbcType=DECIMAL} ,
+        
+        	#{remark,jdbcType=VARCHAR} ,
+        
+        	#{parentparaid,jdbcType=VARCHAR} ,
+        
+        	#{displaysort,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysParameter">
+        UPDATE T_SYS_PARAMETER SET
+	        ISDEFAULT = #{isdefault,jdbcType=VARCHAR} ,
+	        PARANAME = #{paraname,jdbcType=VARCHAR} ,
+	        PARANO = #{parano,jdbcType=VARCHAR} ,
+	        PARA_CLASS = #{paraClass,jdbcType=VARCHAR} ,
+	        PARA_KEY = #{paraKey,jdbcType=VARCHAR} ,
+	        PARA_TYPE = #{paraType,jdbcType=VARCHAR} ,
+	        PARA_ORDER = #{paraorder,jdbcType=DECIMAL} ,
+	        REMARK = #{remark,jdbcType=VARCHAR} ,
+	        PARENTPARAID = #{parentparaid,jdbcType=VARCHAR} ,
+	        DISPLAYSORT = #{displaysort,jdbcType=VARCHAR} 
+        WHERE 
+	        PARAID = #{paraid,jdbcType=VARCHAR} 
+	</update>
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_PARAMETER WHERE
+	        PARAID = #{paraid,jdbcType=VARCHAR} 
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_PARAMETER WHERE
+	        PARAID = #{paraid,jdbcType=VARCHAR} 
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTsysParameterByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_PARAMETER
+	      <where>
+	      	<if test="paraname!= null and '' != paraname">
+				AND PARANAME LIKE CONCAT(CONCAT('%', #{paraname}),'%')
+			</if>
+			<if test="paraKey != null and '' != paraKey">
+				and PARA_KEY like concat(concat('%', #{paraKey}), '%')
+			</if>
+			<if test="paraType != null and '' != paraType">
+				and PARA_TYPE  = #{paraType}
+			</if>
+	      </where>
+ </select>
+ 
+   <select id="checkTsysParameterByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_PARAMETER
+	      <where>
+	      	<if test="paraname!= null and '' != paraname">
+				AND PARANAME = #{paraname}
+			</if>
+			<if test="paraKey != null and '' != paraKey">
+				and PARA_KEY = #{paraKey}
+			</if>
+			<if test="paraType != null and '' != paraType">
+				and PARA_TYPE  = #{paraType}
+			</if>
+	      </where>
+ </select>
+    
+<select id="selectPageTsysParameter" resultMap="BaseResultMap" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_PARAMETER
+ </select>
+</mapper>
+

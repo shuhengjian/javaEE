@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TOrdersInfoMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TOrdersInfo">
+    <id column="orders_info_id" jdbcType="VARCHAR" property="ordersInfoId" />
+    <result column="orders_id" jdbcType="VARCHAR" property="ordersId" />
+    <result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_quantity" jdbcType="VARCHAR" property="goodsQuantity" />
+    <result column="goods_units" jdbcType="VARCHAR" property="goodsUnits" />
+    <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice" />
+    <result column="goods_standard" jdbcType="VARCHAR" property="goodsStandard" />
+    <result column="goods_num" jdbcType="INTEGER" property="goodsNum" />
+    <result column="file_uel" jdbcType="VARCHAR" property="fileUel" />
+    <result column="orders_deal" jdbcType="VARCHAR" property="ordersDeal" />
+    <result column="kit_state" jdbcType="VARCHAR" property="kitState" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    orders_info_id, orders_id, goods_id, goods_name, goods_quantity, goods_units, goods_price, 
+    goods_standard, goods_num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_orders_info
+    where orders_info_id = #{ordersInfoId,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByOdersId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_orders_info
+    where orders_id = #{value}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_orders_info
+    where orders_info_id = #{ordersInfoId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.musicbar.second.domain.TOrdersInfo">
+    insert into t_orders_info (orders_info_id, orders_id, goods_id, 
+      goods_name, goods_quantity, goods_units, 
+      goods_price, goods_standard, goods_num
+      )
+    values (#{ordersInfoId,jdbcType=VARCHAR}, #{ordersId,jdbcType=VARCHAR}, #{goodsId,jdbcType=VARCHAR}, 
+      #{goodsName,jdbcType=VARCHAR}, #{goodsQuantity,jdbcType=VARCHAR}, #{goodsUnits,jdbcType=VARCHAR}, 
+      #{goodsPrice,jdbcType=DECIMAL}, #{goodsStandard,jdbcType=VARCHAR}, #{goodsNum,jdbcType=INTEGER}
+      )
+  </insert>
+  
+  <insert id="modifyHostId" parameterType="list">
+	    insert into t_orders_info (orders_info_id, orders_id, goods_id, 
+      goods_name, goods_quantity, goods_units, 
+      goods_price, goods_standard, goods_num
+      )values
+	    <foreach item="value" index="key" collection="list" separator="," >
+	      	(#{value.ordersInfoId,jdbcType=VARCHAR}, #{value.ordersId,jdbcType=VARCHAR}, #{value.goodsId,jdbcType=VARCHAR}, 
+      #{value.goodsName,jdbcType=VARCHAR}, #{value.goodsQuantity,jdbcType=VARCHAR}, #{value.goodsUnits,jdbcType=VARCHAR}, 
+      #{value.goodsPrice,jdbcType=DECIMAL}, #{value.goodsStandard,jdbcType=VARCHAR}, #{value.goodsNum,jdbcType=INTEGER}
+      )
+	    </foreach>
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.musicbar.second.domain.TOrdersInfo">
+    insert into t_orders_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ordersInfoId != null">
+        orders_info_id,
+      </if>
+      <if test="ordersId != null">
+        orders_id,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="goodsName != null">
+        goods_name,
+      </if>
+      <if test="goodsQuantity != null">
+        goods_quantity,
+      </if>
+      <if test="goodsUnits != null">
+        goods_units,
+      </if>
+      <if test="goodsPrice != null">
+        goods_price,
+      </if>
+      <if test="goodsStandard != null">
+        goods_standard,
+      </if>
+      <if test="goodsNum != null">
+        goods_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ordersInfoId != null">
+        #{ordersInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersId != null">
+        #{ordersId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsQuantity != null">
+        #{goodsQuantity,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsUnits != null">
+        #{goodsUnits,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPrice != null">
+        #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsStandard != null">
+        #{goodsStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsNum != null">
+        #{goodsNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.musicbar.second.domain.TOrdersInfo">
+    update t_orders_info
+    <set>
+      <if test="ordersId != null">
+        orders_id = #{ordersId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null">
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsQuantity != null">
+        goods_quantity = #{goodsQuantity,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsUnits != null">
+        goods_units = #{goodsUnits,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPrice != null">
+        goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsStandard != null">
+        goods_standard = #{goodsStandard,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsNum != null">
+        goods_num = #{goodsNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where orders_info_id = #{ordersInfoId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.musicbar.second.domain.TOrdersInfo">
+    update t_orders_info
+    set orders_id = #{ordersId,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=VARCHAR},
+      goods_name = #{goodsName,jdbcType=VARCHAR},
+      goods_quantity = #{goodsQuantity,jdbcType=VARCHAR},
+      goods_units = #{goodsUnits,jdbcType=VARCHAR},
+      goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      goods_standard = #{goodsStandard,jdbcType=VARCHAR},
+      goods_num = #{goodsNum,jdbcType=INTEGER}
+    where orders_info_id = #{ordersInfoId,jdbcType=VARCHAR}
+  </update>
+  <!-- 厨房未烹饪-->
+  <select id="selectKitchen" parameterType="string" resultMap="BaseResultMap">
+  		SELECT t_orders_info.goods_name,t_orders_info.goods_num,file_uel,t_orders.create_time,t_orders_info.orders_id FROM t_orders_info 
+				inner join t_goods_info ON t_orders_info.goods_id = t_goods_info.goods_id 
+				INNER JOIN t_orders ON t_orders_info.orders_id = t_orders.orders_id 
+				inner join t_attach ON t_goods_info.goods_id = t_attach.pkid 
+				AND orders_state = 1  AND cook = 1 AND kit_state = #{value} ORDER BY t_orders.create_time ASC;
+  </select>
+ <!-- 修改商品状态 -->
+  <update id="updateKitchen" parameterType="String">
+  	update t_orders_info 
+  	set 
+  	kit_state = #{kitState} 
+  	where 
+  	orders_info_id = #{ordersInfoId}
+  </update>
+  <!-- 修改订单状态 -->
+  <update id="updateKitchenState" parameterType="String">
+  	update t_orders 
+  	set 
+  	orders_state = #{ordersState} 
+  	where 
+  	orders_id = #{ordersId}
+  </update>
+  
+  <!-- 根据订单id查询所有需要烹饪的商品 -->
+  <select id="selectDetailByorderId" parameterType="String" resultMap="BaseResultMap">
+  	select * from t_orders_info where t_orders_info.orders_id = #{value}
+  </select>
+</mapper>

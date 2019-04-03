@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN" "\\urlrewrite3.2.dtd">
+
+<urlrewrite>
+ <!--   -->
+   	<rule>
+		<from>^/index.html$</from>
+		<to>/frontJumpController.do?method=index</to>
+	</rule>
+ 	<rule>
+		<from>^/dispatch.html$</from>
+		<to>/index.do?method=toLogin</to>
+	</rule>
+
+ 	<!-- <rule>
+		<from>^/([A-Za-z0-9]+).html$</from>
+		<to>/frontJumpController.do?method=$1</to>
+	</rule> -->
+	
+	<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_.]+)/([A-Za-z0-9_]+)/parallelCar.html$</from>
+		<to>/$1.do?method=$2&amp;$3=&amp;code=$4</to>
+	</rule>
+		<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_.]+)/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)/parallelCar.html$</from>
+		<to>/$1.do?method=$2&amp;$3=$4&amp;code=$5</to>
+	</rule>
+	<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/newsId/([A-Za-z0-9_]+)/news.html$</from>
+		<to>/$1.do?method=$2&amp;newsId=$3</to>
+	</rule> 
+	<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/newsTypeCode/([0-9]+)/news.html$</from>
+		<to>/$1.do?method=$2&amp;newsTypeCode=$3</to>
+	</rule> 	
+		<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/([0-9]+)/([A-Za-z0-9_]+).html$</from>
+		<to>/$1.do?method=$2&amp;code=$3</to>
+	</rule>   
+	<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/([A-Za-z0-9.]+)/([A-Za-z0-9.]+)/news.html$</from>
+		<to>/$1.do?method=$2&amp;currentPage=$3&amp;newsTypeCode=$4</to>
+	</rule> 
+	<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+).html$</from>
+		<to>/$1.do?method=$2</to>
+	</rule> 
+	<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/([A-Za-z0-9.]+)/([A-Za-z0-9.]+).html$</from>
+		<to>/$1.do?method=$2&amp;$3=$4</to>
+	</rule> 
+	<rule>
+		<from>^/([A-Za-z0-9]+)/([A-Za-z0-9_]+)/([A-Za-z0-9.]+)/([A-Za-z0-9.]+)/([A-Za-z0-9.]+).html$</from>
+		<to>/$1.do?method=$2&amp;code=$3&amp;$4=$5</to>
+	</rule> 
+	<!-- <rule> <from>frontJumpController.html</from> <to>index.html</to> </rule> -->
+
+	<!-- <rule> <from>/([A-Za-z0-9]+).html/([A-Za-z0-9]+)</from> <to>/$1.do?method=$2</to> 
+		</rule> -->
+	<!-- <rule> <from>^/user/([a-z]+)/([0-9]+)$</from> <to>/index.jsp?nickname=$1&amp;age=$2</to> 
+		</rule> -->
+</urlrewrite>

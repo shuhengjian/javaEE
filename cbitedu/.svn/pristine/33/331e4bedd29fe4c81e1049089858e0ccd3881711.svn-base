@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TtyAdvertisingMapper" >
+
+ 	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.ty.domain.TtyAdvertising" >
+        <id column="advertising_id" property="advertisingId" jdbcType="VARCHAR" />
+        <result column="advertising_begin_time" property="advertisingBeginTime" jdbcType="VARCHAR" />
+        <result column="advertising_end_time" property="advertisingEndTime" jdbcType="VARCHAR" />
+        <result column="advertising_state" property="advertisingState" jdbcType="VARCHAR" />
+        <result column="advertising_name" property="advertisingName" jdbcType="VARCHAR" />
+        <association property="tsysAttach" javaType="com.creatorblue.cbitedu.ty.domain.TsysAttach" 
+        	resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap" >
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        advertising_id, advertising_begin_time, advertising_end_time, advertising_state,advertising_name
+    </sql>
+    <select id="select" resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyAdvertising" >
+       select * from t_sys_attach where PKID in(
+        select advertising_id
+        from t_ty_advertising
+        <where>
+       	  advertising_begin_time &lt;= now() and advertising_end_time &gt; now() 
+       	  and advertising_state =1
+        </where>
+        )
+    </select>
+
+	<select id="selectDeficiency" parameterType="map" resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap">	
+		 select * 
+		from t_sys_attach where PKID=(
+			select advertising_id
+			from t_ty_advertising 
+			where advertising_id!=#{id}  and advertising_end_time &lt;= now()   and advertising_state =1
+			ORDER BY advertising_begin_time desc
+			)
+			LIMIT ${num}
+	</select>
+ <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />,a.*
+        from t_ty_advertising b , t_sys_attach a 
+        where b.advertising_id = a.PKID and advertising_id = #{advertisingId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from t_ty_advertising
+        where advertising_id = #{advertisingId,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="com.creatorblue.cbitedu.ty.domain.TtyAdvertising" >
+        insert into t_ty_advertising (advertising_id, advertising_begin_time, 
+            advertising_end_time, advertising_state,advertising_name
+            )
+        values (#{advertisingId,jdbcType=VARCHAR}, #{advertisingBeginTime,jdbcType=VARCHAR}, 
+            #{advertisingEndTime,jdbcType=TIMESTAMP}, #{advertisingState,jdbcType=VARCHAR},
+            #{advertisingName,jdbcType=VARCHAR}
+            )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.creatorblue.cbitedu.ty.domain.TtyAdvertising" >
+        insert into t_ty_advertising
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="advertisingId != null" >
+                advertising_id,
+            </if>
+            <if test="advertisingBeginTime != null" >
+                advertising_begin_time,
+            </if>
+            <if test="advertisingEndTime != null" >
+                advertising_end_time,
+            </if>
+            <if test="advertisingState != null" >
+                advertising_state,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="advertisingId != null" >
+                #{advertisingId,jdbcType=VARCHAR},
+            </if>
+            <if test="advertisingBeginTime != null" >
+                #{advertisingBeginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="advertisingEndTime != null" >
+                #{advertisingEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="advertisingState != null" >
+                #{advertisingState,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.creatorblue.cbitedu.ty.domain.TtyAdvertising" >
+        update t_ty_advertising
+        <set >
+            <if test="advertisingBeginTime != null" >
+                advertising_begin_time = #{advertisingBeginTime,jdbcType=VARCHAR},
+            </if>
+            <if test="advertisingEndTime != null" >
+                advertising_end_time = #{advertisingEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="advertisingState != null" >
+                advertising_state = #{advertisingState,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where advertising_id = #{advertisingId,jdbcType=VARCHAR}
+    </update>
+
+<update id="updateByPrimaryKey" parameterType="com.creatorblue.cbitedu.ty.domain.TtyAdvertising" >
+        update t_ty_advertising b , t_sys_attach a 
+        <set>
+            b.advertising_name = #{advertisingName,jdbcType=VARCHAR},
+            b.advertising_state = #{advertisingState,jdbcType=VARCHAR},
+            b.advertising_begin_time = #{advertisingBeginTime,jdbcType=VARCHAR},
+            b.advertising_end_time = #{advertisingEndTime,jdbcType=VARCHAR},
+            a.update_user_id = #{tsysAttach.updateUserId,jdbcType=VARCHAR},
+            a.update_time = #{tsysAttach.updateTime,jdbcType=VARCHAR},
+            a.FILE_NAME = #{tsysAttach.fileName,jdbcType=VARCHAR},
+            a.REMARK = #{tsysAttach.remark,jdbcType=VARCHAR},
+            a.SECOND_NAME = #{tsysAttach.secondName,jdbcType=VARCHAR},
+            a.FILE_TYPE = #{tsysAttach.fileType,jdbcType=VARCHAR},
+            a.PKID = #{tsysAttach.pkid,jdbcType=VARCHAR},
+            a.FILE_SIZE = #{tsysAttach.fileSize,jdbcType=VARCHAR},
+            a.FILE_SUFFIX = #{tsysAttach.fileSuffix,jdbcType=VARCHAR},
+            a.LJ_URL = #{tsysAttach.ljUrl,jdbcType=VARCHAR},
+            a.FILE_NO = #{tsysAttach.fileNo,jdbcType=VARCHAR},
+            a.FILE_STATE = #{tsysAttach.fileState,jdbcType=VARCHAR},
+           	a.FILE_ORERNO = #{tsysAttach.fileOrerno,jdbcType=VARCHAR}
+            <!--//判断是否上传了图片，如果上传了则修改此字段的值，未上传则不修改  -->
+			<if test="tsysAttach != null and tsysAttach.fileUrl != null">
+				,a.FILE_URL = #{tsysAttach.fileUrl},
+			</if>
+		</set>
+        where b.advertising_id = a.PKID and
+        advertising_id = #{advertisingId,jdbcType=VARCHAR}
+    </update>
+    
+    <!-- 条件查询，查询所有 -->
+	<select id="selectPageTtyAdvertisingByMap" parameterType="map" resultMap="BaseResultMap">
+			select
+			<include refid="Base_Column_List" /> ,a.*
+	        from t_ty_advertising b left join t_sys_attach a on b.advertising_id=a.PKID
+        <where>
+			<if test="advertisingState != null and '' != advertisingState">
+		       	  and advertising_state = #{advertisingState}
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 根据类查询是否存在 -->
+	<select id="checkTheNameWithParentId" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyAdvertising">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM t_ty_advertising
+			 <where>
+		       <if test="advertisingName != null and '' != advertisingName">
+		       	  and advertising_name = #{advertisingName} 
+		        </if>
+		       <if test="advertisingId != null and '' != advertisingId">
+		        	and advertising_id != #{advertisingId}
+		       </if>
+	        </where>
+	</select>
+	<!-- 更新状态 -->
+	<update id="updateBrandStateByPrimaryKey" parameterType="com.creatorblue.cbitedu.ty.domain.TtyAdvertising" >
+        update t_ty_advertising
+        <set >
+            <if test="advertisingState != null and advertisingState != ''" >
+                advertising_state = #{advertisingState,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where advertising_id = #{advertisingId,jdbcType=VARCHAR}
+    </update>
+</mapper>

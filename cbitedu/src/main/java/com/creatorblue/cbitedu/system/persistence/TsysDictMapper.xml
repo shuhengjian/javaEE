@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysDictMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysDict">
+		<result column="DICT_ID" jdbcType="VARCHAR" property="dictId" />
+		<result column="DICT_TYPE" jdbcType="VARCHAR" property="dictType" />
+		<result column="DICT_NAME" jdbcType="VARCHAR" property="dictName" />
+		<result column="DICT_VALUE" jdbcType="VARCHAR" property="dictValue" />
+		<result column="DICT_CODE" jdbcType="VARCHAR" property="dictCode" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="DICT_SORT" jdbcType="VARCHAR" property="dictSort" />
+		<result column="SORT_NUM" jdbcType="DECIMAL" property="sortNum" />
+		<result column="PARENT_TYPE" jdbcType="VARCHAR" property="parentType" />
+		<result column="DISPLAY_SORT" jdbcType="VARCHAR" property="displaySort" />
+		<result column="ISDEFAULT" jdbcType="VARCHAR" property="isdefault" />
+		<result column="MULTI_TYPE" jdbcType="VARCHAR" property="multiType" />
+		<result column="ORG_ID" jdbcType="VARCHAR" property="orgId" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Base_Column_List">
+		DICT_ID,DICT_TYPE,DICT_NAME,DICT_VALUE,DICT_CODE,REMARK,DICT_SORT,SORT_NUM,PARENT_TYPE,DISPLAY_SORT,ISDEFAULT,MULTI_TYPE,ORG_ID
+	</sql>
+	<insert id="insert" parameterType="com.creatorblue.cbitedu.system.domain.TsysDict">
+		INSERT INTO T_SYS_DICT (
+		DICT_ID ,
+		DICT_TYPE ,
+		DICT_NAME ,
+		DICT_VALUE ,
+		DICT_CODE ,
+		REMARK ,
+		DICT_SORT ,
+		SORT_NUM ,
+		PARENT_TYPE ,
+		DISPLAY_SORT ,
+		ISDEFAULT ,
+		MULTI_TYPE ,
+		ORG_ID
+		) VALUES (
+
+		#{dictId,jdbcType=VARCHAR} ,
+
+		#{dictType,jdbcType=VARCHAR} ,
+
+		#{dictName,jdbcType=VARCHAR} ,
+
+		#{dictValue,jdbcType=VARCHAR} ,
+
+		#{dictCode,jdbcType=VARCHAR} ,
+
+		#{remark,jdbcType=VARCHAR} ,
+
+		#{dictSort,jdbcType=VARCHAR} ,
+
+		#{sortNum,jdbcType=DECIMAL} ,
+
+		#{parentType,jdbcType=VARCHAR} ,
+
+		#{displaySort,jdbcType=VARCHAR} ,
+
+		#{isdefault,jdbcType=VARCHAR} ,
+
+		#{multiType,jdbcType=VARCHAR} ,
+
+		#{orgId,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysDict">
+		UPDATE T_SYS_DICT SET
+		DICT_TYPE = #{dictType,jdbcType=VARCHAR} ,
+		DICT_NAME =
+		#{dictName,jdbcType=VARCHAR} ,
+		DICT_VALUE =
+		#{dictValue,jdbcType=VARCHAR} ,
+		DICT_CODE =
+		#{dictCode,jdbcType=VARCHAR} ,
+		REMARK = #{remark,jdbcType=VARCHAR} ,
+		DICT_SORT = #{dictSort,jdbcType=VARCHAR} ,
+		SORT_NUM =
+		#{sortNum,jdbcType=DECIMAL} ,
+		PARENT_TYPE =
+		#{parentType,jdbcType=VARCHAR} ,
+		DISPLAY_SORT =
+		#{displaySort,jdbcType=VARCHAR} ,
+		ISDEFAULT =
+		#{isdefault,jdbcType=VARCHAR} ,
+		MULTI_TYPE =
+		#{multiType,jdbcType=VARCHAR} ,
+		ORG_ID = #{orgId,jdbcType=VARCHAR}
+		WHERE
+		DICT_ID = #{dictId,jdbcType=VARCHAR}
+	</update>
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM T_SYS_DICT WHERE
+		DICT_ID = #{dictId,jdbcType=VARCHAR}
+	</delete>
+	<select id="selectDetailById" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_DICT WHERE
+		DICT_ID = #{dictId,jdbcType=VARCHAR}
+	</select>
+	<!-- 实际业务需要增加的SQL语句 -->
+	<select id="selectPageTsysDictByMap" resultMap="BaseResultMap"
+		parameterType="map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM T_SYS_DICT
+		<where>
+			<if test="dictType != null and '' != dictType">
+				AND DICT_TYPE = #{dictType}
+			</if>
+			<if test="dictName != null and '' != dictName">  <!-- #{} 是调用预处理，而${}则是字符串替换， 常用语排序里面 -->
+				AND DICT_NAME LIKE CONCAT(CONCAT('%', #{dictName}),'%')
+			</if>
+			<if test="dictValue != null and '' != dictValue">
+				<!-- AND DICT_VALUE LIKE CONCAT(CONCAT('%', #{dictValue}),'%') -->
+				AND DICT_VALUE LIKE CONCAT(CONCAT('%', #{dictValue}),'%')
+			</if>
+			<if test="dictCode != null and '' != dictCode">
+				AND DICT_CODE LIKE CONCAT(CONCAT('%', #{dictCode}),'%')
+			</if>
+			<if test="parentType != null and '' != parentType">
+				and PARENT_TYPE = #{parentType}
+			</if>
+			<if test="displaySort != null and '' != displaySort">
+				and DISPLAY_SORT = #{displaySort}
+			</if>
+		</where>
+	</select>
+
+	<select id="checkTsysDictByMap" resultMap="BaseResultMap"
+		parameterType="map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM T_SYS_DICT
+		<where>
+			<if test="dictType != null and '' != dictType">
+				AND DICT_TYPE = #{dictType}
+			</if>
+			<if test="dictName != null and '' != dictName">  <!-- #{} 是调用预处理，而${}则是字符串替换， 常用语排序里面 -->
+				AND DICT_NAME = #{dictName}
+			</if>
+			<if test="dictValue != null and '' != dictValue">
+				AND DICT_VALUE = #{dictValue}
+			</if>
+			<if test="dictCode != null and '' != dictCode">
+				AND DICT_CODE = #{dictCode}
+			</if>
+			<if test="parentType != null and '' != parentType">
+				and PARENT_TYPE = #{parentType}
+			</if>
+			<if test="displaySort != null and '' != displaySort">
+				and DISPLAY_SORT = #{displaySort}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectPageTsysDict" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM T_SYS_DICT WHERE
+		DICT_VALUE IS NOT NULL
+	</select>
+	
+</mapper>
+

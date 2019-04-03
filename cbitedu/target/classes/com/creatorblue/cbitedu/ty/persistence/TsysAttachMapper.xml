@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper" >
+
+    <resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.ty.domain.TsysAttach" >
+        <id column="ATTACH_ID" property="attachId" jdbcType="VARCHAR" />
+        <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+        <result column="FILE_URL" property="fileUrl" jdbcType="VARCHAR" />
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="SECOND_NAME" property="secondName" jdbcType="VARCHAR" />
+        <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+        <result column="PKID" property="pkid" jdbcType="VARCHAR" />
+        <result column="FILE_SIZE" property="fileSize" jdbcType="VARCHAR" />
+        <result column="FILE_SUFFIX" property="fileSuffix" jdbcType="VARCHAR" />
+        <result column="LJ_URL" property="ljUrl" jdbcType="VARCHAR" />
+        <result column="FILE_NO" property="fileNo" jdbcType="VARCHAR" />
+        <result column="FILE_STATE" property="fileState" jdbcType="INTEGER" />
+        <result column="FILE_ORERNO" property="fileOrerno" jdbcType="INTEGER" />
+    </resultMap>
+   <delete id="deleteByPrimaryKey" parameterType="string" >
+        delete  from t_sys_attach 
+        where PKID = #{pkid,jdbcType=VARCHAR}
+    </delete>
+    <!-- 根据id查询文件路径 -->
+    <select id="selectFileUrlById" parameterType="string" resultMap="BaseResultMap">
+    	select * from t_sys_attach where PKID = #{pkid,jdbcType=VARCHAR}
+    </select>
+    
+   <insert id="insert" parameterType="com.creatorblue.cbitedu.ty.domain.TsysAttach" >
+       insert into t_sys_attach
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="attachId != null" >
+                ATTACH_ID,
+            </if>
+            <if test="createUserId != null" >
+                create_user_id,
+                 create_time,
+            </if>
+            <if test="updateUserId != null" >
+                update_user_id,
+                  update_time,
+            </if>
+            <if test="fileUrl != null" >
+                FILE_URL,
+            </if>
+            <if test="fileName != null" >
+                FILE_NAME,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="secondName != null" >
+                SECOND_NAME,
+            </if>
+            <if test="fileType != null" >
+                FILE_TYPE,
+            </if>
+            <if test="pkid != null" >
+                PKID,
+            </if>
+            <if test="fileSize != null" >
+                FILE_SIZE,
+            </if>
+            <if test="fileSuffix != null" >
+                FILE_SUFFIX,
+            </if>
+            <if test="ljUrl != null" >
+                LJ_URL,
+            </if>
+            <if test="fileNo != null" >
+                FILE_NO,
+            </if>
+            <if test="fileState != null" >
+                FILE_STATE,
+            </if>
+            <if test="fileOrerno != null" >
+                FILE_ORERNO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="attachId != null" >
+                #{attachId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null" >
+                #{createUserId,jdbcType=VARCHAR},
+                now(),
+            </if>
+            <if test="updateUserId != null" >
+                #{updateUserId,jdbcType=VARCHAR},
+                now(),
+            </if>
+            <if test="fileUrl != null" >
+                #{fileUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null" >
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="secondName != null" >
+                #{secondName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType != null" >
+                #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="pkid != null" >
+                #{pkid,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null" >
+                #{fileSize,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSuffix != null" >
+                #{fileSuffix,jdbcType=VARCHAR},
+            </if>
+            <if test="ljUrl != null" >
+                #{ljUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileNo != null" >
+                #{fileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fileState != null" >
+                #{fileState,jdbcType=INTEGER},
+            </if>
+            <if test="fileOrerno != null" >
+                #{fileOrerno,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert> 
+    <!-- 查询详情图片 -->
+	<select id="selectAttachById" resultMap="BaseResultMap" parameterType="map">
+	SELECT a.FILE_URL FROM t_ty_product p LEFT JOIN t_sys_attach
+	a on p.product_id=a.PKID WHERE p.product_id=#{productId} and FILE_NAME=#{fileName}
+	</select>
+	
+	<select id="selectfindById" resultMap="BaseResultMap" parameterType="string">
+	SELECT *
+	from t_sys_attach
+	WHERE  PKID  =#{value}
+	</select>
+	
+	 <update id="update" parameterType="com.creatorblue.cbitedu.ty.domain.TsysAttach" >
+        update t_sys_attach
+        <set >
+            <if test="createUserId != null" >
+                create_user_id = #{createUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUserId != null" >
+                update_user_id = #{updateUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="fileUrl != null" >
+                FILE_URL = #{fileUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null" >
+                FILE_NAME = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="secondName != null" >
+                SECOND_NAME = #{secondName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType != null" >
+                FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="pkid != null" >
+                PKID = #{pkid,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null" >
+                FILE_SIZE = #{fileSize,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSuffix != null" >
+                FILE_SUFFIX = #{fileSuffix,jdbcType=VARCHAR},
+            </if>
+            <if test="ljUrl != null" >
+                LJ_URL = #{ljUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="fileNo != null" >
+                FILE_NO = #{fileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fileState != null" >
+                FILE_STATE = #{fileState,jdbcType=INTEGER},
+            </if>
+            <if test="fileOrerno != null" >
+                FILE_ORERNO = #{fileOrerno,jdbcType=INTEGER},
+            </if>
+        </set>
+        where ATTACH_ID = #{attachId,jdbcType=VARCHAR}
+    </update>
+</mapper>

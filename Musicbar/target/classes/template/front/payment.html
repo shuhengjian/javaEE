@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh">
+<!--<![endif]-->
+
+<head>
+<title>老树林音乐酒吧</title>
+<!-- Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<!-- 360浏览器默认采用高速模式渲染页面 -->
+<meta name="renderer" content="webkit">
+<meta name="keywords" content="Demo">
+<meta name="description" content="Demo">
+<meta name="author" content="">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" th:href="@{/front/img/favicon.ico}">
+<!-- Global CSS  -->
+<link rel="stylesheet" th:href="@{/front/css/bootstrap.min.css}">
+<!--Custom Css-->
+<link rel="stylesheet" th:href="@{/front/css/private.css}">
+<!-- CSS Implementing Plugins -->
+
+<link rel="stylesheet" th:href="@{/front/css/line-icons.css}">
+<link rel="stylesheet" th:href="@{/front/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/front/normalize.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/front/css/alert.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/front/css/loaders.css}">
+<script type="text/javascript" th:src="@{/front/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/comm.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/alert.min.js}"></script>
+<script type="text/javascript" th:src="@{/front/js/payment.js}"></script>
+
+<!-- Custom JS -->
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+</head>
+<!--[if !IE]>注释规范_Begin<![endif]-->
+<!--[if !IE]>注释规范_End<![endif]-->
+<body>
+	<div class="topTool navbar-fixed-top">
+		<div class="returnBtn">
+			<a href="#"><img class="img-responsive" src="img/returnBtn.png"></a>
+		</div>
+		<div class="menuBtn">
+			<div class="dropdown">
+				<button type="button" class="btn dropdown-toggle" id="dropdownMenu1"
+					data-toggle="dropdown"></button>
+				<ul class="dropdown-menu pull-right" role="menu"
+					aria-labelledby="dropdownMenu1">
+					<li role="presentation"><a href="activity.html"><span
+							class="glyphicon glyphicon-certificate"></span>活动</a></li>
+
+					<li role="presentation"><a th:href="@{/front/order_meal}"><span
+							class="glyphicon glyphicon-th"></span>点单</a></li>
+					<li role="presentation"><a th:href="@{/front/goGoodsCart}"><span
+							class="glyphicon glyphicon-shopping-cart"></span>购物车</a></li>
+
+					<li role="presentation"><a
+						th:href="@{/front/TOrFrontqueryAll}"><span
+							class="glyphicon glyphicon-th-list"></span>订单</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="currentPath">购物车</div>
+	</div>
+	<div class="paymentList">
+		<!--  <ul class="productLine">
+            <li class="productName">德国 凯尔特人(Barbarossa)小麦啤酒</li>
+            <li class="productImg"><img class="img-responsive" src="img/product/beer/001.jpg"></li>
+            <li class="productInfo">
+                <div class="infoRow">
+                    <a class="delProduct pull-right" href="#">删除<span class="glyphicon glyphicon-trash"></span></a>
+                </div>
+                <div class="infoRow">
+                    <div class="productCapacity">500ml/听</div>
+                    <div class="productPrice">¥&nbsp;8/听</div> 
+                </div>
+                <div class="infoRow">
+                    <div class="productUnit">单位：听</div>
+                    <div class="selcetNo">
+                    <span class="input-number-decrement">–</span><input class="input-number" type="text" value="4" min="0" max="10"><span class="input-number-increment">+</span></div>   
+                </div>
+            </li>
+            <li class="driver"></li>
+
+
+        </ul> -->
+	</div>
+	<div class="goPayTool navbar-fixed-bottom">
+		<div class="totalPay">
+			合计：¥&nbsp<span>0.0</span>
+		</div>
+		<a class="goPay" href="javascript:void(0)"><b>去结算</b><span>(0)</span></a>
+	</div>
+	<!-- 	<script type="text/javascript">
+
+(function() {//物品数量选择
+
+  window.inputNumber = function(el) {
+
+    var min = el.attr('min') || false;
+    var max = el.attr('max') || false;
+
+    var els = {};
+
+    els.dec = el.prev();
+    els.inc = el.next();
+
+    el.each(function() {
+      init($(this));
+    });
+
+    function init(el) {
+
+      els.dec.on('click', decrement);
+      els.inc.on('click', increment);
+
+      function decrement() {
+        var value = el[0].value;
+        value--;
+        if(!min || value >= min) {
+          el[0].value = value;
+        }
+      }
+
+      function increment() {
+        var value = el[0].value;
+        value++;
+        if(!max || value <= max) {
+          el[0].value = value++;
+        }
+      }
+    }
+  }
+})();
+
+inputNumber($('.input-number'));
+    //@ sourceURL=pen.js
+</script>  -->
+	<div id="loadingwrapper">
+		<div class="loading-mask"></div>
+		<div class="loading-box-s">
+			<div class="loader-cicle"></div>
+			<p class="loading-text">正在加载</p>
+		</div>
+	</div>
+</body>
+</html>

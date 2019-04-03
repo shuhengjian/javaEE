@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysRoleMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysRole">
+		<result column="ROLE_ID" jdbcType="VARCHAR" property="roleId" />
+		<result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+		<result column="ROLE_TYPE" jdbcType="VARCHAR" property="roleType" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="ORG_ID" jdbcType="VARCHAR" property="orgId" />
+		<result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+		<result column="CREATE_DATE" jdbcType="VARCHAR" property="createDate" />
+		<result column="DATA_SCOPE" jdbcType="VARCHAR" property="dataScope" />
+		<result column="ORG_NAME" jdbcType="VARCHAR" property="org.orgName" />
+		<result column="USER_REALNAME" jdbcType="VARCHAR" property="userinfo.userRealname" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Base_Column_List">
+		ROLE_ID,ROLE_NAME,ROLE_TYPE,REMARK,ORG_ID,CREATOR,CREATE_DATE,DATA_SCOPE
+	</sql>
+	<insert id="insert" parameterType="com.creatorblue.cbitedu.system.domain.TsysRole">
+		INSERT INTO T_SYS_ROLE (
+		ROLE_ID ,
+		ROLE_NAME ,
+		ROLE_TYPE ,
+		REMARK ,
+		ORG_ID ,
+		CREATOR ,
+		CREATE_DATE ,
+		DATA_SCOPE
+		) VALUES (
+
+		#{roleId,jdbcType=VARCHAR} ,
+
+		#{roleName,jdbcType=VARCHAR} ,
+
+		#{roleType,jdbcType=VARCHAR} ,
+
+		#{remark,jdbcType=VARCHAR} ,
+
+		#{orgId,jdbcType=VARCHAR} ,
+
+		#{creator,jdbcType=VARCHAR} ,
+
+		#{createDate,jdbcType=VARCHAR} ,
+
+		#{dataScope,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysRole">
+		UPDATE T_SYS_ROLE SET
+		ROLE_NAME = #{roleName,jdbcType=VARCHAR} ,
+		ROLE_TYPE =
+		#{roleType,jdbcType=VARCHAR} ,
+		REMARK = #{remark,jdbcType=VARCHAR} ,
+		ORG_ID = #{orgId,jdbcType=VARCHAR} ,
+		CREATOR =
+		#{creator,jdbcType=VARCHAR} ,
+		CREATE_DATE =
+		#{createDate,jdbcType=VARCHAR} ,
+		DATA_SCOPE =
+		#{dataScope,jdbcType=VARCHAR}
+		WHERE
+		ROLE_ID = #{roleId,jdbcType=VARCHAR}
+	</update>
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM T_SYS_ROLE WHERE
+		ROLE_ID = #{roleId,jdbcType=VARCHAR}
+	</delete>
+	<select id="selectDetailById" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_ROLE r WHERE
+		ROLE_ID = #{roleId,jdbcType=VARCHAR}
+	</select>
+	<!-- 实际业务需要增加的SQL语句 -->
+	<select id="selectPageTsysRoleByMap" resultMap="BaseResultMap"
+		parameterType="map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM T_SYS_ROLE  r
+		<where>
+			<if test="roleName!=null and roleName!=''">
+				AND ROLE_NAME like '%'||#{roleName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND role_id IN (SELECT role_id FROM t_user_role WHERE
+				user_id = #{userId})
+			</if>
+			<if test="roleList!=null">
+				AND role_id IN
+				<foreach item="item" index="index" collection="roleList"
+					open="(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+		<if test="sortname!=null and sortname!=''">
+			order by ${sortname} ${sortorder}
+		</if>
+
+	</select>
+
+	<select id="selectPageTsysRole" resultMap="BaseResultMap">
+		SELECT r.*, o.org_name, u.user_realname
+		FROM t_sys_org o
+		RIGHT JOIN t_sys_role r ON (o.org_id = r.org_id)
+		LEFT JOIN t_sys_userinfo u ON (r.creator = u.user_id)
+
+		<where>
+			<if test="roleName!=null and roleName!=''">
+				AND r.ROLE_NAME like '%'||#{roleName,jdbcType=VARCHAR}||'%'
+			</if>
+		</where>
+		<if test="sortname!=null and sortname!=''">
+			order by ${sortname} ${sortorder}
+		</if>
+	</select>
+
+	<select id="selectRoleInfoByMap" resultMap="BaseResultMap">
+		SELECT r.*, o.org_name, uc.user_realname
+		FROM t_sys_org o
+		RIGHT JOIN t_sys_role r ON (o.org_id = r.org_id)
+		left join t_user_role ur on (r.role_id = ur.role_id)
+		LEFT JOIN t_sys_userinfo u ON (ur.user_id= u.user_id)
+		LEFT JOIN t_sys_userinfo uc ON (r.creator = uc.user_id)
+		<where>
+			<if test="userId!=null and userId!=''">
+				AND u.user_id = #{userId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>
+

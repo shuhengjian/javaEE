@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysUserprivilegeMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysUserprivilege">
+        <result column="USERPRVIID" jdbcType="VARCHAR" property="userprviid"/>
+        <result column="USERID" jdbcType="VARCHAR" property="userid"/>
+        <result column="MODULEID" jdbcType="VARCHAR" property="moduleid"/>
+        <result column="OPERATEID" jdbcType="VARCHAR" property="operateid"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		USERPRVIID,USERID,MODULEID,OPERATEID
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysUserprivilege">
+        INSERT INTO T_SYS_USERPRIVILEGE (
+        	USERPRVIID ,
+        	USERID ,
+        	MODULEID ,
+        	OPERATEID 
+        ) VALUES (
+        
+        	#{userprviid,jdbcType=VARCHAR} ,
+        
+        	#{userid,jdbcType=VARCHAR} ,
+        
+        	#{moduleid,jdbcType=VARCHAR} ,
+        
+        	#{operateid,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysUserprivilege">
+        UPDATE T_SYS_USERPRIVILEGE SET
+	        USERID = #{userid,jdbcType=VARCHAR} ,
+	        MODULEID = #{moduleid,jdbcType=VARCHAR} ,
+	        OPERATEID = #{operateid,jdbcType=VARCHAR} 
+        WHERE 
+	        USERPRVIID = #{userprviid,jdbcType=VARCHAR} 
+	</update>
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_USERPRIVILEGE WHERE
+	        USERPRVIID = #{userprviid,jdbcType=VARCHAR} 
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_USERPRIVILEGE WHERE
+	        USERPRVIID = #{userprviid,jdbcType=VARCHAR} 
+  </select>
+<!-- 实际业务需要增加的SQL语句 -->
+  <select id="selectPageTsysUserprivilegeByMap" resultMap="BaseResultMap" parameterType="map">
+	    SELECT 
+	     <include refid="Base_Column_List" />
+	        FROM T_SYS_USERPRIVILEGE
+ </select>
+    
+<select id="selectPageTsysUserprivilege" resultMap="BaseResultMap" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_USERPRIVILEGE
+ </select>
+</mapper>
+

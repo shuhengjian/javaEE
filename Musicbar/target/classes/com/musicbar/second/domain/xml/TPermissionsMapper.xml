@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TPermissionsMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TPermissions">
+    <id column="permissions_id" jdbcType="VARCHAR" property="permissionsId" />
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="operation_id" jdbcType="VARCHAR" property="operationId" />
+    <result column="operation_name" jdbcType="VARCHAR" property="operationName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    permissions_id, menu_id, menu_name, role_id, role_name, operation_id, operation_name
+  </sql>
+  	<!-- 根据角色id查看分配的权限 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_permissions
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </select>
+  <!-- 删除角色权限 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_permissions
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </delete>
+ 	<!--  为角色分配权限 -->
+  <insert id="insert" parameterType="java.util.List">
+    insert into t_permissions (permissions_id, menu_id, menu_name, 
+      role_id, role_name, operation_id, 
+      operation_name)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    	(
+    	#{item.permissionsId,jdbcType=VARCHAR},
+    	#{item.menuId,jdbcType=VARCHAR}, 
+    	#{item.menuName,jdbcType=VARCHAR}, 
+      	#{item.roleId,jdbcType=VARCHAR}, 
+      	#{item.roleName,jdbcType=VARCHAR}, 
+      	#{item.operationId,jdbcType=VARCHAR}, 
+      	#{item.operationName,jdbcType=VARCHAR}
+      	)
+    </foreach>
+    
+  </insert>
+  
+</mapper>

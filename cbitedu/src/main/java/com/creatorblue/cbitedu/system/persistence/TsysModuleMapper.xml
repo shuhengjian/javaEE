@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.creatorblue.cbitedu.system.persistence.TsysModuleMapper">
+	<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.system.domain.TsysModule">
+        <result column="MODULE_ID" jdbcType="VARCHAR" property="moduleId"/>
+        <result column="APP_ID" jdbcType="VARCHAR" property="appId"/>
+        <result column="MODULE_NAME" jdbcType="VARCHAR" property="moduleName"/>
+        <result column="LINK_ADDR" jdbcType="VARCHAR" property="linkAddr"/>
+        <result column="MODULE_CLASS" jdbcType="DECIMAL" property="moduleClass"/>
+        <result column="ICON" jdbcType="VARCHAR" property="icon"/>
+        <result column="MODULE_CODE" jdbcType="VARCHAR" property="moduleCode"/>
+        <result column="PARENT_MODULEID" jdbcType="VARCHAR" property="parentModuleid"/>
+        <result column="SORT_NUM" jdbcType="DECIMAL" property="sortNum"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="DISPLAY" jdbcType="VARCHAR" property="display"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+<sql id="Base_Column_List">
+		MODULE_ID,APP_ID,MODULE_NAME,LINK_ADDR,MODULE_CLASS,ICON,MODULE_CODE,PARENT_MODULEID,SORT_NUM,REMARK,DISPLAY
+</sql>
+<insert id="insert"  parameterType="com.creatorblue.cbitedu.system.domain.TsysModule">
+        INSERT INTO T_SYS_MODULE (
+        	MODULE_ID ,
+        	APP_ID ,
+        	MODULE_NAME ,
+        	LINK_ADDR ,
+        	MODULE_CLASS ,
+        	ICON ,
+        	MODULE_CODE ,
+        	PARENT_MODULEID ,
+        	SORT_NUM ,
+        	REMARK ,
+        	DISPLAY 
+        ) VALUES (
+        
+        	#{moduleId,jdbcType=VARCHAR} ,
+        
+        	#{appId,jdbcType=VARCHAR} ,
+        
+        	#{moduleName,jdbcType=VARCHAR} ,
+        
+        	#{linkAddr,jdbcType=VARCHAR} ,
+        
+        	#{moduleClass,jdbcType=DECIMAL} ,
+        
+        	#{icon,jdbcType=VARCHAR} ,
+        
+        	#{moduleCode,jdbcType=VARCHAR} ,
+        
+        	#{parentModuleid,jdbcType=VARCHAR} ,
+        
+        	#{sortNum,jdbcType=DECIMAL} ,
+        
+        	#{remark,jdbcType=VARCHAR} ,
+        
+        	#{display,jdbcType=VARCHAR} 
+        )
+</insert>
+   <update id="update" parameterType="com.creatorblue.cbitedu.system.domain.TsysModule">
+        UPDATE T_SYS_MODULE SET
+	        APP_ID = #{appId,jdbcType=VARCHAR} ,
+	        MODULE_NAME = #{moduleName,jdbcType=VARCHAR} ,
+	        LINK_ADDR = #{linkAddr,jdbcType=VARCHAR} ,
+	        MODULE_CLASS = #{moduleClass,jdbcType=DECIMAL} ,
+	        ICON = #{icon,jdbcType=VARCHAR} ,
+	        MODULE_CODE = #{moduleCode,jdbcType=VARCHAR} ,
+	        PARENT_MODULEID = #{parentModuleid,jdbcType=VARCHAR} ,
+	        SORT_NUM = #{sortNum,jdbcType=DECIMAL} ,
+	        REMARK = #{remark,jdbcType=VARCHAR} ,
+	        DISPLAY = #{display,jdbcType=VARCHAR} 
+        WHERE 
+	        MODULE_ID = #{moduleId,jdbcType=VARCHAR} 
+	</update>
+<delete id="delete" parameterType="java.lang.String">
+        DELETE FROM T_SYS_MODULE WHERE
+	        MODULE_ID = #{moduleId,jdbcType=VARCHAR} 
+ </delete>
+ <select id="selectDetailById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_MODULE WHERE
+	        MODULE_ID = #{moduleId,jdbcType=VARCHAR} 
+  </select>
+<select id="selectPageTsysModule" resultMap="BaseResultMap" >
+	    SELECT  
+	    <include refid="Base_Column_List" />
+	        FROM T_SYS_MODULE
+ </select>
+ 
+ <!-- 根据应用系统id获取菜单模块数据 -->
+  <select id="selectPageTsysModuleByMap" parameterType="map" resultMap="BaseResultMap">
+	    SELECT 
+	    <include refid="Base_Column_List" />
+	    FROM T_SYS_MODULE 
+	    <where>
+	    	<if test="appId!=null and appId!=''">
+	   			 APP_ID = #{appId,jdbcType=VARCHAR} 
+	    	</if>
+	    	<if test="parentModuleid!=null and parentModuleid!=''">
+	   			 PARENT_MODULEID = #{parentModuleid,jdbcType=VARCHAR} 
+	    	</if>
+	    	<if test="display!=null and display!=''">
+	   			 AND DISPLAY='0'
+	    	</if>
+	    	 <if test="userId!=null and userId!=''">
+			    AND module_id IN
+		       (SELECT module_id
+		          FROM t_sys_roleprivilege
+		         WHERE role_id IN
+		               (SELECT role_id FROM t_user_role WHERE user_id = #{userId})
+		        UNION ALL
+		        SELECT moduleid FROM t_sys_userprivilege WHERE userid = #{userId})
+	    	</if>
+	    </where>
+	    ORDER BY SORT_NUM ASC
+  </select>
+  
+   <!-- 获取菜单模块编码获取数据 -->
+    <select id="selectModuleByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_MODULE WHERE MODULE_CODE = #{MODULE_CODE,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据业务层传来得map条件获取数据-->
+  <select id="selectModuleBycondition" resultMap="BaseResultMap" parameterType="map">
+	  SELECT 
+	  <include refid="Base_Column_List" />
+	   FROM T_SYS_MODULE
+	   <where>
+	         <if test="moduleId!=null and moduleId!=''">
+	     		AND MODULE_ID = #{moduleId,jdbcType=VARCHAR}
+	    	 </if>
+	    	   <if test="parentModuleid!=null and parentModuleid!=''">
+	     		AND PARENT_MODULEID = #{parentModuleid,jdbcType=VARCHAR}
+	    	 </if>
+	    	 <if test="moduleCode!=null and moduleCode!=''">
+	     		AND MODULE_CODE = #{moduleCode,jdbcType=VARCHAR}
+	    	 </if>
+	    </where>
+ </select>
+</mapper>
+
+

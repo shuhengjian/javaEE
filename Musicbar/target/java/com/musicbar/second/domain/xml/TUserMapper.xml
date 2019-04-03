@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TUserMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TUser">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_mobile" jdbcType="VARCHAR" property="userMobile" />
+    <result column="user_idcard" jdbcType="VARCHAR" property="userIdcard" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="user_state" jdbcType="VARCHAR" property="userState" />
+    <association property="userRole" foreignColumn="user_role_id"
+			resultMap="com.musicbar.second.mapper.TUserRoleMapper.BaseResultMap" />
+	<association property="role" foreignColumn="role_id"
+			resultMap="com.musicbar.second.mapper.TRoleMapper.BaseResultMap" />
+	<association property="attach" foreignColumn="pkid"
+			resultMap="com.musicbar.second.mapper.TAttachMapper.BaseResultMap" />
+	<association property="parameter" foreignColumn="para_type"
+			resultMap="com.musicbar.second.mapper.TParameterMapper.BaseResultMap" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_id, role_id, user_name, user_mobile, user_idcard, user_password, create_time, update_time,
+    user_state
+  </sql>
+  <select id="selectAllUser" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from t_user
+  </select>
+  <!-- 查询用户名 密码 -->
+  <select id="selectByNamePwd"  parameterType="com.musicbar.second.domain.TUser" resultMap="BaseResultMap">
+  		select 
+		<include refid="Base_Column_List" />
+  		from t_user 
+  		<where>
+  			<if test="userMobile != null">
+        user_mobile = #{userMobile},
+      </if>
+      <if test="usePassword != null">
+        user_password = #{userPassword},
+      </if>
+  		</where>
+  </select>
+  <!-- 根据用户id查询 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    u.user_id, u.role_id, u.user_name, u.user_mobile, u.user_idcard, u.user_password,
+    u.create_time, u.update_time, u.user_state,a.file_uel
+    from t_user u
+    LEFT JOIN t_role r ON u.role_id = r.role_id
+    LEFT JOIN t_attach a ON u.user_id = a.PKID
+    where u.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询用户手机号、身份证号 -->
+	<select id="selectUserMobileAndIdcard" resultType="int" parameterType="com.musicbar.second.domain.TUser">
+		select count(*) from t_user
+		<where>
+			<if test="userMobile !=null">
+				AND user_mobile = #{userMobile}
+			</if>
+			<if test="userIdcard !=null">
+				and user_idcard = #{userIdcard}
+			</if>
+			<if test="userId !=null and userId.trim() !=''">
+				and user_id != #{userId}
+			</if>
+		</where>
+	</select>
+  <!-- 删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 新增用户 -->
+  <insert id="insert" parameterType="com.musicbar.second.domain.TUser">
+    insert into t_user (user_id, role_id, user_name, user_mobile,
+      user_idcard, user_password, create_time, update_time,
+      user_state
+      )
+    values (#{userId,jdbcType=VARCHAR}, #{role.roleId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+       #{userMobile,jdbcType=VARCHAR}, #{userIdcard,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
+       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{userState,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.musicbar.second.domain.TUser">
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userMobile != null">
+        user_mobile,
+      </if>
+      <if test="userIdcard != null">
+        user_idcard,
+      </if>
+      <if test="userPassword != null">
+        user_password,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="userState != null">
+        user_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userMobile != null">
+        #{userMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcard != null">
+        #{userIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userState != null">
+        #{userState,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.musicbar.second.domain.TUser">
+    update t_user
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userMobile != null">
+        user_mobile = #{userMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcard != null">
+        user_idcard = #{userIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userState != null">
+        user_state = #{userState,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <!-- 修改用户 -->
+  <update id="updateByPrimaryKey" parameterType="com.musicbar.second.domain.TUser">
+    update t_user u,t_attach a
+    <set>
+    	u.role_id = #{role.roleId,jdbcType=VARCHAR},
+	 	u.user_name = #{userName,jdbcType=VARCHAR},
+	    u.user_mobile = #{userMobile,jdbcType=VARCHAR},
+	    u.user_idcard = #{userIdcard,jdbcType=VARCHAR},
+	    u.user_password = #{userPassword,jdbcType=VARCHAR},
+	    u.create_time = #{createTime,jdbcType=TIMESTAMP},
+	    u.update_time = #{updateTime,jdbcType=TIMESTAMP},
+	    u.user_state = #{userState,jdbcType=VARCHAR}
+    </set>  
+    where u.user_id = a.pkid
+    AND u.user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+
+	<!-- 修改用户状态 -->
+	<update id="changeState" parameterType="map" >
+		update t_user
+		<set>
+			<if test="userState != null and userState !=''">
+				user_state = #{userState}
+			</if>	
+		</set>
+		where user_id in
+		<foreach collection="map" open="(" close=")" separator="," item="s" index="i">
+			#{s}
+		</foreach>
+	</update>
+
+  <!-- 条件查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.musicbar.second.domain.TUser">
+  	select
+  	u.user_id, u.user_name, u.user_mobile, u.user_idcard, u.user_password,
+  	u.create_time, u.update_time, p.para_val as user_state, r.role_name, a.file_uel
+  	from t_user u
+  	INNER JOIN (select * from t_parameter where para_type ='user_state') p ON u.user_state = p.para_no
+  	LEFT JOIN t_role r ON u.role_id = r.role_id
+  	LEFT JOIN t_attach a ON u.user_id = a.pkid
+  	<where> 		
+		<if test="userName != null and '' != userName and userName.trim()!=''">
+			AND u.user_name LIKE CONCAT(CONCAT('%', #{userName}),'%')
+		</if>
+		<if test="userMobile != null and userMobile.trim()!=''">
+			AND u.user_mobile LIKE CONCAT(CONCAT('%', #{userMobile}),'%')
+		</if>
+		<if test="role != null and role.roleId.trim()!=''">
+			AND u.role_id = #{role.roleId}
+		</if>
+		<if test="userState != null and '' != userState">
+			AND u.user_state = #{userState}
+		</if>
+	</where>
+	order by create_time DESC
+  </select>
+  <!-- 查询用户状态 -->
+ <!--  <select id="selectState" resultMap="BaseResultMap">
+	select distinct	u.user_state,p.para_val
+	from t_user u,t_parameter p
+	WHERE
+		u.user_state = p.para_no
+	AND p.para_type = 'user_state'
+  </select> -->
+  <!-- 查询用户手机号和密码 -->
+  <select id="selectMobilePwd" resultMap="BaseResultMap">
+	select user_mobile, user_password
+	from t_user
+  </select>
+  <!-- 查询用户手机号 -->
+  <select id="selectMobile" resultMap="BaseResultMap">
+	select user_mobile
+	from t_user
+  </select>
+  <!-- 批量删除 -->
+  <delete id="deleteAll">
+  	delete from t_user where user_id in
+	<foreach collection="list" open="(" close=")" separator="," item="item">
+		#{item}
+	</foreach>
+  </delete>
+  <select id="selectState" resultMap="com.musicbar.second.mapper.TParameterMapper.BaseResultMap">
+  	SELECT p.para_name,p.para_no, p.para_val, p.para_type FROM t_parameter p WHERE p.para_type = "user_state"
+  </select>
+</mapper>

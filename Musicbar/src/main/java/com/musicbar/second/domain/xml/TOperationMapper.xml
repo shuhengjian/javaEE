@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TOperationMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TOperation">
+    <id column="operation_id" jdbcType="VARCHAR" property="operationId" />
+    <result column="operation_name" jdbcType="VARCHAR" property="operationName" />
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    operation_id, operation_name, menu_id, menu_name
+  </sql>
+  <!-- 根据菜单id查询其操作 -->
+  <select id="selectByMenuId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_operation
+    where menu_id = #{menuId,jdbcType=VARCHAR}
+  </select>
+ <!--  根据操作id查 -->
+  <select id="selectOperationById" parameterType="String" resultMap="BaseResultMap">
+  	select 
+	<include refid="Base_Column_List"></include>
+  	from t_operation 
+  	where operation_id = #{value}
+  </select>
+
+</mapper>

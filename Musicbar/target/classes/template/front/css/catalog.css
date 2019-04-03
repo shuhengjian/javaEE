@@ -1,0 +1,217 @@
+.pLine {
+	clear: both;
+	width: 87.5%;
+	height: 2px;
+	background-color: #ededed;
+	margin: 10px auto;
+}
+
+#scroller1, #scroller {
+	position: absolute;
+	z-index: 1;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	width: 100%;
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
+
+#ser_page div {
+	float: none;
+}
+
+.ser_navs {
+	width: 97.5%;
+	padding-left: 2.5%;
+	background-color: #fff;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #bfbfbf;
+}
+
+.ser_navs li {
+	display: block;
+	border-bottom: 1px solid #bfbfbf;
+}
+
+.ser_navs li a {
+	width: 100%;
+	display: block;
+	height: 40px;
+	background-color: #fff;
+	line-height: 40px;
+	color: #999;
+}
+
+.ser_navs li:last-child {
+	border: none;
+}
+
+#sum_inputs {
+	position: absolute;
+	height: 34px;
+	top: 8px;
+	right: 2.5%;
+	width: 40px;
+	border: 0;
+	-webkit-appearance: none;
+	box-shadow: none;
+	padding: 0;
+	background:
+		url(http://rep3.mmb.cn/wap/upload/touch/newWap/icon/scfd.png)
+		no-repeat center center;
+	background-size: 20px auto;
+}
+
+#ser_page {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9999999;
+	background-color: #eee;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.page_cons {
+	height: 50px;
+	table-layout: fixed;
+	background-color: #e5e5e5;
+	width: 95%;
+	padding: 0 2.5%;
+	position: relative;
+}
+
+#clear_val {
+	display: block;
+	position: absolute;
+	top: 10px;
+	right: 40px;
+	width: 34px;
+	height: 30px;
+	background: url(http://rep3.mmb.cn/wap/upload/touch/newWap/icon/qcs.png)
+		no-repeat center center;
+	background-size: 18px auto;
+}
+
+.cons_ser {
+	display: -webkit-box;
+	display: -moz-box;
+	height: 50px;
+	width: 100%;
+	position: relative;
+}
+
+#close_serc {
+	display: block;
+	position: absolute;
+	top: 10px;
+	left: 2.5%;
+	width: 30px;
+	height: 30px;
+	background:
+		url(http://rep3.mmb.cn/wap/upload/touch/newWap/icon/fh00.png)
+		no-repeat 9px 5px #fff;
+	background-size: 10px auto;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+}
+
+#sum_page {
+	position: absolute;
+	height: 32px;
+	top: 8px;
+	right: 2.5%;
+	width: 40px;
+	border: 0;
+	-webkit-appearance: none;
+	box-shadow: none;
+	padding: 0;
+	background:
+		url(http://rep3.mmb.cn/wap/upload/touch/newWap/icon/scfd2.png)
+		no-repeat center center;
+	background-size: 20px auto;
+}
+
+#clear_all {
+	display: block;
+	width: 95%;
+	margin: 20px auto;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background-color: #EB6100;
+	color: #fff;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	font-size: 16px;
+}
+
+#no_ser {
+	text-align: center;
+	padding: 50px 0;
+	color: #999;
+}
+
+#no_ser img {
+	width: 50px;
+	padding-bottom: 20px;
+}
+
+.car_item {
+	position: relative;
+}
+
+.goods_car_num {
+	display: none;
+	position: absolute;
+	font-size: 13px;
+	width: 22px;
+	height: 22px;
+	line-height: 22px;
+	text-align: center;
+	background-color: red;
+	color: white;
+	top: 2px;
+	right: 10px;
+	border-radius: 50%;
+}
+
+.cb_goods_car {
+	display: none;
+	position: absolute;
+	font-size: 13px;
+	width: 22px;
+	height: 22px;
+	line-height: 22px;
+	text-align: center;
+	background-color: red;
+	color: white;
+	top: 5px;
+	border-radius: 50%;
+}
+.update{
+	display:block
+	width: 100%;
+	text-align: center;
+	height: 50px;
+	line-height: 50px;
+}
+.update img{
+	width: 40px;
+	height: 40px;
+}

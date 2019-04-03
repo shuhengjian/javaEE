@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicbar.second.mapper.TMenuMapper">
+  <resultMap id="BaseResultMap" type="com.musicbar.second.domain.TMenu">
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+  </resultMap>
+  <!-- 查询所有菜单 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select menu_id, menu_name 
+  	from t_menu
+  </select>
+  <!-- 根据菜单id查询菜单名 -->
+  <select id="selectName" parameterType="String" resultType="String">
+  	select menu_name 
+  	from t_menu 
+  	where menu_id = #{value}
+  </select>
+
+</mapper>

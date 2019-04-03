@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh">
+<!--<![endif]-->
+
+<head>
+<title>老树林音乐酒吧</title>
+<!-- Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<!-- 360浏览器默认采用高速模式渲染页面 -->
+<meta name="renderer" content="webkit">
+
+<meta name="keywords" content="Demo">
+<meta name="description" content="Demo">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="img/favicon.ico">
+<!-- Global CSS  -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<!--Custom Css-->
+<link rel="stylesheet" href="css/private.css">
+<!-- CSS Implementing Plugins -->
+<link rel="stylesheet" href="css/line-icons.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" type="text/css" th:href="@{/front/css/alert.css}">
+<script type="text/javascript" src="js/alert.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" th:src="@{/front/js/comm.js}"></script>
+<!-- Custom JS -->
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+</head>
+<!--[if !IE]>注释规范_Begin<![endif]-->
+<!--[if !IE]>注释规范_End<![endif]-->
+<body>
+    <div class="topTool navbar-fixed-top">
+        <div class="returnBtn">
+			<a href="#"><img class="img-responsive" src="img/returnBtn.png"></a>
+		</div>
+		<div class="menuBtn">
+			<div class="dropdown">
+				<button type="button" class="btn dropdown-toggle" id="dropdownMenu1"
+					data-toggle="dropdown"></button>
+				<ul class="dropdown-menu pull-right" role="menu"
+					aria-labelledby="dropdownMenu1">
+					<li role="presentation"><a href="activity.html"><span
+							class="glyphicon glyphicon-certificate"></span>活动</a></li>
+
+					<li role="presentation"><a th:href="@{/front/order_meal}"><span
+							class="glyphicon glyphicon-th"></span>点单</a></li>
+					<li role="presentation"><a th:href="@{/front/goGoodsCart}"><span
+							class="glyphicon glyphicon-shopping-cart"></span>购物车</a></li>
+
+					<li role="presentation"><a th:href="@{/front/TOrFrontqueryAll}"><span
+							class="glyphicon glyphicon-th-list"></span>订单</a></li>
+				</ul>
+			</div>
+		</div>
+        <div class="currentPath">交易情况</div>
+    </div>
+    
+    <div class="confirm">
+        <div class="payResult"><span class="glyphicon glyphicon-ok"></span>支付成功</div>
+        <div class="orderBox">
+            <div class="orderInfo">
+                <div class="attribute">订单号：</div>
+                <div class="attributeValue">[[${tOrders.ordersCode}]]</div>
+            </div>
+            <div class="orderInfo">
+                <div class="attribute">支付金额：</div>
+                <div class="attributeValue">[[${tOrders.ordersMoney}]]</div>
+            </div>
+            <div class="orderInfo">
+                <div class="attribute">支付时间：</div>
+                <div class="attributeValue">[[${#dates.format(tOrders.paymentTime,'yyyy-MM-dd HH:mm')}]]</div>
+            </div>
+            <div class="orderInfo">
+                <div class="attribute">支付方式：</div>
+                <div class="attributeValue">[[${tOrders.paymentMode}]]</div>
+            </div>
+            <div class="orderInfo">
+                <div class="attribute">当前状态：</div>
+                <div class="attributeValue">[[${tOrders.ordersState}]]</div>
+            </div>
+            <div class="orderInfo">
+                <label>
+                </label>
+            </div>
+        </div>
+        <a onclick="queryActive()"><div class="bigBtn">查看订单</div></a>
+        <!-- <a th:href="TOrFrontqueryAll"><div class="bigBtn">查看订单</div></a> -->
+    </div>
+    <script type="text/javascript">
+    $(".returnBtn").click(function() {
+		history.back(-1);
+	})
+	
+	function queryActive(){
+    	let act = "1";
+    	location = "TOrFrontqueryAll?act="+act;
+    }
+    </script>
+</body>

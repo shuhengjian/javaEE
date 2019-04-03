@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>后台管理-WeAdmin Frame型后台管理系统-WeAdmin 1.0</title>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"
+	th:href="@{'/backstage/favicon.ico'}" />
+<link rel="stylesheet" href="../../static/css/font.css"
+	th:href="@{'/backstage/static/css/font.css'}">
+<link rel="stylesheet" href="../../static/css/weadmin.css"
+	th:href="@{'/backstage/static/css/weadmin.css'}">
+<script src="../jquery.min.js"
+	th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript"
+	charset="utf-8"></script>
+<script th:src="@{'/front/js/comm.js'}" type="text/javascript"
+	charset="utf-8"></script>
+<script type="text/javascript">
+	var isExit;
+	var ctx;
+	$(function() {
+		isExit = true;
+		ctx=getContextPath();
+		$.ajax({
+			url : "select_Car",
+			type : "post",
+			dataType : "json",
+			success : function(res) {
+				$("#total b").html(res.sum);
+				$("#order_list").empty();
+				var cartNum = res.goodsList.length;
+				$("#cont span").text("(" + cartNum + ")");
+				res.goodsList.forEach(function(obj) {
+					productLine(obj);
+				})
+			}
+		})
+	})
+	function addCar(tag) {
+		var goodsId = $(tag).data("gid");
+		var goodsIds = $(".list_detail .list_close");
+		//console.log(goodsIds)
+		$.ajax({
+			url : "add_Car",
+			type : "post",
+			data : {
+				goodsId : goodsId
+			},
+			async : false,
+			dataType : "json",
+			success : function(res) {
+				if(res.code==0){
+					layer.alert(res.msg, {
+						icon: 5,
+						title: "提示"
+						});
+					return;
+				}
+				
+				$("#total b").html(res.data.sumPrice);
+				$("#cont span").text("(" + res.data.number + ")");
+				if (res.code == 0) {
+					alert(res.msg)
+					return;
+				}
+				for (let i = 0; i < goodsIds.length; i++) {
+					let _goodsId = $(goodsIds[i]).data("id");
+					if (_goodsId == goodsId) {
+						$(goodsIds[i]).parents(".list_detail").find("#num")
+								.val(res.data.num);
+						isExit = false;
+						break;
+					}
+				}
+				if (!isExit) {
+					isExit = true;
+					return;
+				}
+				divF(res.data);
+			}
+		})
+	}
+	/*加减*/
+	function updateCar(tag, num) {
+		var goodsId = $(tag).data("id");
+		var cont = $(tag).parents(".list_num").find("#num").val();
+		if (cont == 1 && num == -1) {
+			alert("不能小于一件商品");
+			return false;
+		}
+		$.ajax({
+			url : "update_car",
+			type : "post",
+			data : {
+				goodsId : goodsId,
+				num : num,
+				isAlter : true
+			},
+			dataType : "json",
+			success : function(res) {
+				$(tag).parents(".list_num").find("#num").val(res.num);
+				$("#total b").text(res.sumPrice);
+			}
+		})
+	}
+	/*删除*/
+	function deleteCartItem(tag) {
+		let _this = tag;
+		var goodsId = $(_this).data("id");
+		$.ajax({
+			url : "delete_car",
+			type : "post",
+			data : {
+				goodsId : goodsId
+			},
+			dataType : "json",
+			success : function(res) {
+				if (res.code == 1) {
+					$(_this).parents(".list_detail").remove();
+				} else {
+					alert(res.msg);
+				}
+				$("#total b").text(res.data.sumPrice);
+				let cartNum = $("#order_list .list_detail").length;
+				$(".cartNum").text(cartNum);
+			}
+		})
+	}
+	/*删除全部*/
+	function delectAllCart() {
+		let list=$(".list_detail").length;
+		console.log(list)
+		if(list<=0){
+			layer.alert('购物车中还未添加商品!', {
+				icon: 5,
+				title: "提示"
+				});
+			return;
+		}
+		 layer.confirm('确定要清空购物车吗？', {
+	            btn : [ '确定', '取消' ]//按钮
+	        }, function(index) {
+	        	$("#order_list").empty();
+	    		let is = delCookie("backCart");
+	    		if (is) {
+	    			$("#total b").text(0);
+	    			$(".cartNum").text(0);
+	    		}
+	    		 layer.close(index);
+	        }); 
+	    }
+	
+	
+	//删除cookie值
+	function delCookie(key) {
+		var date = new Date();
+		date.setTime(date.getTime() - 100000000);
+		var delValue = getCookie(key);
+		if (!!delValue) {
+			document.cookie = key + '=' + delValue + ';expires='
+					+ date.toGMTString() + ";path=/";
+			return true;
+		}
+	}
+	//获取cookie
+	function getCookie(key) {
+		var arr, reg = RegExp('(^| )' + key + '=([^;]+)(;|$)');
+		if (arr = document.cookie.match(reg))
+			return decodeURIComponent(arr[2]);
+		else
+			return null;
+	}
+
+	/*获得焦点*/
+	/* function addFocus(tag){
+		var goodsId = $(tag).next().data("id");
+		console.log(2)
+	} */
+	/*失去焦点*/
+	/* function blur(tag){
+		var num = $(tag).val();
+		console.log(1)
+	}  */
+
+	function changeCar(tag) {
+		var goodsId = $(tag).next().data("id");
+		var num = $(tag).val();
+		$.ajax({
+			url : "update_car",
+			type : "post",
+			data : {
+				goodsId : goodsId,
+				num : num,
+				isAlter : false
+			},
+			dataType : "json",
+			success : function(res) {
+				console.log(res)
+				$(tag).parents(".list_num").find("#num").val(res.num);
+				$("#total b").text(res.sumPrice);
+			}
+		})
+	}
+
+	function divF(obj, i) {
+		let productLine = '<li class="list_detail">\
+						<ul >\
+						<li class="goods_img"><img src="'+ctx+'/file/'+obj.attch.fileUel+'" class="back_cart_goods"/></li>\
+							<li class="goods_name">'
+				+ obj.goodsName
+				+ '</li>\
+							<li class="list_price">\
+								¥<b>'
+				+ obj.goodsPrice
+				+ '</b>\
+							</li>\
+							<li class="list_num">\
+								<button data-id="'
+				+ obj.goodsId
+				+ '" onclick="updateCar(this,-1)">-</button>\
+								<input type="number" maxlength="3" value="'
+				+ obj.num
+				+ '" id="num"  onchange="changeCar(this)"/>\
+								<button data-id="'
+				+ obj.goodsId
+				+ '" onclick="updateCar(this,1)">+</button>\
+							</li>\
+						</ul>\
+						<div class="list_close" onclick="deleteCartItem(this)" data-id="'
+				+ obj.goodsId
+				+ '">\
+							<i class="layui-icon" style="font-size: 30px;">&#xe640;</i>\
+						</div>\
+					</li>';
+		$('#order_list').append(productLine);
+	}
+	function productLine(obj, i) {
+		let productLine = '<li class="list_detail">\
+						<ul ><li class="goods_img"><img src="'+ctx+'/file/'+obj.goodsInfo.attch.fileUel+'" class="back_cart_goods" /></li>\
+							<li class="goods_name">'
+				+ obj.goodsInfo.goodsName
+				+ '</li>\
+							<li class="list_price">\
+								¥<b>'
+				+ obj.goodsInfo.goodsPrice
+				+ '</b>\
+							</li>\
+							<li class="list_num">\
+								<button data-id="'
+				+ obj.goodsInfo.goodsId
+				+ '" onclick="updateCar(this,-1)">-</button>\
+								<input type="number" maxlength="3" value="'
+				+ obj.num
+				+ '" id="num"  onchange="changeCar(this)"/>\
+								<button data-id="'
+				+ obj.goodsInfo.goodsId
+				+ '" onclick="updateCar(this,1)">+</button>\
+							</li>\
+						</ul>\
+						<div class="list_close" onclick="deleteCartItem(this)" data-id="'
+				+ obj.goodsInfo.goodsId
+				+ '">\
+							<i class="layui-icon" style="font-size: 30px;">&#xe640;</i>\
+						</div>\
+					</li>';
+		$('#order_list').append(productLine);
+	}
+	/*结算*/
+	function settlement(){
+		let ul =$(".list_detail");
+		if(ul.length<=0){
+			layer.alert('购物车中还未添加商品!', {
+				icon: 5,
+				title: "提示"
+				});
+			return;
+		}
+		$.ajax({
+			url:"result_settlement",
+			type:"post",
+			dataType : 'json',
+			async : false,
+			success : function(res) {
+				console.log(res);
+				if(res.code==0){
+					layer.alert(res.msg, {
+						icon: 5,
+						title: "提示"
+						});
+					return;
+				}
+				WeAdminShow('结算','result_list?orderID='+res.data.orderID,600,400)
+			}
+		})
+	}
+	// 返回当前项目名
+	function getContextPath() {
+		var pathName = window.document.location.pathname;
+		// 获取带"/"的项目名，如：/myproj
+		var projectName = pathName
+				.substring(0, pathName.substr(1).indexOf('/') + 1);
+		return projectName;
+	}
+</script>
+<style type="text/css">
+/*左侧菜单*/
+.left-nav {
+	overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 0px;
+	height: 0px;
+}
+
+#nav li {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	font-size: 20px;
+}
+/*中间商品预览*/
+#content_box {
+	left: 220px;
+	right: 400px;
+	position: absolute;
+	top: 46px;
+	bottom: 42px;
+}
+
+#goods_detail {
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#goods_detail li {
+	float: left;
+	margin: 5px;
+	width: 200px;
+	height: 100px;
+	background-color: gainsboro;
+	border: 1px solid gainsboro;
+	position: relative;
+}
+
+#goods_detail li img {
+	width: 90px;
+	height: 90px;
+	margin: 5px;
+}
+/*商品介绍*/
+.goods_info {
+	width: 90px;
+	height: 90px;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.goods_info .g_name {
+	width: 100%;
+	height: 30px;
+}
+
+.goods_info .g_inventory {
+	width: 100%;
+	height: 20px;
+}
+
+.goods_info .g_price {
+	width: 100%;
+	height: 20px;
+}
+/*右侧订单*/
+#right_box {
+	width: 400px;
+	position: absolute;
+	top: 94px;
+	bottom: 92px;
+	right: 0;
+}
+/*头*/
+#list_title {
+	width: 400px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background-color: skyblue;
+	position: fixed;
+	top: 46px;
+	right: 0;
+}
+/**/
+#clear_car {
+	position: absolute;
+	bottom: -10px;
+	right: 5px;
+	color: gainsboro;
+	cursor: pointer;
+}
+/*购物车列表*/
+#order_list {
+	width: 100%;
+	height: 100%;
+	border-left: 1px solid gainsboro;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border-left:
+}
+
+.list_detail {
+	width: 100%;
+	height: 90px;
+	/* border: 1px solid dimgray; */
+	position: relative;
+	/* background-color: gainsboro; */
+	margin-top: 5px;
+}
+
+.list_detail ul {
+	width: 90%;
+	height: 90px;
+	line-height: 90px;
+	position: relative;
+	display: flex;
+	align-content: center;
+}
+
+.back_cart_goods {
+	width: 70px;
+	height: 70px;
+	margin-left: 10px;
+}
+
+.goods_name {
+	width: 120px;
+	overflow: hidden;
+	padding-left: 10px;
+	margin-left: 10px;
+}
+
+.list_price {
+	width: 100px;
+	overflow: hidden;
+}
+
+.list_price b {
+	color: red;
+	font-size: 20px;
+}
+
+.list_num {
+	width: 100px;
+	height: 30px;
+	position: relative;
+	margin-top: 35px;
+	display: flex;
+	justify-content: space-between;
+	margin-right: 15px;
+}
+
+.list_num>button {
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	/*border: 0;*/
+}
+
+.list_num>button:active {
+	background-color: red;
+	margin-right: 5px;
+}
+
+.list_num button:last-child {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 2;
+	left: 63px;
+}
+
+.list_num>input {
+	height: 26px;
+	width: 30px;
+	position: absolute;
+	top: 0;
+	left: 30px;
+	z-index: 1;
+	text-align: center;
+}
+
+/*红色x*/
+.list_close {
+	width: 30px;
+	height: 30px;
+	line-height: 80px;
+	text-align: center;
+	color: red;
+	position: absolute;
+	top: 10px;
+	right: 5px;
+	cursor: pointer;
+}
+
+/*结算*/
+#list_result {
+	width: 400px;
+	height: 50px;
+	display: flex;
+	justify-content: space-between;
+	background-color: skyblue;
+	z-index: 100;
+	position: fixed;
+	bottom: 42px;
+	right: 0;
+	line-height: 50px;
+}
+
+#list_result li:first-child {
+	text-align: center;
+	width: 100px;
+}
+
+#total b {
+	font-size: 20px;
+	color: red;
+}
+
+#list_result li:last-child {
+	width: 100px;
+	height: 50px;
+	background-color: red;
+	color: white;
+	line-height: 50px;
+	text-align: center;
+}
+</style>
+</head>
+
+<body>
+	<!-- 顶部开始 -->
+	<div class="container">
+		<div class="logo">
+			<a href="./index.html">老树林音乐酒吧后台管理</a>
+		</div>
+
+
+		<ul class="layui-nav right" lay-filter="">
+			<li class="layui-nav-item"><a href="javascript:;">Admin</a>
+				<dl class="layui-nav-child">
+					<dd>
+						<a class="loginout" href="login.html">切换账号</a>
+					</dd>
+					<dd>
+						<a class="loginout" href="login.html">注销</a>
+					</dd>
+					<dd>
+						<a class="loginout" href="#">修改密码</a>
+					</dd>
+				</dl></li>
+			<li class="layui-nav-item to-index"><a href="./index.html">后台管理</a>
+			</li>
+		</ul>
+
+	</div>
+	<!-- 顶部结束 -->
+	<!-- 中部开始 -->
+	<!-- 左侧菜单开始 -->
+	<div class="left-nav">
+		<div id="side-nav">
+			<ul id="nav">
+				<!--商品分类-->
+				<li><a href="cashier_list">全部</a></li>
+				<th:block th:each="typeList :${typeList}">
+					<li><a
+						th:href="@{/backstage/cashier_list?type.typeId=}+${typeList.typeId}"
+						th:text="${typeList.typeName}">香烟</a></li>
+				</th:block>
+				<!-- <li>啤酒</li>
+					<li>红酒</li>
+					<li>白酒</li>
+					<li>水果</li>
+					<li>沙拉</li>
+					<li>特价推荐</li> -->
+			</ul>
+		</div>
+	</div>
+	<!--右侧结束-->
+	<!--中间开始-->
+	<div id="content_box">
+		<!--商品-->
+		<ul id="goods_detail">
+			<th:block th:each="good :${good}">
+				<li class="car" onclick="addCar(this,1)"
+					th:data-gid="${good.goodsId}"><img src="bailandi.jpg"
+					th:src="${good.attch}!=null and ${good.attch.fileUel}!=null?@{'/file/'+${good.attch.fileUel}}:''" />
+					<div class="goods_info">
+						<div class="g_name" th:text="${good.goodsName}">白兰地</div>
+						<div class="goods_stock">库存:[[${good.goodsStock}]]</div>
+						<div class="g_price">
+							¥<b>[[${good.goodsPrice}]]</b>
+						</div>
+						<div class="g_inventory">销量[[${good.goodsSales}]]</div>
+					</div></li>
+			</th:block>
+			<!-- <li>
+					<img src="bailandi.jpg" />
+					<div class="goods_info">
+						<div class="g_name">白兰地</div>
+						<div class="g_price">¥<b>999.00</b></div>
+						<div class="g_inventory">剩余：1111</div>
+					</div>
+				</li> -->
+		</ul>
+	</div>
+	<!--中间结束-->
+	<!--右边开始-->
+	<div id="right_box">
+		<div id="list_title">
+			购物车
+			<div id="clear_car" onclick="delectAllCart()">清空</div>
+		</div>
+		<!--购物商品列表 开始-->
+		<ul id="order_list">
+			<!-- <li class="list_detail">
+					<ul >
+						<li class="goods_name">白兰地</li>
+						<li class="list_price">
+							¥<b>555.00</b>
+						</li>
+						<li class="list_num">
+							<button>-</button>
+							<input type="number" maxlength="3" value="1"/>
+							<button>+</button>
+						</li>
+					</ul>
+					<div class="list_close">
+						<i class="layui-icon" style="font-size: 30px;">&#xe640;</i>
+					</div>
+				</li> -->
+		</ul>
+		<!--购物商品列表 结束-->
+		<!--结算 开始-->
+		<ul id="list_result">
+			<li>总金额</li>
+			<li id="total">¥<b>0.00</b></li>
+			<li onclick="settlement()" style="cursor: pointer;" id="cont">结算<span
+				class="cartNum">(0)</span></li>
+		</ul>
+		<!--结算 结束-->
+	</div>
+	<!--右边结束-->
+	<!-- 底部开始 -->
+	<div class="footer">
+		<div class="copyright">Copyright ©2018 MusicBar</div>
+	</div>
+	<!-- 底部结束 -->
+	<script type="text/javascript">
+		//			layui扩展模块的两种加载方式-示例
+		//		    layui.extend({
+		//			  admin: '{/}../../static/js/admin' // {/}的意思即代表采用自有路径，即不跟随 base 路径
+		//			});
+		//			//使用拓展模块
+		//			layui.use('admin', function(){
+		//			  var admin = layui.admin;
+		//			});
+		layui.config({
+			base : '../../static/js/',
+			version : '101100'
+		}).use('admin');
+		layui.use([ 'jquery', 'admin' ], function() {
+			var $ = layui.jquery;
+			$(function() {
+				var login = JSON.parse(localStorage.getItem("login"));
+				if (login) {
+					if (login = 0) {
+						window.location.href = './login.html';
+						return false;
+					} else {
+						return false;
+					}
+				} else {
+					window.location.href = './login.html';
+					return false;
+				}
+			});
+		});
+		
+	</script>
+</body>
+<!--Tab菜单右键弹出菜单-->
+<ul class="rightMenu" id="rightMenu">
+	<li data-type="fresh">刷新</li>
+	<li data-type="current">关闭当前</li>
+	<li data-type="other">关闭其它</li>
+	<li data-type="all">关闭所有</li>
+</ul>
+<script type="text/javascript" src="../../lib/layui/layui.js"
+	charset="utf-8" th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+<script src="../../static/js/eleDel.js" type="text/javascript"
+	charset="utf-8" th:src="@{'/backstage/static/js/eleDel.js'}"></script>
+</html>

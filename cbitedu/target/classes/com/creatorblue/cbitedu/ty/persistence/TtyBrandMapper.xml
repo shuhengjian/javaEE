@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TtyBrandMapper" >
+
+    <resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.ty.domain.TtyBrand" >
+        <id column="brand_id" property="brandId" jdbcType="VARCHAR" />
+        <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+        <result column="brand_state" property="brandState" jdbcType="VARCHAR" />
+        <association property="tsysAttach" javaType="com.creatorblue.cbitedu.ty.domain.TsysAttach" 
+        	resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap" >
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        brand_id, brand_name,brand_state
+    </sql>
+ <select id="select" resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap"  >
+        select * from t_sys_attach where PKID in(
+        select brand_id
+        from t_ty_brand
+        where brand_state=1
+        )
+         limit 12
+    </select>
+    
+ <select id="selectCountProduct" parameterType="String" resultType="int">
+ 	select count(*) from t_ty_product where brand_id = #{brandId}
+ </select>
+    
+    
+    <!-- 条件查询，查询所有 -->
+	<select id="selectPageTtyBrandByMap" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" /> ,a.*
+        from t_ty_brand b left join t_sys_attach a on 	b.brand_id = a.PKID
+        <where>
+			<if test="brandName != null and '' != brandName">
+				AND brand_name LIKE CONCAT(CONCAT('%', #{brandName}),'%')
+			</if>
+			<if test="brandState != null and '' != brandState">
+		       	  and brand_state = #{brandState}
+		    </if>
+		</where>
+	</select>
+	<!-- 根据类查询是否存在 -->
+	<select id="checkTheNameWithParentId" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyBrand">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM t_ty_brand
+			 <where>
+		       <if test="brandName != null and '' != brandName">
+		       	  and brand_name = #{brandName} 
+		        </if>
+		       <if test="brandId != null and '' != brandId">
+		        	and brand_id != #{brandId}
+		       </if>
+	        </where>
+	</select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="Base_Column_List" /> ,a.*
+        from t_ty_brand b , t_sys_attach a 
+        where b.brand_id = a.PKID and brand_id = #{brandId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="string" >
+        delete  from t_ty_brand
+        where brand_id = #{brandId,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="com.creatorblue.cbitedu.ty.domain.TtyBrand" >
+     	insert into t_ty_brand (brand_id, brand_name,brand_state)
+        values (#{brandId,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR}, #{brandState,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.creatorblue.cbitedu.ty.domain.TtyBrand" >
+        insert into t_ty_brand
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="brandId != null" >
+                brand_id,
+            </if>
+            <if test="brandName != null" >
+                brand_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="brandId != null and brandId != ''" >
+                #{brandId,jdbcType=VARCHAR},
+            </if>
+            <if test="brandName != null and brandName != ''" >
+                #{brandName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBrandStateByPrimaryKey" parameterType="com.creatorblue.cbitedu.ty.domain.TtyBrand" >
+        update t_ty_brand
+        <set >
+            <if test="brandState != null and brandState != ''" >
+                brand_state = #{brandState,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where brand_id = #{brandId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.creatorblue.cbitedu.ty.domain.TtyBrand" >
+        update t_ty_brand b , t_sys_attach a 
+        <set>
+            b.brand_name = #{brandName,jdbcType=VARCHAR},
+            b.brand_state = #{brandState,jdbcType=VARCHAR},
+            a.update_user_id = #{tsysAttach.updateUserId,jdbcType=VARCHAR},
+            a.update_time = #{tsysAttach.updateTime,jdbcType=VARCHAR},
+            a.FILE_NAME = #{tsysAttach.fileName,jdbcType=VARCHAR},
+            a.REMARK = #{tsysAttach.remark,jdbcType=VARCHAR},
+            a.SECOND_NAME = #{tsysAttach.secondName,jdbcType=VARCHAR},
+            a.FILE_TYPE = #{tsysAttach.fileType,jdbcType=VARCHAR},
+            a.PKID = #{tsysAttach.pkid,jdbcType=VARCHAR},
+            a.FILE_SIZE = #{tsysAttach.fileSize,jdbcType=VARCHAR},
+            a.FILE_SUFFIX = #{tsysAttach.fileSuffix,jdbcType=VARCHAR},
+            a.LJ_URL = #{tsysAttach.ljUrl,jdbcType=VARCHAR},
+            a.FILE_NO = #{tsysAttach.fileNo,jdbcType=VARCHAR},
+            a.FILE_STATE = #{tsysAttach.fileState,jdbcType=VARCHAR},
+           	a.FILE_ORERNO = #{tsysAttach.fileOrerno,jdbcType=VARCHAR}
+            <!--//判断是否上传了图片，如果上传了则修改此字段的值，未上传则不修改  -->
+			<if test="tsysAttach != null and tsysAttach.fileUrl != null">
+				,a.FILE_URL = #{tsysAttach.fileUrl},
+			</if>
+		</set>
+        where b.brand_id = a.PKID and
+        brand_id = #{brandId,jdbcType=VARCHAR}
+    </update>
+    
+    
+    
+    
+    
+    
+    
+    
+    <select id="selectBrand" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" /> ,a.*
+        from t_ty_brand b , t_sys_attach a 
+        where b.brand_id = a.PKID and brand_state = 1
+	</select>
+</mapper>

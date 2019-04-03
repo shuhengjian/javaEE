@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatorblue.cbitedu.ty.persistence.TtyRuleMapper">
+		
+		<resultMap id="BaseResultMap" type="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		<id column="product_id" property="productId" jdbcType="VARCHAR" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="product_market_price" property="productMarketPrice"
+			jdbcType="DECIMAL" />
+		<result column="product_flatly_price" property="productFlatlyPrice"
+			jdbcType="DECIMAL" />
+		<result column="product_remark" property="productRemark"
+			jdbcType="VARCHAR" />
+		<result column="product_color" property="productColor"
+			jdbcType="VARCHAR" />
+		<result column="product_cover_picture" property="productCoverPicture"
+			jdbcType="VARCHAR" />
+		<result column="product_pub_time" property="productPubTime"
+			jdbcType="TIMESTAMP" />
+		<result column="create_user_id" property="createUserId"
+			jdbcType="VARCHAR" />
+		<result column="update_user_id" property="updateUserId"
+			jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+		<association property="ttyBrand" foreignColumn="brand_id"
+			resultMap="com.creatorblue.cbitedu.ty.persistence.TtyBrandMapper.BaseResultMap" />
+		<association property="ttyType" foreignColumn="type_id"
+			resultMap="com.creatorblue.cbitedu.ty.persistence.TtyTypeMapper.BaseResultMap" />
+		<association property="ttyPrice" foreignColumn="price_id"
+			resultMap="com.creatorblue.cbitedu.ty.persistence.TtyPriceMapper.BaseResultMap" />
+		<association property="tsysOrg" foreignColumn="org_Id"
+			resultMap="com.creatorblue.cbitedu.system.persistence.TsysOrgMapper.BaseResultMap" />
+	</resultMap>
+	
+	
+
+	<sql id="Base_Column_List">
+		product_id, t_ty_product.brand_id, t_ty_product.type_id, t_ty_product.org_id,
+		t_ty_product.price_id, product_name, product_market_price,
+		product_flatly_price, product_remark, product_color,
+		product_cover_picture, product_pub_time,
+		create_user_id, update_user_id, update_time
+	</sql>
+	
+	<!-- 条件查询，查询所有 -->
+	<select id="selectPageTtyProductByMap" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+        from t_ty_product
+        <where>
+			<if test="productName != null and '' != productName">
+				AND product_name LIKE CONCAT(CONCAT('%', #{productName}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="Base_Column_List" />
+        from t_ty_product
+        where product_id = #{productId,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="select" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		select
+		<include refid="Base_Column_List" />
+		from t_ty_product
+		<where>
+			<if test="ttyBrand!=null and ttyBrand.brandId.trim()!=''">
+				and brand_id=#{ttyBrand.brandId}
+			</if>
+			<if test="ttyType!=null and ttyType.typeId.trim()!=''">
+				and type_id=#{ttyType.typeId}
+			</if>
+			<if test="ttyPrice!=null and ttyPrice.priceId.trim()!=''">
+				and price_id=#{ttyPrice.priceId}
+			</if>
+		</where>
+		limit 6
+	</select>
+	
+	<select id="selectLikeProduct" resultMap="BaseResultMap">
+			select
+			<include refid="Base_Column_List" />
+			FROM t_ty_product
+			ORDER BY product_pub_time
+			LIMIT 4
+	</select>	
+	
+	<select id="selectNewProduct" resultMap="BaseResultMap">
+			select
+			<include refid="Base_Column_List" />
+			FROM t_ty_product
+			ORDER BY product_pub_time desc
+			LIMIT 4
+	</select>		
+
+	<select id="selectByBrandAndTypeAndPrice" resultMap="BaseResultMap"
+		parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		select
+		<include refid="Base_Column_List" />
+		from t_ty_product pd,t_ty_brand bd,t_ty_price pr,t_ty_type tp
+		<where>
+			pd.brand_id=bd.brand_id and pd.price_id=pr.price_id and
+			pd.type_id=tp.type_id
+			<if test="ttyBrand!=null and ttyBrand.brandId.trim()!=''">
+				and brand_id=#{ttyBrand.brandId}
+			</if>
+			<if test="ttyType!=null and ttyType.typeId.trim()!=''">
+				and type_id=#{ttyType.typeId}
+			</if>
+			<if test="ttyPrice!=null and ttyPrice.priceId.trim()!=''">
+				and price_id=#{ttyPrice.priceId}
+			</if>
+			<if test="productId.trim()!='' and productId!=null">
+				and product_id=#{productId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<!-- 查询品牌 -->
+	<select id="selectLogo"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap">
+		select FILE_NAME,FILE_URL,PKID from t_sys_attach where PKID in(
+		select brand_id
+		from t_ty_brand)
+	</select>
+
+	<!-- 查询价格区间 -->
+	<select id="selectPrice"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TtyPriceMapper.BaseResultMap">
+		SELECT price_max,price_min,price_id FROM t_ty_price ORDER BY price_min
+	</select>
+
+	<!-- 查询类型 -->
+	<select id="selectType"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TtyTypeMapper.BaseResultMap">
+		select type_id,type_name from t_ty_type
+	</select>
+	<!-- 查询全部产品 -->
+	<select id="selectAll"
+		resultMap="com.creatorblue.cbitedu.ty.persistence.TtyProductMapper.BaseResultMap">
+		SELECT
+		product_id,product_name,product_cover_picture,product_flatly_price,product_market_price,product_remark
+		FROM t_ty_product
+	</select>
+	<!-- 根据类查询是否存在 -->
+	<select id="checkTheNameWithParentId" resultMap="BaseResultMap" parameterType="com.creatorblue.cbitedu.ty.domain.TtyProduct">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM t_ty_product
+			 <where>
+		       <if test="productName != null and '' != productName">
+		       	  and product_name = #{productName} 
+		        </if>
+		       <if test="productId != null and '' != productId">
+		        	and product_id != #{productId}
+		       </if>
+	        </where>
+	</select>
+
+	<!-- 进入详情began -->
+	<select id="selectDetails" resultMap="BaseResultMap">
+		SELECT product_name,product_flatly_price,product_market_price,type_name,ORG_NAME,PHONE,product_pub_time,product_color
+		FROM t_ty_product p JOIN t_sys_org o on p.ORG_ID=o.ORG_ID
+		JOIN t_ty_type t on t.type_id = p.type_id
+		WHERE p.product_id =#{productId}
+	</select>
+	<select id="selectPicture" resultMap="com.creatorblue.cbitedu.ty.persistence.TsysAttachMapper.BaseResultMap">
+		SELECT FILE_URL FROM t_sys_attach WHERE PKID=#{productId}
+	</select>
+	<!-- 进入详情end -->
+		
+
+
+
+</mapper>

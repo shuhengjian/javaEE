@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>活动管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../../static/css/font.css"
+			th:href="@{'/backstage/static/css/font.css'}">
+		<link rel="stylesheet" href="../../static/css/weadmin.css"
+			th:href="@{'/backstage/static/css/weadmin.css'}">
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+	      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+	      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	</head>
+
+	<body>
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">活动管理</a>
+      </span><a class="layui-btn layui-btn-sm"
+			style="line-height: 1.6em; margin-top: 3px; float: right"
+			href="javascript:location.replace(location.href);" title="刷新"> <i
+			class="layui-icon" style="line-height: 30px">&#x1002;</i></a>
+		</div>
+		<div class="weadmin-body">
+			<div class="layui-row">
+				<form class="layui-form layui-col-md12 we-search">
+					<div class="layui-input-inline">
+					<select name="activState" value="">
+						<option value="" name="state" class="selectAll">活动状态</option>
+						 <th:blocl th:each="list : ${list}">
+	                    <option class="selectByState" th:value="${list.parameter.paraNo}" th:text="${list.parameter.paraVal}" th:selected="${activ}!=null and ${activ.activState}==${list.parameter.paraNo}">上架</option>
+	                    <!-- <option>下架</option> -->
+	                    </th:blocl>
+					</select>
+				</div>
+					<div class="layui-inline">
+						<input type="text" name="activTheme" placeholder="请输入活动主题"
+							autocomplete="off" class="layui-input">
+					</div>
+					<button class="layui-btn" type="button" lay-filter="sreach"
+						id="selecta" onclick="queryAll(1,10)">
+						<i class="layui-icon">&#xe615;</i>
+					</button>
+				</form>
+			</div>
+			<div class="weadmin-block">
+				<button class="layui-btn layui-btn-danger cb-btn-remove">
+					<i class="layui-icon"></i>批量删除
+				</button>
+				<button class="layui-btn"
+					onclick="WeAdminShow('活动添加','active_open',700,400)">
+					<i class="layui-icon"></i>添加
+				</button>
+				<button class="layui-btn enable">启用</button>
+				<button class="layui-btn layui-btn-danger binable">禁用</button>
+				<!-- <button class="layui-btn preview">预览</button> -->
+				<!-- <span class="fr" style="line-height:40px">共有数据：6条</span> -->
+			</div>
+			<table class="layui-table" id="memberList">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" th:onchange="'selectall(this)'" name="selectall" id="selectall" value="" />
+						</th>
+						<th>序号</th>
+						<th>活动状态</th>
+						<th>活动主题</th>
+						<th>开始时间</th>
+						<th>结束时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+			<div id="pagefenye" class="fenye" style="text-align:center;"></div>
+		</div>
+		<script src="../jquery.min.js" th:src="@{'/backstage/pages/jquery.min.js'}" type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/layui/layui.js" charset="utf-8"
+		th:src="@{'/backstage/lib/layui/layui.js'}"></script>
+	<script src="../../static/js/eleDel.js" type="text/javascript"
+		charset="utf-8" th:src="@{'/backstage/static/js/eleDel.js'}"></script>
+	<script type="text/javascript">
+		$(function(){
+			/* 查询活动列表 */
+			queryAll(1,1);
+			/*查询活动状态*/
+			selectState();
+		})
+		//重新渲染表单
+		function renderForm(){
+		  layui.use('form', function(){
+		   var form = layui.form;//高版本建议把括号去掉，有的低版本，需要加()
+		   form.render();
+		  });
+		 }
+		/*查询活动状态*/
+		function selectState(){
+			$.ajax({
+				url:"active_state",
+				type : "post",
+				dataType : "json",
+				success : function(res) {
+					$("[name=state]").nextAll().remove();
+					$.each(res, function(i, o) {
+						$("[name=state]").after(
+								"<option value='" + o.parameter.paraNo + "'>" + o.parameter.paraVal
+										+ "</option>");
+						renderForm();
+					})
+				}
+			})
+		}
+		/* 查询活动列表 */
+		function queryAll(pageNum, pageSize){
+			$.ajax({
+				url:"active_queryAll",
+				type:"post",
+				data : $("form").serialize() + "&pageNum=" + pageNum || 1
+				+ "&pageSize=" + pageSize || 1,
+				success: function(res){
+					let all =JSON.parse(res);
+					let list =all[0].list;
+					//总页数
+					let pages = all[0].pages;
+					console.log(all)
+					//当前页码
+					let pageNum =all[0].pageNum;
+					//每页显示的数
+					let pageSize = all[0].pageSize;
+					//总记录数
+					let count = all[0].total;
+					$("tbody").empty();
+					for(let i = 0; i<list.length ; i++){
+						/* 列表追加 */
+						$("tbody").append("<tr data-id='1' class='ellipsis'>\
+							<td>\
+							<input type='checkbox' name='chk_one' id='selectall' value='' class='"+list[i].activId+"' onchange='sel(this)'/>\
+							</td>\
+							<td>"+(i+1)+"</td>\
+							<td>"+list[i].activState+"</td>\
+							<td>"+list[i].activTheme+"</td>\
+							<td>"+new Date(list[i].activStartTime.time).toLocaleString()+"</td>\
+							<td>"+new Date(list[i].activEndTime.time).toLocaleString()+"</td>\
+							<td style='display:none;'><input th:value='"+list[i].activId+"'/></td>\
+							<td class='td-manage' data-id=\""+list[i].activId+"\">\
+								<a title='编辑' onclick=\"WeAdminEdit('活动修改','active_open?activId="+list[i].activId+"', '"+list[i].activId+"', 700, 400)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe642;</i>\
+								</a>\
+								&nbsp; &nbsp;\
+								<a title=\"删除\" onclick=\"active_dele(this)\" href='javascript:;'\>\
+									<i class=\"layui-icon\">&#xe640;</i>\
+								</a>\
+								&nbsp; &nbsp;\
+								<a title='预览'  onclick=\"WeAdminEdit('活动预览','goActiveInfo?activId="+list[i].activId+"', '"+list[i].activId+"', 270, 480)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe60b;</i>\
+								</a>\
+							</td>\
+						</tr>")
+				    }
+					//调用分页方法
+					getPageList(count, pageNum, pageSize);  
+				}
+			})
+		}
+		/*删除*/
+		function active_dele(tag){
+			if(window.confirm('您确定要删除吗？')){
+				$.ajax({
+					url:"active_delete",
+					type:"post",
+					data:{activId:$(tag).parents("td").data("id")},
+					dataType:"json",
+					success:function(res){
+						if(res.code==200){
+							alert(res.msg);
+							location.href="active_querylist";//刷新页面
+						}else{
+							alert(res.msg);
+						}
+					}
+				})
+			}
+		}
+		
+		$(".cb-btn-remove").click(function(){
+			var param="";
+			$("[name='chk_one']:checked").each(function(){
+				param+=$(this).attr("class")+",";
+			});
+			if(window.confirm('你确定要删除吗')){
+				$.ajax({
+					url:"active_deleteAll",
+					type:"post",
+					data:{id:param},
+					dataType:"json",
+					success:function(res){
+						if(res.code==200){
+							alert(res.msg);
+							location.href="active_querylist";//刷新页面
+						}else{
+							alert(res.msg);
+						}
+					}
+				})
+			}else{
+				return false;
+			}
+		})
+		/*上架*/
+		$(".enable").click(function(){
+			var checked = $("input[name='chk_one']:checked");
+			if(checked.length == 0 || checked.length > 1){
+				alert("请先选中一条记录!");
+				return false;
+			}
+			var activId = checked.attr("class");
+			$.ajax({
+				url:"active_updateState",
+				type:"post",
+				data:{
+					activId:activId,
+					activState:"1"
+					},
+				dataType:"json",
+				success:function(res){
+					if(res.code==200){
+						alert(res.msg);
+						location.href="active_querylist";//刷新页面
+					}else{
+						alert(res.msg);
+					}
+				}
+			})
+		})
+		
+		/*下架*/
+		$(".binable").click(function(){
+			var checked = $("input[name='chk_one']:checked");
+			if(checked.length == 0 || checked.length > 1){
+				alert("请先选中一条记录!");
+				return false;
+			}
+			var activId = checked.attr("class");
+			$.ajax({
+				url:"active_updateState",
+				type:"post",
+				data:{
+					activId:activId,
+					activState:"0"
+					},
+				dataType:"json",
+				success:function(res){
+					if(res.code==200){
+						alert(res.msg);
+						location.href="active_querylist";//刷新页面
+					}else{
+						alert(res.msg);
+					}
+				}
+			})
+		})
+		//全选 
+		function selectall (tag) {
+			let t = $(tag).prop("checked");
+			$("input[type='checkbox']").prop("checked",t);
+		}
+		function sel (tag) {
+			let t = $(tag).is(':checked');
+			let value = true;
+			for (let i = 0;i< $("input[name='chk_one']").length;i++) {	
+				if (!$("input[name='chk_one']")[i].checked) {
+					value = false;
+					break;
+				}
+			}
+			$("input[name='selectall']").prop("checked",value);
+			$(tag).prop("checked",t);
+		}
+		function getPageList(count, curr, limit) {
+			//分页方法
+			layui.use([ 'laypage', 'layer' ], function() {
+				var laypage = layui.laypage, layer = layui.layer;
+				//完整功能
+				laypage.render({
+					elem : 'pagefenye',
+					count : count || 0,
+					theme : '#009587',
+					limit : limit || 3,
+					limits : [ 5, 10, 20, 30, 40 ],
+					curr : curr || 1,
+					layout : [ 'count', 'prev', 'page', 'next', 'refresh', 'skip' ],
+					jump : function(obj, first) {
+						//debugger;
+						if (!first) {
+							//window.location.href = "?curr="+obj.curr+"&pageSize="+obj.limit+"&enterId="+'${enterId}';
+							queryAll(obj.curr, obj.limit);
+						}
+					}
+				});
+			});
+		}
+		$(".selectAll").click(function(){
+			$.ajax({
+				url:"active_queryAll",
+				type:"post",
+				data:{pageNum:pageNum},
+				success: function(res){
+					let all =JSON.parse(res);
+					let list =all[0].list;
+					//总页数
+					let pages = all[0].pages;
+					console.log(all)
+					//当前页码
+					let pageNum =all[0].pageNum;
+					//每页显示的数
+					let pageSize = all[0].pageSize;
+					//总记录数
+					let count = all[0].total;
+					$("tbody").empty();
+					for(let i = 0; i<list.length ; i++){
+						/* 列表追加 */
+						$("tbody").append("<tr data-id='1' class='ellipsis'>\
+							<td>\
+							<input type='checkbox' name='chk_one' id='selectall' value='' class='"+list[i].activId+"' onchange='sel(this)'/>\
+							</td>\
+							<td>"+(i+1)+"</td>\
+							<td>"+list[i].activState+"</td>\
+							<td>"+list[i].activTheme+"</td>\
+							<td>"+new Date(list[i].activStartTime.time).toLocaleString()+"</td>\
+							<td>"+new Date(list[i].activEndTime.time).toLocaleString()+"</td>\
+							<td style='display:none;'><input th:value='"+list[i].activId+"'/></td>\
+							<td class='td-manage' data-id=\""+list[i].activId+"\">\
+								<a title='编辑' onclick=\"WeAdminEdit('活动修改','active_open?activId="+list[i].activId+"', '"+list[i].activId+"', 600, 400)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe642;</i>\
+								</a>\
+								&nbsp; &nbsp;\
+								<a title=\"删除\" onclick=\"active_dele(this)\" href='javascript:;'\>\
+									<i class=\"layui-icon\">&#xe640;</i>\
+								</a>\
+								&nbsp; &nbsp;\
+								<a title='预览'  onclick=\"WeAdminEdit('活动预览','goActiveInfo?activId="+list[i].activId+"', '"+list[i].activId+"', 270, 480)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe60b;</i>\
+								</a>\
+							</td>\
+						</tr>")
+				    }
+					//调用分页方法
+					getPageList(count, pageNum, pageSize);  
+				}
+			})
+		})
+		$(".selectByState").click(function(){
+			$.ajax({
+				url:"active_queryAll",
+				type:"post",
+				data:{pageNum:pageNum},
+				success: function(res){
+					let all =JSON.parse(res);
+					let list =all[0].list;
+					//总页数
+					let pages = all[0].pages;
+					console.log(all)
+					//当前页码
+					let pageNum =all[0].pageNum;
+					//每页显示的数
+					let pageSize = all[0].pageSize;
+					//总记录数
+					let count = all[0].total;
+					$("tbody").empty();
+					for(let i = 0; i<list.length ; i++){
+						/* 列表追加 */
+						$("tbody").append("<tr data-id='1' class='ellipsis'>\
+							<td>\
+							<input type='checkbox' name='chk_one' id='selectall' value='' class='"+list[i].activId+"' onchange='sel(this)'/>\
+							</td>\
+							<td>"+(i+1)+"</td>\
+							<td>"+list[i].activState+"</td>\
+							<td>"+list[i].activTheme+"</td>\
+							<td>"+new Date(list[i].activStartTime.time).toLocaleString()+"</td>\
+							<td>"+new Date(list[i].activEndTime.time).toLocaleString()+"</td>\
+							<td style='display:none;'><input th:value='"+list[i].activId+"'/></td>\
+							<td class='td-manage' data-id=\""+list[i].activId+"\">\
+								<a title='编辑' onclick=\"WeAdminEdit('活动修改','active_open?activId="+list[i].activId+"', '"+list[i].activId+"', 600, 400)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe642;</i>\
+								</a>\
+								&nbsp; &nbsp;\
+								<a title=\"删除\" onclick=\"active_dele(this)\" href='javascript:;'\>\
+									<i class=\"layui-icon\">&#xe640;</i>\
+								</a>\
+								&nbsp; &nbsp;\
+								<a title='预览'  onclick=\"WeAdminEdit('活动预览','goActiveInfo?activId="+list[i].activId+"', '"+list[i].activId+"', 270, 480)\" href='javascript:;'>\
+									<i class='layui-icon'>&#xe60b;</i>\
+								</a>\
+							</td>\
+						</tr>")
+				    }
+					//调用分页方法
+					getPageList(count, pageNum, pageSize);  
+				}
+			})
+		})
+	</script>
+</body>
